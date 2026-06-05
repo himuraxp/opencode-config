@@ -113,9 +113,9 @@ Créez un fichier `frameworks/<mon-framework>.md` dans le repo :
 ```txt
 frameworks/
 ├── angular-20.md   # Existant
-├── nodejs.md       # À ajouter
-├── nestjs.md       # À ajouter
-└── astro.md        # À ajouter
+├── nodejs.md       # API Node.js / Express
+├── nestjs.md       # Architecture modulaire NestJS
+└── astro.md        # Sites statiques Astro, SEO, i18n
 ```
 
 Le nom du fichier sera le nom du framework. Relancez `./scripts/install.sh` pour le déployer.
