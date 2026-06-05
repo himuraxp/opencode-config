@@ -4,19 +4,35 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$(pwd)"
 
+# Parse arguments
+DRY_RUN=false
+for arg in "$@"; do
+  if [[ "$arg" == "--dry-run" ]]; then
+    DRY_RUN=true
+  fi
+done
+
 sync_file() {
   local src="$1"
   local dest="$2"
 
   if [[ ! -e "$dest" ]]; then
-    mkdir -p "$(dirname "$dest")"
-    cp "$src" "$dest"
-    echo "created: $dest"
+    if [[ "$DRY_RUN" == true ]]; then
+      echo "would create: $dest"
+    else
+      mkdir -p "$(dirname "$dest")"
+      cp "$src" "$dest"
+      echo "created: $dest"
+    fi
   elif cmp -s "$src" "$dest"; then
     echo "up-to-date: $dest"
   else
-    cp "$src" "$dest.new"
-    echo "diff: $dest.new (review and replace if needed)"
+    if [[ "$DRY_RUN" == true ]]; then
+      echo "would create: $dest.new (review and replace if needed)"
+    else
+      cp "$src" "$dest.new"
+      echo "diff: $dest.new (review and replace if needed)"
+    fi
   fi
 }
 
@@ -24,7 +40,12 @@ sync_file() {
 sync_file "$ROOT_DIR/templates/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
 
 # Sync docs/ai/ : templates racine
-mkdir -p "$PROJECT_DIR/docs/ai"
+if [[ "$DRY_RUN" == true ]]; then
+  echo "would create dir: $PROJECT_DIR/docs/ai"
+else
+  mkdir -p "$PROJECT_DIR/docs/ai"
+fi
+
 for file in "$ROOT_DIR/templates"/*.md; do
   name="$(basename "$file")"
   if [[ "$name" != "AGENTS.md" ]]; then
@@ -38,4 +59,8 @@ for file in "$ROOT_DIR/templates/project-docs"/*.md; do
   sync_file "$file" "$PROJECT_DIR/docs/ai/$(basename "$file")"
 done
 
-echo "Project sync done."
+if [[ "$DRY_RUN" == true ]]; then
+  echo "Dry run complete. No files were modified."
+else
+  echo "Project sync done."
+fi

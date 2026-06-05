@@ -84,6 +84,12 @@ cd mon-projet
 ~/.config/opencode-config/scripts/init-project.sh
 ```
 
+Pour prévisualiser sans rien modifier :
+
+```bash
+~/.config/opencode-config/scripts/init-project.sh --dry-run
+```
+
 Résultat :
 
 ```txt
@@ -104,6 +110,12 @@ mon-projet/
 
 ```bash
 ~/.config/opencode-config/scripts/sync-project.sh
+```
+
+Pour prévisualiser sans rien modifier :
+
+```bash
+~/.config/opencode-config/scripts/sync-project.sh --dry-run
 ```
 
 Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà.
