@@ -157,9 +157,9 @@ opencode-config/
 │
 ├── frameworks/                Règles par stack technique
 │   ├── angular-20.md          Conventions Angular 20 stand-alone
-│   ├── nodejs.md              (à ajouter)
-│   ├── nestjs.md              (à ajouter)
-│   └── astro.md               (à ajouter)
+│   ├── nodejs.md              Conventions Node.js API
+│   ├── nestjs.md              Conventions NestJS
+│   └── astro.md               Conventions Astro
 │
 ├── templates/                 Ce que chaque projet reçoit
 │   ├── AGENTS.md              Template racine pour chaque projet

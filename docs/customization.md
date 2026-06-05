@@ -22,10 +22,10 @@ Dans `frameworks/`, les règles techniques par stack :
 
 ```txt
 frameworks/
-├── angular-20.md   # Angular 20 stand-alone, signal, inject(), etc.
-├── nodejs.md       # À créer
-├── nestjs.md       # À créer
-└── astro.md        # À créer
+├── angular-20.md   # Angular 20 stand-alone, signals, inject(), etc.
+├── nodejs.md       # API Node.js / TypeScript
+├── nestjs.md       # Architecture modulaire NestJS
+└── astro.md        # Sites statiques Astro, SEO, i18n
 ```
 
 Pour ajouter un framework :
