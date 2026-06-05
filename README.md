@@ -1,6 +1,6 @@
 # opencode-config
 
-> **La référence OpenCode pour les développeurs Angular 20 / TypeScript / Infomaniak.**
+> **La référence OpenCode pour les développeurs Angular 20 / TypeScript**
 
 Forkable. Multi-couches. Prête à l'emploi.
 
@@ -12,7 +12,7 @@ Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser
 
 Ce repo fournit :
 
-- **Agents spécialisés** (Angular 20, architecture, review, tests, sécurité)
+- **Agents spécialisés** (Angular 20 +, architecture, review, tests, sécurité)
 - **Templates de projet** (AGENTS.md, plans, décisions, changelog)
 - **Scripts d'installation** pour synchroniser ces règles sur toutes les machines et tous les projets
 - **Un modèle multi-couches** : global → organisation → projet
@@ -23,7 +23,7 @@ Ce repo fournit :
 |----------|-------------|
 | **Cohérence** | Même comportement des agents sur toutes les machines |
 | **Gain de temps** | Initialisation d'un projet en 3 secondes |
-| **Qualité** | Standards Angular 20 Infomaniak intégrés dès le départ |
+| **Qualité** | Standards Angular 20 + intégrés dès le départ |
 | **Traçabilité** | Chaque agent documente son plan, ses décisions et son avancement |
 | **Sécurité** | Checklist sécurité automatique à chaque review |
 
@@ -96,7 +96,7 @@ L'agent reçoit alors :
 
 ```txt
 1. Standards globaux
-2. Standards Angular 20
+2. Standards Angular 20 +
 3. Standards entreprise (si configurés)
 4. Standards projet (AGENTS.md local)
 ```
@@ -113,7 +113,7 @@ opencode-config/
 ├── CHANGELOG.md
 │
 ├── agents/
-│   ├── angular-20-infomaniak.md   Conventions Angular 20 stand-alone
+│   ├── angular-20.md              Conventions Angular 20 stand-alone
 │   ├── architect.md               Découpage technique et décisions
 │   ├── reviewer.md                Code review stricte
 │   ├── tester.md                  Tests Jest + Angular
@@ -153,4 +153,4 @@ opencode-config/
 
 ## Licence
 
-MIT © Infomaniak
+MIT

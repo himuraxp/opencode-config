@@ -1,4 +1,4 @@
-# AGENTS.md — opencode-config v2
+# AGENTS.md — opencode-config
 
 Ce dépôt contient la configuration globale OpenCode de référence.
 
