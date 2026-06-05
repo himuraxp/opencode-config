@@ -19,6 +19,9 @@ monorepo/
       STATUS.md      → état d'avancement
       DECISIONS.md   → décisions structurantes
       CHANGELOG.md   → historique des agents
+      BUFFER.md      → mémoire tampon de session
+      INDEX.md       → cartographie du projet
+      WARNINGS.md    → alertes et dettes techniques
   packages/          → packages du monorepo
 ```
 

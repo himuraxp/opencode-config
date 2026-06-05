@@ -29,4 +29,10 @@ for file in "$ROOT_DIR/templates"/*.md; do
   fi
 done
 
+# Copier les templates depuis project-docs/ (BUFFER, INDEX, WARNINGS)
+for file in "$ROOT_DIR/templates/project-docs"/*.md; do
+  [[ -e "$file" ]] || continue
+  copy_if_missing "$file" "$PROJECT_DIR/docs/ai/$(basename "$file")"
+done
+
 echo "Project initialized for OpenCode."

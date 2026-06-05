@@ -15,6 +15,9 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 - Préserver les comportements existants.
 - Ajouter ou adapter les tests quand la logique change.
 - Toujours privilégier une solution simple, maintenable et lisible.
+- Ne jamais lire globalement des fichiers énormes si une recherche ciblée suffit.
+- Utiliser `INDEX.md` pour comprendre où chercher avant de scanner le projet.
+- Ne pas polluer `DECISIONS.md` avec des micro-décisions temporaires.
 
 ## Standards globaux
 
@@ -28,6 +31,69 @@ Les standards suivants sont chargés automatiquement par l'agent principal (Auro
 - **commits** : format et règles de commit
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
+
+## Modes de travail
+
+### Mode EXECUTION (par défaut)
+
+Objectif : appliquer le plan existant.
+
+Règles :
+- Modifier uniquement les fichiers dans le scope.
+- Vérifier build/lint/test après chaque changement logique.
+- Documenter les écarts dans `BUFFER.md`.
+- Stopper immédiatement si contradiction avec `DECISIONS.md` ou `WARNINGS.md`.
+- Consulter `INDEX.md` avant de toucher un fichier inconnu du projet.
+
+### Mode BRAINSTORM
+
+Objectif : concevoir, planifier, architecturer.
+
+Règles :
+- Aucune modification de code source.
+- Documentation, architecture et planification uniquement.
+- Autorisé à modifier : `PLAN.md`, `DECISIONS.md`, `INDEX.md`.
+- Sortie du mode quand le plan est validé et clair.
+
+## Documentation IA
+
+Utiliser `docs/ai/` pour conserver le contexte long terme.
+
+### Ordre de lecture — Début de session
+
+```txt
+1. STATUS.md   → état actuel, bloqueurs
+2. PLAN.md     → plan en cours
+3. WARNINGS.md → alertes actives
+4. INDEX.md    → cartographie du projet
+5. BUFFER.md   → si reprise de session interrompue
+```
+
+### Ordre de mise à jour — Fin de session
+
+```txt
+1. STATUS.md    → fait, à faire, bloqueurs, prochaine étape
+2. BUFFER.md   → sujets hors-scope, micro-décisions, snapshot
+3. CHANGELOG.md → changements significatifs uniquement
+```
+
+### Rôle de chaque document
+
+- **PLAN.md** : plan technique courant (objectif, étapes, risques, tests).
+- **STATUS.md** : état d'avancement dynamique (en cours, fait, bloqué, prochaine action).
+- **DECISIONS.md** : décisions structurantes (contexte, décision, impact, alternative rejetée).
+- **CHANGELOG.md** : historique significatif des sessions IA (quoi, quand, pourquoi).
+- **BUFFER.md** : mémoire tampon temporaire (hors-scope, micro-décisions, snapshot de session).
+- **INDEX.md** : cartographie du projet (structure, modules, fichiers clés, conventions).
+- **WARNINGS.md** : alertes actives et dettes connues (zones sensibles, workarounds).
+
+### Règles de synchronisation
+
+- BUFFER.md : vider ou archiver en fin de session si vide.
+- Un sujet hors-scope persistant dans BUFFER.md doit être promu dans WARNINGS.md.
+- Ne pas mettre les micro-décisions dans DECISIONS.md (réservé aux décisions structurantes).
+- Ne pas documenter les unif, typo ou micro-corrections dans CHANGELOG.md.
+- Mettre à jour INDEX.md si la structure du projet change significativement.
 
 ## Angular 20 — Conventions
 
@@ -74,30 +140,9 @@ Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installat
 
 Pour une tâche complexe :
 
-1. Lire le contexte existant (code, docs/ai/).
+1. Lire le contexte existant (docs/ai/ puis INDEX.md).
 2. Identifier les fichiers concernés.
 3. Proposer un plan court (pour >2 fichiers).
 4. Implémenter par petits changements.
 5. Lancer ou indiquer les tests pertinents.
 6. Résumer clairement les modifications.
-
-## Session IA
-
-### Début de session
-
-1. Lire `docs/ai/STATUS.md`.
-2. Lire `docs/ai/PLAN.md`.
-
-### Fin de session
-
-1. Mettre à jour `docs/ai/STATUS.md` (fait, à faire, bloqueurs, prochaine étape).
-2. Ajouter une entrée dans `docs/ai/CHANGELOG.md` si adaptations significatives.
-
-## Documentation IA
-
-Utiliser `docs/ai/` pour conserver le contexte long terme :
-
-- `PLAN.md` : plan technique courant.
-- `STATUS.md` : état d'avancement.
-- `DECISIONS.md` : décisions structurantes.
-- `CHANGELOG.md` : changements réalisés par les agents.

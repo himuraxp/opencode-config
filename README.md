@@ -25,10 +25,12 @@ Ce repo fournit :
 |----------|-------------|
 | **Cohérence** | Même comportement des agents sur toutes les machines |
 | **Gain de temps** | Initialisation d'un projet en 3 secondes |
-| **Qualité** | Standards Angular 20 + intégrés dès le départ |
+| **Qualité** | Standards Angular 20+ intégrés dès le départ |
 | **Traçabilité** | Chaque agent documente son plan, ses décisions et son avancement |
 | **Sécurité** | Checklist sécurité automatique à chaque review |
+| **Mémoire de session** | BUFFER, INDEX et WARNINGS pour les projets longs et complexes |
 | **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → Vérifier → Committer |
+
 
 ## Installation rapide
 
@@ -66,7 +68,11 @@ AGENTS.md
         ├── PLAN.md        → plan technique courant
         ├── STATUS.md      → état d'avancement
         ├── DECISIONS.md   → décisions structurantes
-        └── CHANGELOG.md   → historique des sessions IA
+        ├── CHANGELOG.md   → historique des sessions IA
+        ├── BUFFER.md      → mémoire tampon de session
+        ├── INDEX.md       → cartographie du projet
+        └── WARNINGS.md    → alertes et dettes techniques
+
 ```
 
 ### 3. Synchroniser un projet existant
@@ -166,7 +172,12 @@ opencode-config/
 │   ├── PLAN.md                Plan technique courant
 │   ├── STATUS.md              État d'avancement
 │   ├── DECISIONS.md           Décisions structurantes
-│   └── CHANGELOG.md           Journal des agents
+│   ├── CHANGELOG.md           Journal des agents
+│   └── project-docs/
+│       ├── BUFFER.md          Mémoire tampon de session
+│       ├── INDEX.md           Cartographie du projet
+│       └── WARNINGS.md        Alertes et dettes techniques
+
 │
 ├── examples/                  Exemples prêts à l'emploi
 │   ├── angular-app/           Projet Angular 20+ complet

@@ -112,7 +112,36 @@ Dans le `frameworks/angular-20.md` original, ajoutez une référence :
 Voir `frameworks/angular-performance.md` pour les détails.
 ```
 
+## Nouveaux Documents de Session (BUFFER, INDEX, WARNINGS)
+
+### Pourquoi les utiliser ?
+
+En plus de `PLAN.md`, `STATUS.md`, `DECISIONS.md` et `CHANGELOG.md`, chaque projet peut maintenant gérer : `BUFFER.md`, `INDEX.md` et `WARNINGS.md`.
+
+- **INDEX.md** : Cartographie du projet. Évite au agent de scanner tout le code à chaque session. Mis à jour si la structure change significativement.
+- **BUFFER.md** : Mémoire tampon temporaire. Hors-scope découvert, micro-décisions temporaires, snapshot pour reprise après interruption. Vidé ou archivé en fin de session.
+- **WARNINGS.md** : Alertes actives et dettes techniques. Zones sensibles du projet, workarounds connus. Doit être consulté avant tout changement dans ces zones.
+
+### Quand les modifier
+
+- **INDEX.md** : Quand la structure change significativement ou à la création initiale.
+- **BUFFER.md** : En début de session si reprise, en fin de session pour noter les sujets hors-scope.
+- **WARNINGS.md** : Quand une nouvelle dette ou zone à risque est identifiée. À archiver quand résolu.
+
+### Différences entre les documents
+
+| Document | Quand lire | Quand écrire | Contenu |
+|----------|-----------|--------------|---------|
+| STATUS.md | Début de session | Fin de session | État d'avancement, bloqueurs |
+| PLAN.md | Début de session | Pendant plannification | Plan technique, étapes, risques |
+| DECISIONS.md | Quand un choix arrive | Après décision structurante | Décision, contexte, impact |
+| CHANGELOG.md | Peu souvent | Fin de session (si significatif) | Historique des changements |
+| BUFFER.md | Si reprise/en cours | En fin de session | Temporaire, micro-décisions, snapshot |
+| INDEX.md | Début de session, si perdu | Si structure change | Cartographie du projet |
+| WARNINGS.md | Avant tout changement dans zone sensible | Quand risque identifié | Alertes actives, dettes |
+
 ## Recommandations
+
 
 - **Ne modifiez jamais directement** `~/.config/opencode/*`.
 - Faîtes les modifications dans le repo forké, puis `install.sh`.
