@@ -10,15 +10,17 @@ Explorer → Planifier → Implémenter → Vérifier → Committer
 
 ### Lecture en début de session
 
-Ordre obligatoire :
+Ordre obligatoire lorsque `docs/ai/` est découvert :
 
 ```txt
-1. STATUS.md   → état actuel, bloqueurs
+1. STATUS.md   → état actuel, bloqueurs, prochaine étape
 2. PLAN.md     → plan en cours
 3. WARNINGS.md → alertes actives avant de toucher quoi que ce soit
 4. INDEX.md    → comprendre la structure du projet sans scanner
-5. BUFFER.md   → seulement si reprise de session interrompue
+5. BUFFER.md   → seulement si reprise de session interrompue, blocage, ou demande explicite
 ```
+
+Aurora détecte automatiquement `docs/ai/` au démarrage et applique cet ordre sans configuration dans `AGENTS.md`.
 
 ### Mise à jour en fin de session
 
@@ -39,8 +41,8 @@ Ordre recommandé :
 ### Gérer le BUFFER.md
 
 - Utiliser pour les micro-décisions prises en session, les découvertes hors-scope, le snapshot si interruption.
-- Vider ou archiver en fin de session.
-- Promouvoir `BUFFER.md` → `WARNINGS.md` si le sujet est persistant ou critique.
+- Vider ou archiver en fin de session si résolu ou vide.
+- **Promouvoir tout risque persistant** de `BUFFER.md` vers `WARNINGS.md`.
 - Ne jamais mettre les micro-décisions dans `DECISIONS.md`.
 
 ### Explorer
@@ -108,3 +110,4 @@ Conception uniquement. Aucun code modifié. Autorisé à modifier `PLAN.md`, `DE
 - ❌ Committer avec tests cassés
 - ❌ Scanner le projet entier si INDEX.md suffit
 - ❌ Mettre micro-décisions dans DECISIONS.md
+- ❌ Lire un fichier `.new` automatiquement (propositions de fusion manuelle uniquement)

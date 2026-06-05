@@ -2,6 +2,18 @@
 
 Ce fichier est la source de vérité pour les agents travaillant sur ce projet.
 
+## Rôle de ce fichier
+
+Aurora charge automatiquement les standards globaux et découvre `docs/ai/` sans configuration supplémentaire.
+Ce fichier n'a **pas** besoin de dupliquer la logique mémoire (ordre de lecture, rôles des documents...).
+
+Concentrez-vous ici sur :
+
+- **Contexte métier** : produit, utilisateurs, contraintes.
+- **Règles spécifiques** : conventions non couvertes par les standards globaux.
+- **Conventions locales** : architecture, nommage, patterns préférés.
+- **Exceptions projet** : dérogations temporaires ou zones à risque propres à ce projet.
+
 ## Objectif du projet
 
 Décrire ici le produit, le contexte métier et les contraintes principales.
@@ -55,11 +67,12 @@ Règles :
 - Autorisé à modifier : `PLAN.md`, `DECISIONS.md`, `INDEX.md`.
 - Sortie du mode quand le plan est validé et clair.
 
-## Documentation IA
+## Documentation IA (géré automatiquement par Aurora)
 
-Utiliser `docs/ai/` pour conserver le contexte long terme.
+Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture/mise à jour défini dans les standards globaux.
+L'AGENTS.md local n'a pas besoin de répéter ces règles.
 
-### Ordre de lecture — Début de session
+### Ordre de lecture — Début de session (référence)
 
 ```txt
 1. STATUS.md   → état actuel, bloqueurs

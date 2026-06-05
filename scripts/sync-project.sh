@@ -64,3 +64,7 @@ if [[ "$DRY_RUN" == true ]]; then
 else
   echo "Project sync done."
 fi
+
+echo ""
+echo "Note : OpenCode ne lit jamais les fichiers .new automatiquement."
+echo "Les fichiers .new (s'il en existe) sont des propositions de mise à jour à fusionner manuellement."

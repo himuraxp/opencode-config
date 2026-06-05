@@ -114,6 +114,8 @@ Voir `frameworks/angular-performance.md` pour les détails.
 
 ## Nouveaux Documents de Session (BUFFER, INDEX, WARNINGS)
 
+Aurora détecte automatiquement `docs/ai/` au démarrage et charge ces documents selon l'ordre défini dans `standards/memory.md`. Aucun paramétrage dans le `AGENTS.md` local n'est requis pour activer cette découverte.
+
 ### Pourquoi les utiliser ?
 
 En plus de `PLAN.md`, `STATUS.md`, `DECISIONS.md` et `CHANGELOG.md`, chaque projet peut maintenant gérer : `BUFFER.md`, `INDEX.md` et `WARNINGS.md`.
@@ -142,8 +144,8 @@ En plus de `PLAN.md`, `STATUS.md`, `DECISIONS.md` et `CHANGELOG.md`, chaque proj
 
 ## Recommandations
 
-
 - **Ne modifiez jamais directement** `~/.config/opencode/*`.
+- **Les fichiers `.new`** générés par `sync-project.sh` ne sont pas lus automatiquement par OpenCode. Fusionnez-les manuellement dans les fichiers existants avant de les supprimer.
 - Faîtes les modifications dans le repo forké, puis `install.sh`.
 - Versionnez votre fork pour suivre vos personnalisations.
 - Utilisez `git pull` pour récupérer les mises à jour upstream.

@@ -124,6 +124,44 @@ Opérationnel en moins de 2 minutes.
 
 ---
 
+## Automatic Project Memory Discovery
+
+Aurora détecte automatiquement le dossier `docs/ai/` à la racine du projet dès le début de chaque session.
+
+### Lecture automatique au bootstrap
+
+Si `docs/ai/` existe, Aurora charge immédiatement :
+
+1. `STATUS.md` — état actuel, bloqueurs, prochaine étape
+2. `PLAN.md` — plan technique en cours
+3. `WARNINGS.md` — alertes actives et zones à risque
+4. `INDEX.md` — cartographie du projet
+
+### Lecture conditionnelle
+
+- **BUFFER.md** : chargé uniquement en cas de reprise de session interrompue, de blocage signalé dans `STATUS.md`, ou si l'utilisateur demande explicitement de reprendre une tâche.
+- **DECISIONS.md** : consulté en JIT (Just-In-Time) si une décision structurante, une contradiction ou une refonte d'architecture est détectée.
+- **CHANGELOG.md** : consulté en JIT si une régression est suspectée ou si l'utilisateur demande l'historique.
+
+### Pourquoi les fichiers `.new` ne sont pas lus
+
+Lors d'une synchronisation (`sync-project.sh`), les fichiers existants ne sont pas écrasés. Le script génère des fichiers `.new` comme propositions de mise à jour.
+**OpenCode ne lit jamais les fichiers `.new` automatiquement.** Ils doivent être fusionnés manuellement dans les fichiers officiels.
+
+### Existing Project Adoption Checklist
+
+Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/ai/` :
+
+1. Lancer `init-project.sh` dans le projet existant.
+2. Vérifier les fichiers créés dans `docs/ai/`.
+3. Comparer les éventuels fichiers `.new` générés.
+4. Fusionner manuellement les sections utiles.
+5. Supprimer les `.new` une fois traités.
+6. Lancer OpenCode avec Aurora.
+7. Vérifier qu'Aurora annonce la mémoire projet détectée.
+
+---
+
 ## Architecture
 
 ```txt

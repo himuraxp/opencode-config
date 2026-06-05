@@ -13,6 +13,12 @@ Explorer → Planifier → Implémenter → Vérifier → Committer
 - Toujours lire le code existant avant toute modification.
 - Identifier les fichiers concernés, les conventions en vigueur, les patterns existants.
 - Ne jamais implémenter directement sans comprendre le contexte.
+- Si `docs/ai/` existe dans le projet courant, charger automatiquement la mémoire projet dans cet ordre :
+  1. `STATUS.md` — état, bloqueurs, prochaine étape
+  2. `PLAN.md` — plan en cours
+  3. `WARNINGS.md` — alertes actives et zones à risque
+  4. `INDEX.md` — cartographie du projet
+  5. `BUFFER.md` — uniquement si reprise interrompue ou blocage signalé
 
 ### 2. Planifier
 

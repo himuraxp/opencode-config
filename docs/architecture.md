@@ -29,6 +29,7 @@ Pour toute fonctionnalité non triviale, produire :
 ## Utiliser INDEX.md pour naviguer
 
 Avant de proposer un plan, consulter `docs/ai/INDEX.md` pour identifier les modules et fichiers clés du projet sans scanner le code entier.
+Aurora charge automatiquement `INDEX.md` et `WARNINGS.md` au démarrage si `docs/ai/` existe.
 
 Mettre à jour `INDEX.md` si la structure du projet ou les conventions changent significativement.
 

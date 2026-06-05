@@ -13,14 +13,30 @@ docs/
 │   └── CHANGELOG.md   → historique significatif des sessions IA
 ```
 
-## Début de session
+## Découverte automatique de docs/ai/
+
+Aurora doit vérifier à chaque session si le projet courant contient `docs/ai/`.
+Si le dossier existe, l'ordre de lecture de session s'applique automatiquement.
+Aucune modification du `AGENTS.md` local n'est requise pour activer cette découverte.
+
+## Début de session — Ordre de lecture de session
 
 L'agent doit systématiquement :
 
-1. Lire `docs/ai/STATUS.md` pour comprendre l'état actuel.
+1. Lire `docs/ai/STATUS.md` pour comprendre l'état actuel, les bloqueurs, la prochaine étape.
 2. Lire `docs/ai/PLAN.md` pour connaître le plan en cours.
+3. Lire `docs/ai/WARNINGS.md` pour identifier les zones à risque et les alertes actives.
+4. Lire `docs/ai/INDEX.md` pour cartographier le projet sans scan global.
 
-## Fin de session
+Puis lire `docs/ai/BUFFER.md` **uniquement si** :
+
+- la session précédente semble interrompue ;
+- `STATUS.md` signale un blocage ;
+- `BUFFER.md` contient un snapshot de reprise ;
+- l'utilisateur demande explicitement de reprendre une tâche ;
+- le contexte projet est insuffisant.
+
+## Fin de session — Ordre de mise à jour
 
 L'agent doit systématiquement :
 
@@ -30,7 +46,12 @@ L'agent doit systématiquement :
    - les bloqueurs éventuels
    - la prochaine étape recommandée
 
-2. Ajouter une entrée dans `docs/ai/CHANGELOG.md` si des changements significatifs ont été réalisés.
+2. Mettre à jour `docs/ai/BUFFER.md` :
+   - noter les sujets hors-scope, les micro-décisions, le snapshot si interruption ;
+   - vider ou archiver si le buffer est résolu ou vide ;
+   - **promouvoir dans `WARNINGS.md`** tout sujet persistant ou critique identifié dans le buffer.
+
+3. Ajouter une entrée dans `docs/ai/CHANGELOG.md` si des changements significatifs ont été réalisés.
 
 ## Rôle de chaque document
 
@@ -39,9 +60,18 @@ L'agent doit systématiquement :
 - **DECISIONS.md** : décisions structurantes (pourquoi, alternative rejetée, impact).
 - **CHANGELOG.md** : historique des sessions (quoi, quand, contexte).
 
+## Lecture JIT (Just-In-Time)
+
+Certains documents ne sont pas lus systématiquement au démarrage, mais uniquement à la demande selon le contexte.
+
+- **DECISIONS.md** : consulté en JIT si une décision structurante est nécessaire, si une règle projet semble contradictoire, ou si une modification d'architecture est envisagée.
+- **CHANGELOG.md** : consulté en JIT pour comprendre l'historique d'une zone, si une régression est suspectée, ou si l'utilisateur demande l'historique.
+
 ## Règles
 
 - Écrire dans la langue du projet (français recommandé pour les projets francophones).
 - Ne pas documenter les micro-corrections (unif, typo, formatage).
 - Documenter les décisions d'architecture, les pivots, les découvertes importantes.
 - Garder STATUS.md concis et à jour.
+- Promouvoir immédiatement tout risque persistant de `BUFFER.md` vers `WARNINGS.md`.
+- Ne jamais lire un fichier `.new` généré par `sync-project.sh` : il s'agit d'une proposition de fusion manuelle, non d'une source de vérité.

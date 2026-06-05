@@ -59,3 +59,56 @@ Toute tâche suit le cycle du standard workflow :
 ```txt
 Explorer → Planifier → Implémenter → Vérifier → Committer
 ```
+
+## Hiérarchie d'autorité
+
+Instructions applicables par ordre décroissant (le plus spécifique l'emporte) :
+
+```txt
+Instructions système OpenCode
+→ Agent global Aurora
+→ Standards globaux
+→ Frameworks globaux
+→ AGENTS.md projet
+→ docs/ai/DECISIONS.md
+→ docs/ai/WARNINGS.md
+→ docs/ai/PLAN.md
+→ docs/ai/STATUS.md
+→ code existant
+```
+
+Règles d'arrêt :
+
+- En cas de contradiction entre `AGENTS.md` projet et `docs/ai/DECISIONS.md` : **stopper immédiatement** et demander clarification à l'utilisateur.
+- Si `docs/ai/WARNINGS.md` contient un warning critique actif concernant la zone de travail : **bloquer toute modification** dans cette zone jusqu'à résolution ou autorisation explicite.
+
+## Mémoire projet automatique
+
+Au début de chaque session, Aurora vérifie l'existence de `docs/ai/` dans le projet courant.
+
+Si ce dossier existe, Aurora charge automatiquement dans cet ordre :
+
+1. `docs/ai/STATUS.md`
+2. `docs/ai/PLAN.md`
+3. `docs/ai/WARNINGS.md`
+4. `docs/ai/INDEX.md`
+
+Puis charge `docs/ai/BUFFER.md` **uniquement si** l'une des conditions suivantes est remplie :
+
+- la session précédente semble interrompue ;
+- `STATUS.md` indique un blocage ;
+- `BUFFER.md` contient un snapshot de reprise ;
+- l'utilisateur demande explicitement de reprendre une tâche ;
+- le contexte projet est insuffisant.
+
+`DECISIONS.md` est consulté **en JIT** uniquement si :
+
+- une décision structurante est nécessaire ;
+- une règle projet semble contradictoire ;
+- une modification d'architecture est envisagée.
+
+`CHANGELOG.md` est consulté **en JIT** uniquement si :
+
+- il faut comprendre l'historique d'une zone ;
+- une régression est suspectée ;
+- l'utilisateur demande l'historique.
