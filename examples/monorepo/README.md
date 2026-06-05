@@ -1,28 +1,31 @@
 # Exemple Monorepo
 
-Exemple de structure projet pour un monorepo (Nx, Turborepo, pnpm workspaces) avec `AGENTS.md` et documentation IA.
+Exemple de monorepo avec `AGENTS.md` et documentation IA.
 
-Généré via :
+Initialisé via :
 
 ```bash
 ~/.config/opencode-config/scripts/init-project.sh
 ```
 
-## Structure attendue
+## Structure
 
 ```txt
 monorepo/
-  AGENTS.md
-  .opencode/
-    agents/
-      project.md
-      security.md
+  AGENTS.md          → conventions du projet
   docs/
     ai/
-      PLAN.md
-      STATUS.md
-      DECISIONS.md
-      CHANGELOG.md
-  packages/
-    ...
+      PLAN.md        → plan technique courant
+      STATUS.md      → état d'avancement
+      DECISIONS.md   → décisions structurantes
+      CHANGELOG.md   → historique des agents
+  packages/          → packages du monorepo
 ```
+
+## Standards appliqués
+
+Ce monorepo suit les standards : framework Angular 20+
+
+- Séparation des concerns
+- Tests par package
+- Scripts build/lint/test au niveau root

@@ -14,7 +14,7 @@ Ce repo fournit :
 
 - **Standards universels** : workflow, communication, vérification, escalation, commits
 - **Agents spécialisés** : aurora (principal), reviewer, tester, security, architect
-- **Frameworks** : Angular 20 +, Node.js, NestJS, Astro (extensible)
+- **Frameworks** : Angular 20+, Node.js, NestJS, Astro (extensible)
 - **Templates de projet** : AGENTS.md, plans, décisions, changelog
 - **Scripts d'installation** : synchronisez les règles sur toutes les machines
 - **Un modèle multi-couches** : global → organisation → projet
@@ -169,9 +169,9 @@ opencode-config/
 │   └── CHANGELOG.md           Journal des agents
 │
 ├── examples/                  Exemples prêts à l'emploi
-│   ├── angular-app/           Projet Angular 20 complet
-│   ├── node-api/              Projet API Node.js (placeholder)
-│   └── monorepo/              Monorepo (placeholder)
+│   ├── angular-app/           Projet Angular 20+ complet
+│   ├── node-api/              Projet API Node.js
+│   └── monorepo/              Monorepo exemple
 │
 ├── scripts/                   Automatisation
 │   ├── install.sh             Installer la config globale
@@ -184,7 +184,7 @@ opencode-config/
     ├── angular-20.md          Règles Angular 20 détaillées
     ├── code-review.md         Guide de revue de code
     ├── testing.md             Guide de tests
-    └── architecture.md        Guide architecturale
+    └── architecture.md        Guide architectural
 ```
 
 ## Principe de priorité

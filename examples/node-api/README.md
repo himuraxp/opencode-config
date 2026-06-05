@@ -1,28 +1,34 @@
 # Exemple Node.js API
 
-Exemple de structure projet pour une API Node.js / Express / NestJS avec `AGENTS.md` et documentation IA.
+Exemple de projet Node.js / Express avec `AGENTS.md` et documentation IA.
 
-Généré via :
+Initialisé via :
 
 ```bash
 ~/.config/opencode-config/scripts/init-project.sh
 ```
 
-## Structure attendue
+## Structure
 
 ```txt
 node-api/
-  AGENTS.md
-  .opencode/
-    agents/
-      project.md
-      security.md
+  AGENTS.md          → conventions du projet
   docs/
     ai/
-      PLAN.md
-      STATUS.md
-      DECISIONS.md
-      CHANGELOG.md
-  src/
-    ...
+      PLAN.md        → plan technique courant
+      STATUS.md      → état d'avancement
+      DECISIONS.md   → décisions structurantes
+      CHANGELOG.md   → historique des agents
+  src/               → sources Node.js
 ```
+
+## Standards appliqués
+
+Ce projet suit les conventions du framework `nodejs.md` :
+
+- Séparation routes / services / repositories
+- Validation des entrées
+- Gestion d'erreurs centralisée
+- Tests Jest (unitaires + intégration)
+- Logs structurés
+- Pas de `any`
