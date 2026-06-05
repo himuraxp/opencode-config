@@ -1,4 +1,4 @@
-# Exemple Angular 20 +
+# Exemple Angular 20+
 
 Exemple de structure projet Angular 20+ avec `AGENTS.md`, modes de travail et documentation IA.
 

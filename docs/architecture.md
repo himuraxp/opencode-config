@@ -1,4 +1,4 @@
-# Architecture — Conventions Infomaniak
+# Architecture
 
 Guide pour découper les fonctionnalités et prendre des décisions architecturales en contexte Angular / TypeScript.
 

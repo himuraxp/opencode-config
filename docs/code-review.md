@@ -1,4 +1,4 @@
-# Code Review — Conventions Infomaniak
+# Code Review
 
 Guide pour la revue de code assistée par agents.
 

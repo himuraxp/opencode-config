@@ -1,4 +1,4 @@
-# Testing — Conventions Infomaniak
+# Testing
 
 Guide pour écrire des tests utiles, lisibles et maintenables.
 

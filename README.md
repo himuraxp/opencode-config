@@ -1,4 +1,9 @@
-# opencode-config
+# OpenCode Config
+
+[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/himuraxp/opencode-config/releases/tag/v1.0.0)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/himuraxp/opencode-config.svg)](https://github.com/himuraxp/opencode-config/commits/main)
+[![OpenCode Compatible](https://img.shields.io/badge/OpenCode-Compatible-brightgreen.svg)](https://opencode.ai)
 
 > **La référence OpenCode pour les développeurs Angular, TypeScript et les workflows IA en production.**
 
@@ -6,18 +11,130 @@ Forkable. Multi-couches. Prête à l'emploi.
 
 ---
 
-## Je suis développeur — Pourquoi ce repo ?
+## Agent State Layer
+
+Les agents IA perdent le contexte à chaque nouvelle session. Ce repository résout ce problème avec une couche de mémoire persistante :
+
+| Document | Problème résolu |
+|----------|---------------|
+| **BUFFER.md** | Interruptions de session — snapshot de reprise |
+| **INDEX.md** | Lectures inutiles — cartographie du projet en un coup d'œil |
+| **WARNINGS.md** | Régressions — alertes actives avant tout changement |
+| **STATUS.md** | Continuité — état d'avancement entre sessions |
+| **PLAN.md** | Direction — plan technique courant |
+| **DECISIONS.md** | Traçabilité — décisions structurantes justifiées |
+
+Cycle de session :
+
+```txt
+PLAN
+  ↓
+STATUS
+  ↓
+WARNINGS → Arrêt si zone sensible
+  ↓
+INDEX → Éviter le scan global
+  ↓
+BUFFER → Snapshot si interruption
+  ↓
+IMPLEMENTATION
+  ↓
+CHANGELOG → Historique significatif
+```
+
+---
+
+## Why this project?
 
 Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser à moins que vous le leur disiez.
 
-Ce repo fournit :
+Ce repo apporte :
 
-- **Standards universels** : workflow, communication, vérification, escalation, commits
 - **Agents spécialisés** : aurora (principal), reviewer, tester, security, architect
-- **Frameworks** : Angular 20+, Node.js, NestJS, Astro (extensible)
-- **Templates de projet** : AGENTS.md, plans, décisions, changelog
-- **Scripts d'installation** : synchronisez les règles sur toutes les machines
-- **Un modèle multi-couches** : global → organisation → projet
+- **Standards de développement** : workflow, communication, vérification, escalation, commits
+- **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
+- **Mémoire persistante pour agents IA** : 7 documents de session (PLAN, STATUS, DECISIONS, CHANGELOG, BUFFER, INDEX, WARNINGS)
+- **Structure reproductible** : même comportement sur toutes les machines et tous les projets
+
+---
+
+## Quick Start
+
+### 1. Installer la configuration globale
+
+```bash
+git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-config
+cd ~/.config/opencode-config
+./scripts/install.sh
+```
+
+Cela installe dans `~/.config/opencode/` :
+
+```txt
+~/.config/opencode/
+├── agents/        # Personnalités IA
+├── standards/     # Comportements universels
+└── frameworks/    # Règles par stack technique
+```
+
+### 2. Initialiser un projet
+
+```bash
+cd mon-projet
+~/.config/opencode-config/scripts/init-project.sh
+```
+
+Résultat :
+
+```txt
+mon-projet/
+├── AGENTS.md
+└── docs/
+    └── ai/
+        ├── PLAN.md       → plan technique courant
+        ├── STATUS.md     → état d'avancement
+        ├── DECISIONS.md  → décisions structurantes
+        ├── CHANGELOG.md  → historique des sessions
+        ├── BUFFER.md     → mémoire tampon de session
+        ├── INDEX.md      → cartographie du projet
+        └── WARNINGS.md   → alertes et dettes techniques
+```
+
+### 3. Synchroniser un projet existant
+
+```bash
+~/.config/opencode-config/scripts/sync-project.sh
+```
+
+Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà.
+
+Opérationnel en moins de 2 minutes.
+
+---
+
+## Architecture
+
+```txt
+Global Configuration
+        ↓
+     Standards    (workflow, memory, verification, communication, escalation, commits)
+        ↓
+      Agents       (aurora, reviewer, tester, security, architect)
+        ↓
+    Frameworks     (angular-20, nodejs, nestjs, astro...)
+        ↓
+ Project AGENTS.md (source de vérité locale)
+        ↓
+   Project Docs    (PLAN, STATUS, DECISIONS, CHANGELOG, BUFFER, INDEX, WARNINGS)
+```
+
+**Standards** : comportements universels applicables à tout projet.
+**Agents** : personnalités spécialisées pour des tâches spécifiques.
+**Frameworks** : règles techniques par stack (Angular, Node.js, NestJS, Astro).
+**Project AGENTS.md** : source de vérité ultime, le local l'emporte toujours.
+**Project Docs** : mémoire persistante de session entre les conversations IA.
+
+---
 
 ## Que va-t-il m'apporter ?
 
@@ -31,57 +148,7 @@ Ce repo fournit :
 | **Mémoire de session** | BUFFER, INDEX et WARNINGS pour les projets longs et complexes |
 | **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → Vérifier → Committer |
 
-
-## Installation rapide
-
-### 1. Installation globale (une seule fois par machine)
-
-```bash
-git clone <ce-repo> ~/.config/opencode-config
-cd ~/.config/opencode-config
-./scripts/install.sh
-```
-
-Cela installe dans `~/.config/opencode/` :
-
-```txt
-~/.config/opencode/
-├── agents/        # Personnalités IA (aurora, reviewer, tester, security...)
-├── standards/     # Comportements universels (workflow, communication, verification...)
-└── frameworks/    # Règles de framework (angular-20, nodejs, nestjs...)
-```
-
-### 2. Initialiser un projet
-
-Depuis la racine du projet :
-
-```bash
-~/.config/opencode-config/scripts/init-project.sh
-```
-
-Cela ajoute :
-
-```txt
-AGENTS.md
-└── docs/
-    └── ai/
-        ├── PLAN.md        → plan technique courant
-        ├── STATUS.md      → état d'avancement
-        ├── DECISIONS.md   → décisions structurantes
-        ├── CHANGELOG.md   → historique des sessions IA
-        ├── BUFFER.md      → mémoire tampon de session
-        ├── INDEX.md       → cartographie du projet
-        └── WARNINGS.md    → alertes et dettes techniques
-
-```
-
-### 3. Synchroniser un projet existant
-
-```bash
-~/.config/opencode-config/scripts/sync-project.sh
-```
-
-Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà.
+---
 
 ## Comment l'utiliser ?
 
@@ -89,12 +156,14 @@ Après installation, l'agent Aurora (principal) charge automatiquement :
 
 ```txt
 1. Standards globaux (workflow, communication, verification...)
-2. Framework ciblé (Angular 20 +, Node.js, etc.)
+2. Framework ciblé (Angular 20+, Node.js, etc.)
 3. Standards entreprise (si configurés)
 4. Standards projet (AGENTS.md local + docs/ai/)
 ```
 
 La règle d'or : **le local l'emporte toujours**. `AGENTS.md` à la racine du projet est la source de vérité ultime.
+
+---
 
 ## Comment personnaliser ?
 
@@ -118,7 +187,7 @@ Créez un fichier `frameworks/<mon-framework>.md` dans le repo :
 
 ```txt
 frameworks/
-├── angular-20.md   # Existant
+├── angular-20.md   # Angular 20+ stand-alone
 ├── nodejs.md       # API Node.js / Express
 ├── nestjs.md       # Architecture modulaire NestJS
 └── astro.md        # Sites statiques Astro, SEO, i18n
@@ -136,6 +205,8 @@ Le nom du fichier sera le nom du framework. Relancez `./scripts/install.sh` pour
 ### Personnaliser le workflow de session
 
 Modifiez `standards/workflow.md` et `standards/memory.md` pour adapter le cycle de travail et la gestion de la mémoire de session.
+
+---
 
 ## Structure du repo
 
@@ -162,7 +233,7 @@ opencode-config/
 │   └── architect.md           Découpage technique
 │
 ├── frameworks/                Règles par stack technique
-│   ├── angular-20.md          Conventions Angular 20 stand-alone
+│   ├── angular-20.md          Conventions Angular 20+ stand-alone
 │   ├── nodejs.md              Conventions Node.js API
 │   ├── nestjs.md              Conventions NestJS
 │   └── astro.md               Conventions Astro
@@ -177,7 +248,6 @@ opencode-config/
 │       ├── BUFFER.md          Mémoire tampon de session
 │       ├── INDEX.md           Cartographie du projet
 │       └── WARNINGS.md        Alertes et dettes techniques
-
 │
 ├── examples/                  Exemples prêts à l'emploi
 │   ├── angular-app/           Projet Angular 20+ complet
@@ -192,11 +262,13 @@ opencode-config/
 └── docs/                      Guides utilisateur
     ├── workflow.md            Comment fonctionne le cycle de travail
     ├── customization.md        Comment personnaliser et étendre
-    ├── angular-20.md          Règles Angular 20 détaillées
+    ├── angular-20.md          Règles Angular 20+ détaillées
     ├── code-review.md         Guide de revue de code
     ├── testing.md             Guide de tests
     └── architecture.md        Guide architectural
 ```
+
+---
 
 ## Principe de priorité
 
@@ -209,6 +281,8 @@ L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 5. **Frameworks** globaux `~/.config/opencode/frameworks/`.
 6. **Agents** globaux `~/.config/opencode/agents/`.
 7. Bonnes pratiques générales.
+
+---
 
 ## Licence
 

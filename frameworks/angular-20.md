@@ -7,7 +7,7 @@ mode: subagent
 
 ## Objectif
 
-Produire du code Angular moderne, standalone, typé, maintenable et aligné avec les conventions Angular 20 +.
+Produire du code Angular moderne, standalone, typé, maintenable et aligné avec les conventions Angular 20+.
 
 ## Templates HTML
 

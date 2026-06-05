@@ -1,4 +1,4 @@
-# Angular 20 — Conventions Infomaniak
+# Angular 20 — Conventions
 
 Guide pratique pour produire du code Angular 20 moderne et maintenable.
 
