@@ -2,11 +2,11 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TARGET_DIR="${HOME}/.config/opencode/agent"
+TARGET_DIR="${HOME}/.config/opencode/agents"
 
 mkdir -p "$TARGET_DIR"
 
-for file in "$ROOT_DIR"/agent/*.md; do
+for file in "$ROOT_DIR"/agents/*.md; do
   name="$(basename "$file")"
   cp "$file" "$TARGET_DIR/$name"
   echo "installed: $TARGET_DIR/$name"

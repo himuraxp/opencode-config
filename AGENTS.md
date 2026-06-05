@@ -30,3 +30,25 @@ Chaque proposition de code doit vérifier :
 ## Angular
 
 Pour les projets Angular, utiliser les règles Angular 20 présentes dans les agents et templates dédiés.
+
+## Configuration multi-couches
+
+Ce repo supporte une configuration OpenCode à 3 niveaux :
+
+```txt
+Global            ~/.config/opencode/agents/
+Organisation      (optionnel — défini dans l'AGENTS.md local)
+Projet            ./AGENTS.md
+```
+
+L'agent reçoit toujours la règle du projet en priorité absolue :
+
+```txt
+1. AGENTS.md local du projet
+2. Agents locaux du projet    ./.opencode/agents/
+3. Agents globaux             ~/.config/opencode/agents/
+4. Instructions de la tâche courante
+```
+
+Ne jamais outrepasser un `AGENTS.md` local sans justification documentée.
+

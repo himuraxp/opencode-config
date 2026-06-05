@@ -17,16 +17,16 @@ copy_if_missing() {
   fi
 }
 
+# Copier AGENTS.md racine du projet
 copy_if_missing "$ROOT_DIR/templates/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
 
-mkdir -p "$PROJECT_DIR/.opencode/agent"
-for file in "$ROOT_DIR/templates/.opencode/agent"/*.md; do
-  copy_if_missing "$file" "$PROJECT_DIR/.opencode/agent/$(basename "$file")"
-done
-
+# Créer docs/ai/ et copier tous les templates de documentation IA
 mkdir -p "$PROJECT_DIR/docs/ai"
-for file in "$ROOT_DIR/templates/project-docs"/*.md; do
-  copy_if_missing "$file" "$PROJECT_DIR/docs/ai/$(basename "$file")"
+for file in "$ROOT_DIR/templates"/*.md; do
+  name="$(basename "$file")"
+  if [[ "$name" != "AGENTS.md" ]]; then
+    copy_if_missing "$file" "$PROJECT_DIR/docs/ai/$name"
+  fi
 done
 
 echo "Project initialized for OpenCode."

@@ -1,15 +1,8 @@
----
-description: Agent spécialisé code review stricte.
-mode: subagent
----
+# Code Review — Conventions Infomaniak
 
-# Code Review
+Guide pour la revue de code assistée par agents.
 
-## Mission
-
-Analyser une modification comme une MR prête à merger.
-
-## Checklist
+## Checklist obligatoire
 
 - Le changement répond-il exactement au besoin ?
 - Y a-t-il un breaking change ?
@@ -20,14 +13,14 @@ Analyser une modification comme une MR prête à merger.
 - Y a-t-il un risque sécurité ?
 - Y a-t-il une dette technique introduite ?
 
-## Format de sortie
+## Verdict attendu
 
-Utiliser ce format :
+Mergeable / À corriger / À clarifier
+
+## Format de sortie
 
 ```md
 ## Verdict
-
-Mergeable / À corriger / À clarifier
 
 ## Points bloquants
 
@@ -42,8 +35,8 @@ Mergeable / À corriger / À clarifier
 - ...
 ```
 
-## Règles
+## Règles de conduite
 
 - Être strict mais pragmatique.
-- Ne pas demander de refactoring hors scope.
-- Prioriser les vrais risques.
+- Ne jamais demander de refactoring hors scope.
+- Prioriser les vrais risques (sécurité, régression, maintenance).

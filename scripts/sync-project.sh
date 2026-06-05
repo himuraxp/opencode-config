@@ -8,31 +8,28 @@ sync_file() {
   local src="$1"
   local dest="$2"
 
-  mkdir -p "$(dirname "$dest")"
-
   if [[ ! -e "$dest" ]]; then
+    mkdir -p "$(dirname "$dest")"
     cp "$src" "$dest"
     echo "created: $dest"
-    return
-  fi
-
-  if cmp -s "$src" "$dest"; then
+  elif cmp -s "$src" "$dest"; then
     echo "up-to-date: $dest"
-    return
+  else
+    cp "$src" "$dest.new"
+    echo "diff: $dest.new (review and replace if needed)"
   fi
-
-  cp "$src" "$dest.new"
-  echo "new version available: $dest.new"
 }
 
+# Sync AGENTS.md
 sync_file "$ROOT_DIR/templates/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
 
-for file in "$ROOT_DIR/templates/.opencode/agent"/*.md; do
-  sync_file "$file" "$PROJECT_DIR/.opencode/agent/$(basename "$file")"
+# Sync docs/ai/
+mkdir -p "$PROJECT_DIR/docs/ai"
+for file in "$ROOT_DIR/templates"/*.md; do
+  name="$(basename "$file")"
+  if [[ "$name" != "AGENTS.md" ]]; then
+    sync_file "$file" "$PROJECT_DIR/docs/ai/$name"
+  fi
 done
 
-for file in "$ROOT_DIR/templates/project-docs"/*.md; do
-  sync_file "$file" "$PROJECT_DIR/docs/ai/$(basename "$file")"
-done
-
-echo "Project sync completed. Existing files were not overwritten."
+echo "Project sync done."
