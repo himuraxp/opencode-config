@@ -2,6 +2,16 @@
 
 Ce dépôt contient la configuration globale OpenCode de référence.
 
+## Architecture multi-couches
+
+Ce repo sépare les responsabilités en 3 couches :
+
+```txt
+standards/   Comportements universels (workflow, communication, verification...)
+agents/      Personnalités spécialisées (aurora, reviewer, tester, security...)
+frameworks/  Règles par stack technique (angular-20, nodejs, nestjs...)
+```
+
 ## Règle principale
 
 Ne jamais modifier un projet utilisateur sans respecter son `AGENTS.md` local. Le fichier local est la source de vérité du projet.
@@ -27,28 +37,18 @@ Chaque proposition de code doit vérifier :
 - absence de breaking change involontaire ;
 - tests adaptés.
 
-## Angular
-
-Pour les projets Angular, utiliser les règles Angular 20 présentes dans les agents et templates dédiés.
-
 ## Configuration multi-couches
 
-Ce repo supporte une configuration OpenCode à 3 niveaux :
+L'agent reçoit les instructions dans cet ordre (du plus général au plus spécifique) :
 
 ```txt
-Global            ~/.config/opencode/agents/
-Organisation      (optionnel — défini dans l'AGENTS.md local)
-Projet            ./AGENTS.md
+1. Standards globaux         ~/.config/opencode/standards/
+2. Agents globaux            ~/.config/opencode/agents/
+3. Frameworks globaux        ~/.config/opencode/frameworks/
+4. Standards entreprise      (optionnel)
+5. AGENTS.md local du projet
 ```
 
-L'agent reçoit toujours la règle du projet en priorité absolue :
-
-```txt
-1. AGENTS.md local du projet
-2. Agents locaux du projet    ./.opencode/agents/
-3. Agents globaux             ~/.config/opencode/agents/
-4. Instructions de la tâche courante
-```
+L'agent applique la **règle d'or** : le local l'emporte toujours.
 
 Ne jamais outrepasser un `AGENTS.md` local sans justification documentée.
-

@@ -16,7 +16,20 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 - Ajouter ou adapter les tests quand la logique change.
 - Toujours privilégier une solution simple, maintenable et lisible.
 
-## Angular 20 — Conventions Infomaniak
+## Standards globaux
+
+Les standards suivants sont chargés automatiquement par l'agent principal (Aurora) :
+
+- **workflow** : cycle Explorer → Planifier → Implémenter → Vérifier → Committer
+- **memory** : gestion de la session et de la documentation IA
+- **verification** : vérifications build/lint/test obligatoires avant considérer fini
+- **communication** : directivité, ownership, pushback constructif
+- **escalation** : gestion des blocages et arrêt propre
+- **commits** : format et règles de commit
+
+Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
+
+## Angular 20 — Conventions
 
 ### Templates HTML
 
@@ -61,12 +74,24 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 
 Pour une tâche complexe :
 
-1. Lire le contexte existant.
+1. Lire le contexte existant (code, docs/ai/).
 2. Identifier les fichiers concernés.
-3. Proposer un plan court.
+3. Proposer un plan court (pour >2 fichiers).
 4. Implémenter par petits changements.
 5. Lancer ou indiquer les tests pertinents.
 6. Résumer clairement les modifications.
+
+## Session IA
+
+### Début de session
+
+1. Lire `docs/ai/STATUS.md`.
+2. Lire `docs/ai/PLAN.md`.
+
+### Fin de session
+
+1. Mettre à jour `docs/ai/STATUS.md` (fait, à faire, bloqueurs, prochaine étape).
+2. Ajouter une entrée dans `docs/ai/CHANGELOG.md` si adaptations significatives.
 
 ## Documentation IA
 

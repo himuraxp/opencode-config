@@ -1,20 +1,22 @@
 # opencode-config
 
-> **La référence OpenCode pour les développeurs Angular 20 / TypeScript**
+> **La référence OpenCode pour les développeurs Angular, TypeScript et les workflows IA en production.**
 
 Forkable. Multi-couches. Prête à l'emploi.
 
 ---
 
-## Pourquoi ce repo ?
+## Je suis développeur — Pourquoi ce repo ?
 
 Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser à moins que vous le leur disiez.
 
 Ce repo fournit :
 
-- **Agents spécialisés** (Angular 20 +, architecture, review, tests, sécurité)
-- **Templates de projet** (AGENTS.md, plans, décisions, changelog)
-- **Scripts d'installation** pour synchroniser ces règles sur toutes les machines et tous les projets
+- **Standards universels** : workflow, communication, vérification, escalation, commits
+- **Agents spécialisés** : aurora (principal), reviewer, tester, security, architect
+- **Frameworks** : Angular 20 +, Node.js, NestJS, Astro (extensible)
+- **Templates de projet** : AGENTS.md, plans, décisions, changelog
+- **Scripts d'installation** : synchronisez les règles sur toutes les machines
 - **Un modèle multi-couches** : global → organisation → projet
 
 ## Que va-t-il m'apporter ?
@@ -26,8 +28,9 @@ Ce repo fournit :
 | **Qualité** | Standards Angular 20 + intégrés dès le départ |
 | **Traçabilité** | Chaque agent documente son plan, ses décisions et son avancement |
 | **Sécurité** | Checklist sécurité automatique à chaque review |
+| **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → Vérifier → Committer |
 
-## Installation
+## Installation rapide
 
 ### 1. Installation globale (une seule fois par machine)
 
@@ -37,7 +40,14 @@ cd ~/.config/opencode-config
 ./scripts/install.sh
 ```
 
-Cela installe les agents globaux dans `~/.config/opencode/agents/`.
+Cela installe dans `~/.config/opencode/` :
+
+```txt
+~/.config/opencode/
+├── agents/        # Personnalités IA (aurora, reviewer, tester, security...)
+├── standards/     # Comportements universels (workflow, communication, verification...)
+└── frameworks/    # Règles de framework (angular-20, nodejs, nestjs...)
+```
 
 ### 2. Initialiser un projet
 
@@ -51,15 +61,12 @@ Cela ajoute :
 
 ```txt
 AGENTS.md
-├── .opencode/
-│   ├── agents/
-│   └── rules/
 └── docs/
     └── ai/
-        ├── PLAN.md
-        ├── STATUS.md
-        ├── DECISIONS.md
-        └── CHANGELOG.md
+        ├── PLAN.md        → plan technique courant
+        ├── STATUS.md      → état d'avancement
+        ├── DECISIONS.md   → décisions structurantes
+        └── CHANGELOG.md   → historique des sessions IA
 ```
 
 ### 3. Synchroniser un projet existant
@@ -70,38 +77,59 @@ AGENTS.md
 
 Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà.
 
-## Structure multi-couches
+## Comment l'utiliser ?
 
-OpenCode permet de charger des instructions et des agents depuis plusieurs niveaux :
-
-```txt
-Niveau global          ~/.config/opencode/
-                       ├── agents/
-                       ├── prompts/
-                       └── standards/
-
-Niveau organisation    (optionnel)
-                       ├── agents/
-                       └── rules/
-
-Niveau projet          ./
-                       ├── AGENTS.md
-                       ├── .opencode/
-                       │   ├── agents/
-                       │   └── rules/
-                       └── docs/ai/
-```
-
-L'agent reçoit alors :
+Après installation, l'agent Aurora (principal) charge automatiquement :
 
 ```txt
-1. Standards globaux
-2. Standards Angular 20 +
+1. Standards globaux (workflow, communication, verification...)
+2. Framework ciblé (Angular 20 +, Node.js, etc.)
 3. Standards entreprise (si configurés)
-4. Standards projet (AGENTS.md local)
+4. Standards projet (AGENTS.md local + docs/ai/)
 ```
 
 La règle d'or : **le local l'emporte toujours**. `AGENTS.md` à la racine du projet est la source de vérité ultime.
+
+## Comment personnaliser ?
+
+### Personnaliser les agents
+
+Modifiez les fichiers dans le repo cloné, puis relancez `./scripts/install.sh`.
+
+Les agents disponibles sont dans `agents/` :
+
+| Agent | Rôle |
+|-------|------|
+| `aurora.md` | Agent principal — chargement et coordination |
+| `reviewer.md` | Code review stricte |
+| `tester.md` | Tests qualité |
+| `security.md` | Risques sécurité |
+| `architect.md` | Découpage technique |
+
+### Ajouter un framework
+
+Créez un fichier `frameworks/<mon-framework>.md` dans le repo :
+
+```txt
+frameworks/
+├── angular-20.md   # Existant
+├── nodejs.md       # À ajouter
+├── nestjs.md       # À ajouter
+└── astro.md        # À ajouter
+```
+
+Le nom du fichier sera le nom du framework. Relancez `./scripts/install.sh` pour le déployer.
+
+### Créer une nouvelle règle
+
+1. Dans le repo `~/.config/opencode-config`
+2. Créez un fichier dans `standards/` (universel) ou `agents/` (rôle spécialisé)
+3. Relancez `./scripts/install.sh`
+4. Référencez-le dans le `AGENTS.md` du projet concerné
+
+### Personnaliser le workflow de session
+
+Modifiez `standards/workflow.md` et `standards/memory.md` pour adapter le cycle de travail et la gestion de la mémoire de session.
 
 ## Structure du repo
 
@@ -112,44 +140,64 @@ opencode-config/
 ├── LICENSE
 ├── CHANGELOG.md
 │
-├── agents/
-│   ├── angular-20.md              Conventions Angular 20 stand-alone
-│   ├── architect.md               Découpage technique et décisions
-│   ├── reviewer.md                Code review stricte
-│   ├── tester.md                  Tests Jest + Angular
-│   └── security.md                Risques et remédiations
+├── standards/               Comportements universels
+│   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Vérifier→Committer
+│   ├── memory.md              Gestion de la session IA
+│   ├── verification.md        Vérifications build/lint/test obligatoires
+│   ├── communication.md       Directivité, ownership, pushback
+│   ├── escalation.md         Gestion des blocages
+│   └── commits.md            Format et règles de commit
 │
-├── templates/
-│   ├── AGENTS.md                  Template racine pour chaque projet
-│   ├── PLAN.md                    Plan technique courant
-│   ├── STATUS.md                  État d'avancement
-│   ├── DECISIONS.md               Décisions structurantes
-│   └── CHANGELOG.md               Journal des agents
+├── agents/                    Personnalités spécialisées
+│   ├── aurora.md              Agent principal et coordinateur
+│   ├── reviewer.md            Code review stricte
+│   ├── tester.md              Tests Jest + Angular
+│   ├── security.md            Risques et remédiations
+│   └── architect.md           Découpage technique
 │
-├── examples/
-│   ├── angular-app/               Exemple Angular 20 complet
-│   ├── node-api/                  Exemple API Node.js (placeholder)
-│   └── monorepo/                  Exemple monorepo (placeholder)
+├── frameworks/                Règles par stack technique
+│   ├── angular-20.md          Conventions Angular 20 stand-alone
+│   ├── nodejs.md              (à ajouter)
+│   ├── nestjs.md              (à ajouter)
+│   └── astro.md               (à ajouter)
 │
-├── scripts/
-│   ├── install.sh                 Installer les agents globaux
-│   ├── init-project.sh            Initialiser un nouveau projet
-│   └── sync-project.sh            Synchroniser les templates
+├── templates/                 Ce que chaque projet reçoit
+│   ├── AGENTS.md              Template racine pour chaque projet
+│   ├── PLAN.md                Plan technique courant
+│   ├── STATUS.md              État d'avancement
+│   ├── DECISIONS.md           Décisions structurantes
+│   └── CHANGELOG.md           Journal des agents
 │
-└── docs/
-    ├── angular-20.md              Guide Angular 20
-    ├── code-review.md             Guide de revue de code
-    ├── testing.md                 Guide de tests
-    └── architecture.md            Guide architecturale
+├── examples/                  Exemples prêts à l'emploi
+│   ├── angular-app/           Projet Angular 20 complet
+│   ├── node-api/              Projet API Node.js (placeholder)
+│   └── monorepo/              Monorepo (placeholder)
+│
+├── scripts/                   Automatisation
+│   ├── install.sh             Installer la config globale
+│   ├── init-project.sh         Initialiser un nouveau projet
+│   └── sync-project.sh         Synchroniser les templates
+│
+└── docs/                      Guides utilisateur
+    ├── workflow.md            Comment fonctionne le cycle de travail
+    ├── customization.md        Comment personnaliser et étendre
+    ├── angular-20.md          Règles Angular 20 détaillées
+    ├── code-review.md         Guide de revue de code
+    ├── testing.md             Guide de tests
+    └── architecture.md        Guide architecturale
 ```
 
 ## Principe de priorité
 
+L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
+
 1. Instructions explicites de la tâche en cours.
 2. **`AGENTS.md`** local du projet.
 3. Agents `.opencode/agents/` du projet.
-4. Agents globaux `~/.config/opencode/agents/`.
-5. Bonnes pratiques générales.
+4. **Standards** globaux `~/.config/opencode/standards/`.
+5. **Frameworks** globaux `~/.config/opencode/frameworks/`.
+6. **Agents** globaux `~/.config/opencode/agents/`.
+7. Bonnes pratiques générales.
 
 ## Licence
 
