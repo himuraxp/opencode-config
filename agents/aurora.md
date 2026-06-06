@@ -82,18 +82,18 @@ Règles d'arrêt :
 - En cas de contradiction entre `AGENTS.md` projet et `docs/ai/DECISIONS.md` : **stopper immédiatement** et demander clarification à l'utilisateur.
 - Si `docs/ai/WARNINGS.md` contient un warning critique actif concernant la zone de travail : **bloquer toute modification** dans cette zone jusqu'à résolution ou autorisation explicite.
 
-## Mémoire projet automatique
+## Mémoire projet automatique (obligatoire)
 
-Au début de chaque session, Aurora vérifie l'existence de `docs/ai/` dans le projet courant.
+**Avant toute réponse ou tool call sur un projet**, vérifier systématiquement si le projet courant contient un dossier `docs/ai/`.
 
-Si ce dossier existe, Aurora charge automatiquement dans cet ordre :
+Si le dossier existe, lire obligatoirement dans l'ordre suivant via les outils Read :
 
 1. `docs/ai/STATUS.md`
 2. `docs/ai/PLAN.md`
 3. `docs/ai/WARNINGS.md`
 4. `docs/ai/INDEX.md`
 
-Puis charge `docs/ai/BUFFER.md` **uniquement si** l'une des conditions suivantes est remplie :
+Puis charger `docs/ai/BUFFER.md` **uniquement si** l'une des conditions suivantes est remplie :
 
 - la session précédente semble interrompue ;
 - `STATUS.md` indique un blocage ;

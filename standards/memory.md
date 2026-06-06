@@ -13,11 +13,14 @@ docs/
 │   └── CHANGELOG.md   → historique significatif des sessions IA
 ```
 
-## Découverte automatique de docs/ai/
+## Découverte automatique de docs/ai/ (obligatoire)
 
-Aurora doit vérifier à chaque session si le projet courant contient `docs/ai/`.
-Si le dossier existe, l'ordre de lecture de session s'applique automatiquement.
-Aucune modification du `AGENTS.md` local n'est requise pour activer cette découverte.
+Aurora doit **impérativement vérifier** à chaque session si le projet courant contient `docs/ai/`.
+
+- Si le dossier existe, l'ordre de lecture de session s'applique **automatiquement et obligatoirement**.
+- Si le dossier n'existe pas, aucune action particulière n'est requise.
+
+Aucune modification du `AGENTS.md` local n'est requise pour activer cette découverte. C'est un comportement global d'Aurora, non une configuration projet.
 
 ## Début de session — Ordre de lecture de session
 

@@ -67,46 +67,10 @@ Règles :
 - Autorisé à modifier : `PLAN.md`, `DECISIONS.md`, `INDEX.md`.
 - Sortie du mode quand le plan est validé et clair.
 
-## Documentation IA (géré automatiquement par Aurora)
+## Documentation IA
 
-Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture/mise à jour défini dans les standards globaux.
-L'AGENTS.md local n'a pas besoin de répéter ces règles.
-
-### Ordre de lecture — Début de session (référence)
-
-```txt
-1. STATUS.md   → état actuel, bloqueurs
-2. PLAN.md     → plan en cours
-3. WARNINGS.md → alertes actives
-4. INDEX.md    → cartographie du projet
-5. BUFFER.md   → si reprise de session interrompue
-```
-
-### Ordre de mise à jour — Fin de session
-
-```txt
-1. STATUS.md    → fait, à faire, bloqueurs, prochaine étape
-2. BUFFER.md   → sujets hors-scope, micro-décisions, snapshot
-3. CHANGELOG.md → changements significatifs uniquement
-```
-
-### Rôle de chaque document
-
-- **PLAN.md** : plan technique courant (objectif, étapes, risques, tests).
-- **STATUS.md** : état d'avancement dynamique (en cours, fait, bloqué, prochaine action).
-- **DECISIONS.md** : décisions structurantes (contexte, décision, impact, alternative rejetée).
-- **CHANGELOG.md** : historique significatif des sessions IA (quoi, quand, pourquoi).
-- **BUFFER.md** : mémoire tampon temporaire (hors-scope, micro-décisions, snapshot de session).
-- **INDEX.md** : cartographie du projet (structure, modules, fichiers clés, conventions).
-- **WARNINGS.md** : alertes actives et dettes connues (zones sensibles, workarounds).
-
-### Règles de synchronisation
-
-- BUFFER.md : vider ou archiver en fin de session si vide.
-- Un sujet hors-scope persistant dans BUFFER.md doit être promu dans WARNINGS.md.
-- Ne pas mettre les micro-décisions dans DECISIONS.md (réservé aux décisions structurantes).
-- Ne pas documenter les unif, typo ou micro-corrections dans CHANGELOG.md.
-- Mettre à jour INDEX.md si la structure du projet change significativement.
+Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture/mise à jour défini dans les standards globaux (`~/.config/opencode/standards/memory.md`).
+L'AGENTS.md local n'a **pas** besoin de répéter ces règles.
 
 ## Angular 20 — Conventions
 
