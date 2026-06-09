@@ -12,6 +12,36 @@ agents/      Personnalités spécialisées (aurora, reviewer, tester, security..
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs...)
 ```
 
+## Mémoire projet auto-entretenue
+
+Aurora DOIT maintenir automatiquement la mémoire du projet. Avant de rendre la main à l'utilisateur, l'agent DOIT exécuter le `memory-checklist` du standard correspondant.
+
+### Processus obligatoire
+
+1. **Lire** `docs/ai/` au démarrage de chaque session (STATUS, PLAN, INDEX, BUFFER, WARNINGS, DECISIONS)
+2. **Mettre à jour** `docs/ai/` à la fin de chaque session :
+   - `STATUS.md` — tâches en cours / fait / bloqué / prochaine action
+   - `PLAN.md` — avancement des étapes
+   - `CHANGELOG.md` — entrée datée des modifications
+   - `BUFFER.md` — snapshot reprise + fichiers impactés
+   - `INDEX.md` — modules et fichiers clés découverts
+   - `WARNINGS.md` — zones sensibles et dettes techniques
+   - `DECISIONS.md` — décisions architecturales prises
+
+3. **Zero intervention** : l'utilisateur ne doit JAMAIS avoir à demander la mise à jour de la mémoire.
+
+### Si `docs/ai/` est vide (templates vides)
+
+Aurora DOIT :
+- Extraire la structure du projet du contexte de travail
+- Remplir `INDEX.md` avec les modules, composants, services identifiés
+- Documenter dans `BUFFER.md` les premières observations
+- Créer un `PLAN.md` si une tâche est en cours
+
+### Hiérarchie de responsabilité mémoire
+
+`/AGENTS.md` doit contenir une section mémoire ou référencer `docs/ai/`. Si absent, Aurora applique ce standard global automatiquement.
+
 ## Règle principale
 
 Ne jamais modifier un projet utilisateur sans respecter son `AGENTS.md` local. Le fichier local est la source de vérité du projet.
@@ -25,6 +55,10 @@ Ne jamais modifier un projet utilisateur sans respecter son `AGENTS.md` local. L
 - Préserver le style existant du projet.
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
+- **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
+- **Respecter les limites d'exploration** : investigation lourde = subagent, pas de scan global sans objectif précis (voir `exploration-limits.md`).
+- **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
+- **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
 
 ## Qualité attendue
 

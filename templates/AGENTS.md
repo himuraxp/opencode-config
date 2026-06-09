@@ -30,17 +30,23 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 - Ne jamais lire globalement des fichiers énormes si une recherche ciblée suffit.
 - Utiliser `INDEX.md` pour comprendre où chercher avant de scanner le projet.
 - Ne pas polluer `DECISIONS.md` avec des micro-décisions temporaires.
+- **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée**.
+- **Stopper et reset après 2 corrections échouées** sur le même problème.
+- **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement.
 
 ## Standards globaux
 
 Les standards suivants sont chargés automatiquement par l'agent principal (Aurora) :
 
-- **workflow** : cycle Explorer → Planifier → Implémenter → Vérifier → Committer
-- **memory** : gestion de la session et de la documentation IA
+- **workflow** : cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer
 - **verification** : vérifications build/lint/test obligatoires avant considérer fini
 - **communication** : directivité, ownership, pushback constructif
 - **escalation** : gestion des blocages et arrêt propre
 - **commits** : format et règles de commit
+- **review-before-done** : examen contradictoire obligatoire avant déclaration de fin
+- **exploration-limits** : délimiter les investigations, utiliser subagents pour exploration lourde
+- **error-correction** : reset après 2 corrections échouées, ne jamais corriger sans cause profonde
+- **anti-patterns** : reconnaitre et stopper les 5 patterns d'échec courants
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
 
@@ -56,6 +62,8 @@ Règles :
 - Documenter les écarts dans `BUFFER.md`.
 - Stopper immédiatement si contradiction avec `DECISIONS.md` ou `WARNINGS.md`.
 - Consulter `INDEX.md` avant de toucher un fichier inconnu du projet.
+- **Exécuter un examen contradictoire (review adversarial) avant de considérer terminé** via subagent ou skill `code-review`.
+- **Stopper et reset après 2 corrections échouées** sur le même problème (voir standards globaux `error-correction.md`).
 
 ### Mode BRAINSTORM
 

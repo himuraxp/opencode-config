@@ -24,23 +24,13 @@ Les agents IA perdent le contexte à chaque nouvelle session. Ce repository rés
 | **PLAN.md** | Direction — plan technique courant |
 | **DECISIONS.md** | Traçabilité — décisions structurantes justifiées |
 
-Cycle de session :
+Cycle de session (mis à jour avec l'étape REVIEW) :
 
 ```txt
-PLAN
-  ↓
-STATUS
-  ↓
-WARNINGS → Arrêt si zone sensible
-  ↓
-INDEX → Éviter le scan global
-  ↓
-BUFFER → Snapshot si interruption
-  ↓
-IMPLEMENTATION
-  ↓
-CHANGELOG → Historique significatif
+EXPLORER → PLANIFIER → IMPLÉMENTER → [REVIEW] → VÉRIFIER → COMMITTER
 ```
+
+Avec l'étape **REVIEW** (examen contradictoire) obligatoire avant de considérer une tâche comme terminée.
 
 ---
 
@@ -53,7 +43,10 @@ Ce repo apporte :
 - **Agents spécialisés** : aurora (principal), reviewer, tester, security, architect
 - **Standards de développement** : workflow, communication, vérification, escalation, commits
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
+- **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
+- **Limites d'exploration** : délimitation stricte des investigations, subagents pour les recherches lourdes (> 15 fichiers)
 - **Mémoire persistante pour agents IA** : 7 documents de session (PLAN, STATUS, DECISIONS, CHANGELOG, BUFFER, INDEX, WARNINGS)
+- **Anti-patterns** : détection des 5 patterns d'échec courants (session fourre-tout, correction en spirale, sur-spécification, confiance sans vérification, exploration infinie)
 - **Structure reproductible** : même comportement sur toutes les machines et tous les projets
 
 ---
@@ -167,7 +160,7 @@ Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/a
 ```txt
 Global Configuration
         ↓
-     Standards    (workflow, memory, verification, communication, escalation, commits)
+     Standards    (workflow, memory, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns)
         ↓
       Agents       (aurora, reviewer, tester, security, architect)
         ↓
@@ -192,11 +185,11 @@ Global Configuration
 |----------|-------------|
 | **Cohérence** | Même comportement des agents sur toutes les machines |
 | **Gain de temps** | Initialisation d'un projet en 3 secondes |
-| **Qualité** | Standards Angular 20+ intégrés dès le départ |
+| **Qualité** | Standards Angular 20+ intégrés + review adversarial + limite d'exploration |
 | **Traçabilité** | Chaque agent documente son plan, ses décisions et son avancement |
 | **Sécurité** | Checklist sécurité automatique à chaque review |
 | **Mémoire de session** | BUFFER, INDEX et WARNINGS pour les projets longs et complexes |
-| **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → Vérifier → Committer |
+| **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → Review → Vérifier → Committer |
 
 ---
 
@@ -269,11 +262,17 @@ opencode-config/
 │
 ├── standards/               Comportements universels
 │   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Vérifier→Committer
-│   ├── memory.md              Gestion de la session IA
-│   ├── verification.md        Vérifications build/lint/test obligatoires
-│   ├── communication.md       Directivité, ownership, pushback
-│   ├── escalation.md         Gestion des blocages
-│   └── commits.md            Format et règles de commit
+│   ├── error-correction.md    Arrêt après 2 échecs pour éviter la spirale
+│   ├── anti-patterns.md       Stopper les 5 patterns de session types
+│   ├── review-before-done.md  Examen contradictoire avant déclaration de fin
+│   ├── exploration-limits.md  Exploration ciblée et subagents
+│   ├── memory.md                  Mémoire auto-entretenue
+│   ├── memory-checklist.md        Checklist mémoire en fin de session
+│   ├── memory-auto-update.md      Standard de persistance mémoire
+│   ├── verification.md            Vérifications build/lint/test obligatoires
+│   ├── communication.md           Directivité, ownership, pushback
+│   ├── escalation.md              Gestion des blocages
+│   └── commits.md                 Format et règles de commit
 │
 ├── agents/                    Personnalités spécialisées
 │   ├── aurora.md              Agent principal et coordinateur
@@ -326,10 +325,10 @@ L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 
 1. Instructions explicites de la tâche en cours.
 2. **`AGENTS.md`** local du projet.
-3. Agents `.opencode/agents/` du projet.
-4. **Standards** globaux `~/.config/opencode/standards/`.
-5. **Frameworks** globaux `~/.config/opencode/frameworks/`.
-6. **Agents** globaux `~/.config/opencode/agents/`.
+3. Agents spécialisés enregistrés dans la session.
+4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory-auto-update, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns).
+5. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
+6. **Agents** globaux `~/.config/opencode/agents/` (aurora, reviewer, tester, security, architect).
 7. Bonnes pratiques générales.
 
 ---
