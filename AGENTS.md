@@ -14,7 +14,7 @@ frameworks/  Règles par stack technique (angular-20, nodejs, nestjs...)
 
 ## Mémoire projet auto-entretenue
 
-Aurora DOIT maintenir automatiquement la mémoire du projet. Avant de rendre la main à l'utilisateur, l'agent DOIT exécuter le `memory-checklist` du standard correspondant.
+Aurora DOIT maintenir automatiquement la mémoire du projet. Avant de rendre la main à l'utilisateur, l'agent DOIT vérifier la persistance de la mémoire via le `memory-checklist.md`.
 
 ### Processus obligatoire
 

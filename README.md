@@ -160,7 +160,7 @@ Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/a
 ```txt
 Global Configuration
         ↓
-     Standards    (workflow, memory, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns)
+     Standards    (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns)
         ↓
       Agents       (aurora, reviewer, tester, security, architect)
         ↓
@@ -247,7 +247,7 @@ Le nom du fichier sera le nom du framework. Relancez `./scripts/install.sh` pour
 
 ### Personnaliser le workflow de session
 
-Modifiez `standards/workflow.md` et `standards/memory.md` pour adapter le cycle de travail et la gestion de la mémoire de session.
+Modifiez `standards/workflow.md` et `standards/memory-session-flow.md` pour adapter le cycle de travail et la gestion de la mémoire de session.
 
 ---
 
@@ -261,12 +261,12 @@ opencode-config/
 ├── CHANGELOG.md
 │
 ├── standards/               Comportements universels
-│   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Vérifier→Committer
+│   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Review→Vérifier→Committer
 │   ├── error-correction.md    Arrêt après 2 échecs pour éviter la spirale
 │   ├── anti-patterns.md       Stopper les 5 patterns de session types
 │   ├── review-before-done.md  Examen contradictoire avant déclaration de fin
 │   ├── exploration-limits.md  Exploration ciblée et subagents
-│   ├── memory.md                  Mémoire auto-entretenue
+│   ├── memory-session-flow.md     Ordre de lecture automatique des docs/ai/ en début de session
 │   ├── memory-checklist.md        Checklist mémoire en fin de session
 │   ├── memory-auto-update.md      Standard de persistance mémoire
 │   ├── verification.md            Vérifications build/lint/test obligatoires
@@ -326,7 +326,7 @@ L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 1. Instructions explicites de la tâche en cours.
 2. **`AGENTS.md`** local du projet.
 3. Agents spécialisés enregistrés dans la session.
-4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory-auto-update, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns).
+4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns).
 5. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
 6. **Agents** globaux `~/.config/opencode/agents/` (aurora, reviewer, tester, security, architect).
 7. Bonnes pratiques générales.

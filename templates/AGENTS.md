@@ -77,7 +77,7 @@ Règles :
 
 ## Documentation IA
 
-Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture/mise à jour défini dans les standards globaux (`~/.config/opencode/standards/memory.md`).
+Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défi dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour (persistance) est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
 L'AGENTS.md local n'a **pas** besoin de répéter ces règles.
 
 ## Angular 20 — Conventions

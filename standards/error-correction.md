@@ -8,7 +8,18 @@ Corriger un échec avec le même contexte pollué mène à une dégradation rapi
 
 ### Définition
 
-Un " Strike " = tentative de correction d'un bug/erreur/pb qui échoue à nouveau après la correction faite.
+Un **Strike** = une tentative de corrections ou de refactorization d'un code considéré comme mauvais, d'une erreur de compilation, d'un test qui échoue ou d'un comportement buggy, où la modification proposée n'a **pas résolu le problème** (la même erreur ou un problème similaire persiste).
+
+**Types spécifiques de strikes** :
+- Correction d'un bug → le bug est toujours présent après la modification
+- Correction d'une erreur de compilation → la compilation échoue encore (même erreur ou nouvelle)
+- Correction d'un test qui échoue → le test échoue toujours après la modification
+- Refactorisation d'un code → le nouveau code produit le même problème ou un nouveau regression
+
+**Ce qui n'est PAS un strike** :
+- Correction typo ou formatage simple (pas de logique changée)
+- Passage d'une étape de build/lint/test à une autre (compilation OK mais test échoue = nouveau problème, <= même strike si on corrige le premier problème)
+- Gestion acceptée d'une décision d'évolution après discussion avec l'utilisateur
 
 ### Procédure
 

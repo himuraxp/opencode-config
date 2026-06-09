@@ -51,7 +51,9 @@ Créez un fichier dans `standards/` :
 ```txt
 standards/
 ├── workflow.md
-├── memory.md
+├── memory-session-flow.md
+├── memory-auto-update.md
+├── memory-checklist.md
 ├── verification.md
 ├── communication.md
 ├── escalation.md
@@ -80,9 +82,9 @@ L'agent `aurora.md` le chargera automatiquement si nécessaire.
 
 ## Personnaliser le workflow de session
 
-Modifiez `standards/workflow.md` et `standards/memory.md` pour adapter :
+Modifiez `standards/workflow.md` et `standards/memory-session-flow.md` pour adapter :
 
-- Le cycle de travail (actuellement : Explorer → Planifier → Implémenter → Vérifier → Committer)
+- Le cycle de travail (actuellement : Explorer → Planifier → Implémenter → Review → Vérifier → Committer)
 - La gestion de la mémoire (docs/ai/)
 - Les vérifications obligatoires (verification.md)
 - Les formats de communication (communication.md)
@@ -114,7 +116,7 @@ Voir `frameworks/angular-performance.md` pour les détails.
 
 ## Nouveaux Documents de Session (BUFFER, INDEX, WARNINGS)
 
-Aurora détecte automatiquement `docs/ai/` au démarrage et charge ces documents selon l'ordre défini dans `standards/memory.md`. Aucun paramétrage dans le `AGENTS.md` local n'est requis pour activer cette découverte.
+Aurora détecte automatiquement `docs/ai/` au démarrage et charge ces documents selon l'ordre défini dans `standards/memory-session-flow.md`. Aucun paramétrage dans le `AGENTS.md` local n'est requis pour activer cette découverte.
 
 ### Pourquoi les utiliser ?
 

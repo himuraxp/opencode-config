@@ -59,6 +59,14 @@ Le review peut être court-circuité uniquement si :
 
 **Jamais** skipper sur une modification touchant > 3 fichiers ou modifiant de la logique métier.
 
+### Si le review échoue encore
+
+Si **2 reviews successifs** identifient des gaps critiques persistants :
+1. **Constater** : "2 passages de review ont échoué à produire un résultat valide"
+2. **Se questionner** : Le plan initial était-il incorrect ? Le scope est-il mal défini ?
+3. **Consulter `PLAN.md`** — s'il s'écarte du plan, discuter avec l'utilisateur
+4. **Ne pas** entrer dans une boucle infinie de correction+review (voir `error-correction.md`)
+
 ## Anti-patterns interdits
 
 - ❌ Déclarer "terminé" sans preuve du review
