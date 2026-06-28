@@ -50,6 +50,8 @@ Créez un fichier dans `standards/` :
 
 ```txt
 standards/
+├── artifact-authoring.md
+├── audit.md
 ├── workflow.md
 ├── memory-session-flow.md
 ├── memory-auto-update.md
@@ -62,6 +64,13 @@ standards/
 ```
 
 Le standard sera automatiquement copié dans `~/.config/opencode/standards/` par `install.sh`.
+
+Avant de créer un nouvel artefact, appliquez `standards/artifact-authoring.md` :
+
+1. Vérifier qu'un standard, agent ou framework existant ne couvre pas déjà le besoin.
+2. Définir le déclencheur exact.
+3. Garder le contenu court, actionnable et vérifiable.
+4. Mettre à jour `README.md`, `templates/AGENTS.md` et cette page si l'artefact devient public.
 
 ### Règle spécialisée (agent dédié)
 
@@ -137,12 +146,18 @@ En plus de `PLAN.md`, `STATUS.md`, `DECISIONS.md` et `CHANGELOG.md`, chaque proj
 | Document | Quand lire | Quand écrire | Contenu |
 |----------|-----------|--------------|---------|
 | STATUS.md | Début de session | Fin de session | État d'avancement, bloqueurs |
-| PLAN.md | Début de session | Pendant plannification | Plan technique, étapes, risques |
+| PLAN.md | Début de session | Pendant planification | Plan technique, étapes, risques, statut |
 | DECISIONS.md | Quand un choix arrive | Après décision structurante | Décision, contexte, impact |
 | CHANGELOG.md | Peu souvent | Fin de session (si significatif) | Historique des changements |
 | BUFFER.md | Si reprise/en cours | En fin de session | Temporaire, micro-décisions, snapshot |
 | INDEX.md | Début de session, si perdu | Si structure change | Cartographie du projet |
 | WARNINGS.md | Avant tout changement dans zone sensible | Quand risque identifié | Alertes actives, dettes |
+
+### Capacités prouvées dans INDEX.md
+
+`INDEX.md` peut documenter les capacités du projet uniquement quand un signal concret existe : UI, API, base de données, auth, CLI, package, monorepo, infra, data, etc.
+
+Ne jamais ajouter une capacité par intuition métier. Exemple : un produit avec utilisateurs n'a pas forcément une capacité `auth` tant qu'aucun code d'authentification n'est présent.
 
 ## Recommandations
 

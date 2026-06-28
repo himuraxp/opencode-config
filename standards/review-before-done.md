@@ -43,6 +43,23 @@ Report ONLY gaps affecting correctness or requirements.
 Ignore style preferences and formatting choices.
 ```
 
+### Axes obligatoires
+
+Le review doit couvrir trois axes, même si le rapport final reste concis :
+
+| Axe | Question centrale | Exemples de gaps |
+|-----|-------------------|------------------|
+| Code | La diff est-elle correcte et maintenable ? | bug, sécurité, complexité inutile, convention cassée |
+| Fonctionnel | Le résultat respecte-t-il le plan et les critères d'acceptation ? | exigence manquante, edge case non traité, test absent |
+| Pertinence | La solution répond-elle au besoin réel sans hors-scope ? | sur-ingénierie, fichier modifié inutilement, comportement non demandé |
+
+Verdict global :
+
+- `Mergeable` : aucun gap critique ou bloquant
+- `À corriger` : au moins un gap corrigeable avant livraison
+- `À clarifier` : le plan ou le besoin est ambigu
+- `Bloqué` : la tâche ne peut pas être validée sans décision humaine
+
 ### Traitement du retour
 
 1. Le subagent retourne ses constatations

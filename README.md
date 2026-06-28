@@ -41,12 +41,14 @@ Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser
 Ce repo apporte :
 
 - **Agents spécialisés** : aurora (principal), reviewer, tester, security, architect
-- **Standards de développement** : workflow, communication, vérification, escalation, commits
+- **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
+- **Audit read-only** : health-check multi-axes sans modification de code
 - **Limites d'exploration** : délimitation stricte des investigations, subagents pour les recherches lourdes (> 15 fichiers)
 - **Mémoire persistante pour agents IA** : 7 documents de session (PLAN, STATUS, DECISIONS, CHANGELOG, BUFFER, INDEX, WARNINGS)
 - **Anti-patterns** : détection des 5 patterns d'échec courants (session fourre-tout, correction en spirale, sur-spécification, confiance sans vérification, exploration infinie)
+- **Création homogène d'artefacts** : règles pour ajouter standards, agents, frameworks et templates sans doublons
 - **Structure reproductible** : même comportement sur toutes les machines et tous les projets
 
 ---
@@ -160,7 +162,7 @@ Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/a
 ```txt
 Global Configuration
         ↓
-     Standards    (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns)
+     Standards    (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring)
         ↓
       Agents       (aurora, reviewer, tester, security, architect)
         ↓
@@ -185,7 +187,7 @@ Global Configuration
 |----------|-------------|
 | **Cohérence** | Même comportement des agents sur toutes les machines |
 | **Gain de temps** | Initialisation d'un projet en 3 secondes |
-| **Qualité** | Standards Angular 20+ intégrés + review adversarial + limite d'exploration |
+| **Qualité** | Standards Angular 20+ intégrés + review adversarial + audit read-only + limite d'exploration |
 | **Traçabilité** | Chaque agent documente son plan, ses décisions et son avancement |
 | **Sécurité** | Checklist sécurité automatique à chaque review |
 | **Mémoire de session** | BUFFER, INDEX et WARNINGS pour les projets longs et complexes |
@@ -264,6 +266,8 @@ opencode-config/
 │   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Review→Vérifier→Committer
 │   ├── error-correction.md    Arrêt après 2 échecs pour éviter la spirale
 │   ├── anti-patterns.md       Stopper les 5 patterns de session types
+│   ├── artifact-authoring.md  Créer standards/agents/frameworks sans doublons
+│   ├── audit.md               Audit read-only multi-axes
 │   ├── review-before-done.md  Examen contradictoire avant déclaration de fin
 │   ├── exploration-limits.md  Exploration ciblée et subagents
 │   ├── memory-session-flow.md     Ordre de lecture automatique des docs/ai/ en début de session
@@ -326,7 +330,7 @@ L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 1. Instructions explicites de la tâche en cours.
 2. **`AGENTS.md`** local du projet.
 3. Agents spécialisés enregistrés dans la session.
-4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, exploration-limits, error-correction, anti-patterns).
+4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring).
 5. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
 6. **Agents** globaux `~/.config/opencode/agents/` (aurora, reviewer, tester, security, architect).
 7. Bonnes pratiques générales.

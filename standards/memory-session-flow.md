@@ -10,7 +10,10 @@ docs/
 │   ├── PLAN.md        → plan d'implémentation courant
 │   ├── STATUS.md      → état actuel, prochaine étape, bloqueurs
 │   ├── DECISIONS.md   → décisions d'architecture
-│   └── CHANGELOG.md   → historique significatif des sessions IA
+│   ├── CHANGELOG.md   → historique significatif des sessions IA
+│   ├── BUFFER.md      → snapshot de reprise
+│   ├── INDEX.md       → cartographie et capacités prouvées du projet
+│   └── WARNINGS.md    → risques actifs et zones sensibles
 ```
 
 ## Découverte automatique de docs/ai/ (obligatoire)
@@ -62,6 +65,30 @@ L'agent doit systématiquement :
 - **STATUS.md** : état d'avancement dynamique, en cours/fait/bloqué/prochaine action.
 - **DECISIONS.md** : décisions structurantes (pourquoi, alternative rejetée, impact).
 - **CHANGELOG.md** : historique des sessions (quoi, quand, contexte).
+- **BUFFER.md** : snapshot de reprise, fichiers impactés, notes temporaires à promouvoir ou vider.
+- **INDEX.md** : cartographie du projet, fichiers clés, capacités prouvées par des signaux concrets.
+- **WARNINGS.md** : risques actifs, dettes techniques, zones sensibles.
+
+## Capacités projet dans INDEX.md
+
+Documenter uniquement les capacités démontrées par des faits du dépôt :
+
+| Capacité | Signaux acceptés |
+|----------|------------------|
+| UI | framework frontend, dossiers `components/`, `pages/`, vues |
+| API | routes, controllers, serveur HTTP/RPC |
+| Base de données | migrations, ORM, driver, schéma |
+| Auth | middleware auth, sessions, tokens, OAuth, permissions |
+| Realtime | WebSocket, SSE, Socket.IO, Pusher, Ably |
+| Messaging | Kafka, RabbitMQ, SQS, BullMQ, producteurs/consommateurs |
+| Déploiement | CI, Dockerfile, pipeline de release |
+| Infra | Terraform, Pulumi, Kubernetes, Helm |
+| Package | `exports`, `main`, `module`, package publiable |
+| CLI | champ `bin`, Commander, Yargs, Oclif ou équivalent |
+| Data | notebooks, pipelines, modèles, outils data/ML |
+| Monorepo | workspaces, Nx, Turborepo, Lerna |
+
+Ne jamais ajouter une capacité par intuition métier. Si le signal n'existe pas, laisser absent.
 
 ## Lecture JIT (Just-In-Time)
 

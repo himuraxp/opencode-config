@@ -56,9 +56,11 @@ Ne jamais modifier un projet utilisateur sans respecter son `AGENTS.md` local. L
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
 - **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
+- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI).
 - **Respecter les limites d'exploration** : investigation lourde = subagent, pas de scan global sans objectif précis (voir `exploration-limits.md`).
 - **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
 - **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
+- **Créer les nouveaux standards/agents/frameworks via une structure homogène** et seulement s'ils ne dupliquent pas un artefact existant (voir `artifact-authoring.md`).
 
 ## Qualité attendue
 

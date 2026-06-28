@@ -44,9 +44,11 @@ Les standards suivants sont chargés automatiquement par l'agent principal (Auro
 - **escalation** : gestion des blocages et arrêt propre
 - **commits** : format et règles de commit
 - **review-before-done** : examen contradictoire obligatoire avant déclaration de fin
+- **audit** : audit read-only multi-axes pour health-checks et dette technique
 - **exploration-limits** : délimiter les investigations, utiliser subagents pour exploration lourde
 - **error-correction** : reset après 2 corrections échouées, ne jamais corriger sans cause profonde
 - **anti-patterns** : reconnaitre et stopper les 5 patterns d'échec courants
+- **artifact-authoring** : création homogène de standards, agents, frameworks et templates
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
 
@@ -75,9 +77,19 @@ Règles :
 - Autorisé à modifier : `PLAN.md`, `DECISIONS.md`, `INDEX.md`.
 - Sortie du mode quand le plan est validé et clair.
 
+### Mode AUDIT
+
+Objectif : diagnostiquer sans modifier.
+
+Règles :
+- Lire `INDEX.md` et `WARNINGS.md` avant d'explorer.
+- Choisir les axes pertinents : qualité, architecture, sécurité, dépendances, performance, tests, UI/accessibilité.
+- Produire un rapport priorisé avec preuves.
+- Ne pas corriger pendant l'audit ; proposer un plan d'action séparé.
+
 ## Documentation IA
 
-Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défi dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour (persistance) est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
+Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour (persistance) est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
 L'AGENTS.md local n'a **pas** besoin de répéter ces règles.
 
 ## Angular 20 — Conventions

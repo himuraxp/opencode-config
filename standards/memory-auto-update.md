@@ -22,6 +22,12 @@ La mémoire projet (`docs/ai/`) DOIT être maintenue automatiquement par Aurora 
 - Si un plan était en cours : mettre à jour l'avancement des étapes
 - Si une nouvelle tâche a été identifiée : l'ajouter au plan
 - Cocher `[x]` les étapes terminées
+- Maintenir le champ `status` si présent :
+  - `pending` : plan créé, non commencé
+  - `in-progress` : implémentation en cours
+  - `implemented` : implémenté, pas encore validé par review
+  - `reviewed` : review et vérifications terminées
+  - `blocked` : intervention humaine nécessaire
 
 ### Étape 3 : Mettre à jour CHANGELOG.md
 
@@ -38,6 +44,7 @@ Ajouter une entrée au format :
 - Si de nouveaux modules/fichiers clés ont été découverts : les ajouter
 - Si des conventions ont été identifiées : les documenter
 - Maintenir la section "Commandes de recherche utiles" à jour
+- Ajouter uniquement les capacités prouvées par le repo (UI, API, base de données, auth, CLI, package, mobile, desktop, infra, data, monorepo). Ne jamais inférer une capacité sans signal concret.
 
 ### Étape 5 : Mettre à jour BUFFER.md
 
@@ -80,6 +87,18 @@ Ajouter une entrée au format :
 
 - [ ] [Action suivante à réaliser]
 ```
+
+### PLAN.md — Statut
+
+```markdown
+---
+status: pending
+---
+
+# PLAN
+```
+
+Valeurs autorisées : `pending`, `in-progress`, `implemented`, `reviewed`, `blocked`.
 
 ### BUFFER.md — Snapshot reprise
 

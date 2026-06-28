@@ -1,3 +1,53 @@
+# BUFFER
+
+## Snapshot reprise — 2026-06-28
+
+### Sujet
+
+Analyse des idees du projet `ai-driven-dev/framework` branche `next`, dossier `plugins`, reutilisables dans `opencode-config`.
+
+### Sources inspectees
+
+- Local : `README.md`, `standards/workflow.md`, `standards/memory-checklist.md`, `docs/ai/STATUS.md`, `docs/ai/CHANGELOG.md`, `docs/ai/BUFFER.md`
+- Externe temporaire : `/tmp/ai-driven-dev-framework/plugins`
+- AIDD lu : catalogues `aidd-context`, `aidd-dev`, `aidd-refine`, `aidd-vcs`, plus extraits project-memory, sdlc, review rubric, plan status, capability signals, verification cascade
+
+### Conclusions appliquees
+
+- Applique : ajouter un `status` frontmatter dans `PLAN.md` et clarifier le lifecycle du plan.
+- Applique : enrichir `review-before-done.md` avec axes `code`, `fonctionnel`, `pertinence`.
+- Applique : rendre `docs/ai/` complet dans ce repo.
+- Applique : ajouter `standards/artifact-authoring.md` pour creer standards/agents/frameworks de facon homogene.
+- Applique : ajouter `standards/audit.md` pour les audits read-only multi-axes.
+- A eviter : copier `.claude-plugin`, hooks Claude, ou la structure `aidd_docs/` sans adaptation.
+
+### Fichiers impactes pendant la session
+
+- `docs/ai/PLAN.md`
+- `docs/ai/INDEX.md`
+- `docs/ai/WARNINGS.md`
+- `docs/ai/DECISIONS.md`
+- `docs/ai/STATUS.md`
+- `docs/ai/CHANGELOG.md`
+- `docs/ai/BUFFER.md`
+- `standards/audit.md`
+- `standards/artifact-authoring.md`
+- `standards/review-before-done.md`
+- `standards/workflow.md`
+- `standards/memory-auto-update.md`
+- `standards/memory-session-flow.md`
+- `agents/aurora.md`
+- `agents/reviewer.md`
+- `templates/PLAN.md`
+- `templates/project-docs/INDEX.md`
+- `templates/AGENTS.md`
+- `README.md`
+- `docs/workflow.md`
+- `docs/code-review.md`
+- `docs/customization.md`
+
+---
+
 # Intégration des Best Practices Claude Code → Aurora
 
 ## Date

@@ -5,7 +5,7 @@
 Toute session IA suit impérativement le cycle défini dans `standards/workflow.md` :
 
 ```txt
-Explorer → Planifier → Implémenter → Vérifier → Committer
+Explorer → Planifier → Implémenter → Review → Vérifier → Committer
 ```
 
 ### Lecture en début de session
@@ -64,6 +64,7 @@ Le plan doit contenir :
 - Fichiers concernés
 - Risques
 - Tests attendus
+- Statut : `pending`, `in-progress`, `implemented`, `reviewed` ou `blocked`
 
 Storez-le dans `docs/ai/PLAN.md`.
 
@@ -73,6 +74,16 @@ Storez-le dans `docs/ai/PLAN.md`.
 - Travail incrémental
 - Préserver les comportements existants
 - Ne pas casser le build volontairement
+
+### Review
+
+Avant de déclarer terminé, exécuter un examen contradictoire sur trois axes :
+
+- **Code** : correction, maintenabilité, sécurité, conventions
+- **Fonctionnel** : respect du plan, critères d'acceptation, edge cases
+- **Pertinence** : réponse au besoin réel, absence de hors-scope, pas de sur-ingénierie
+
+Le plan ne passe à `reviewed` qu'après review et vérifications.
 
 ### Vérifier
 
@@ -102,11 +113,17 @@ Appliquer le plan. Modifier les fichiers dans le scope, vérifier, documenter le
 
 Conception uniquement. Aucun code modifié. Autorisé à modifier `PLAN.md`, `DECISIONS.md`, `INDEX.md`. Sortir quand le plan est validé.
 
+### Mode AUDIT
+
+Diagnostic read-only. Aucun code modifié. Choisir les axes pertinents : qualité, architecture, sécurité, dépendances, performance, tests, UI/accessibilité. Produire un rapport priorisé avec preuves.
+
 ## Anti-patterns communs
 
 - ❌ Implémenter sans lire le code existant
 - ❌ Modifier 10 fichiers sans plan
 - ❌ Déclarer terminé sans vérifications
+- ❌ Déclarer terminé sans review contradictoire
+- ❌ Corriger du code pendant un audit read-only
 - ❌ Committer avec tests cassés
 - ❌ Scanner le projet entier si INDEX.md suffit
 - ❌ Mettre micro-décisions dans DECISIONS.md

@@ -32,7 +32,8 @@ Pour une tâche de code :
 3. Proposer un plan court si le changement est non trivial.
 4. Modifier uniquement ce qui est nécessaire.
 5. Ajouter ou ajuster les tests.
-6. Résumer les changements et les points de vigilance.
+6. Exécuter le review contradictoire si la tâche modifie du code ou des règles.
+7. Résumer les changements et les points de vigilance.
 
 ## Règles strictes
 
@@ -52,12 +53,14 @@ Tu dois charger automatiquement les agents adaptés à la tâche :
 - Security pour les revues de sécurité.
 - Angular-20 pour le développement Angular.
 
+Pour un audit ou health-check, rester en diagnostic read-only et appliquer `standards/audit.md`.
+
 ## Cycle de travail
 
 Toute tâche suit le cycle du standard workflow :
 
 ```txt
-Explorer → Planifier → Implémenter → Vérifier → Committer
+Explorer → Planifier → Implémenter → Review → Vérifier → Committer
 ```
 
 ## Hiérarchie d'autorité

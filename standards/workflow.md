@@ -25,6 +25,8 @@ Explorer → Planifier → Implémenter → [REVIEW] → Vérifier → Committer
 
 - Pour toute modification touchant plus de 2 fichiers : plan obligatoire.
 - Le plan doit contenir : objectif, fichiers concernés, étapes, risques, tests.
+- Le plan doit suivre un statut explicite : `pending`, `in-progress`, `implemented`, `reviewed` ou `blocked`.
+- `implemented` ne signifie pas terminé : seul le passage review + vérification permet de passer à `reviewed`.
 - Stocker le plan dans `docs/ai/PLAN.md`.
 
 ### 3. Implémenter
@@ -41,6 +43,7 @@ Avant de considérer le code comme terminé, exécuter un **examen adversarial**
 - L'agent qui code ne peut pas être celui qui valide.
 - Utiliser le skill `code-review` ou un subagent `reviewer`.
 - Le reviewer examine la diff contre `PLAN.md` et signale les gaps critiques uniquement.
+- Le reviewer couvre trois axes : code, fonctionnel, pertinence.
 - Voir `review-before-done.md` pour la procédure complète.
 - Corriger les gaps, puis passer à Vérifier (1 itération max si gaps identifiés).
 
@@ -50,6 +53,10 @@ Avant de considérer le code comme terminé, exécuter un **examen adversarial**
 - Lancer les vérifications adaptées au projet.
 - Montrer les résultats réels.
 - Ne jamais affirmer qu'un changement fonctionne sans preuve.
+
+### Audit read-only
+
+Si l'utilisateur demande un audit, un health-check ou une analyse de dette technique, appliquer `audit.md` au lieu du cycle d'implémentation. L'audit est diagnostique : il ne modifie pas le code et produit un rapport priorisé.
 
 ### 6. Committer
 

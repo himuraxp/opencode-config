@@ -30,6 +30,14 @@ racine/
 
 - 
 
+## Capacités prouvées
+
+Documenter uniquement les capacités démontrées par un signal concret du dépôt.
+
+| Capacité | Signal observé | Fichiers |
+|----------|----------------|----------|
+|          |                |          |
+
 ## Commandes de recherche utiles
 
 ```bash

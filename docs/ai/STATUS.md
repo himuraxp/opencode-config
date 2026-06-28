@@ -4,6 +4,18 @@
 
 ## Fait
 
+### 2026-06-28
+
+- Analyse comparative du dossier `plugins` de `ai-driven-dev/framework` branche `next`
+- Integration adaptee des recommandations pertinentes :
+  - `standards/audit.md`
+  - `standards/artifact-authoring.md`
+  - review adversarial en axes code/fonctionnel/pertinence
+  - lifecycle `PLAN.md` avec `status`
+  - `INDEX.md` enrichi avec capacites prouvees
+- Documentation et templates synchronises
+- Verifications : `bash -n` scripts + dry-runs `init-project.sh` et `sync-project.sh`
+
 ### 2026-06-09 ~12:00
 
 - Audit Claude Code best practices : intégration de 4 nouveaux standards
@@ -36,3 +48,4 @@
 
 - [ ] Pusher les changements sur le remote
 - [ ] Optionnel : tester sur un nouveau projet que la mémoire docs/ai/ fonctionne correctement avec le nouveau workflow
+- [x] Choisir avec l'utilisateur les ameliorations AIDD a implementer en priorite
