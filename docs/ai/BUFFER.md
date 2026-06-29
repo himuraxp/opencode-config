@@ -4,13 +4,30 @@
 
 ### Sujet
 
-Analyse des idees du projet `ai-driven-dev/framework` branche `next`, dossier `plugins`, reutilisables dans `opencode-config`.
+Audit read-only de `opencode-config` apres integration des recommandations AIDD.
 
 ### Sources inspectees
 
 - Local : `README.md`, `standards/workflow.md`, `standards/memory-checklist.md`, `docs/ai/STATUS.md`, `docs/ai/CHANGELOG.md`, `docs/ai/BUFFER.md`
 - Externe temporaire : `/tmp/ai-driven-dev-framework/plugins`
 - AIDD lu : catalogues `aidd-context`, `aidd-dev`, `aidd-refine`, `aidd-vcs`, plus extraits project-memory, sdlc, review rubric, plan status, capability signals, verification cascade
+
+### Conclusions corrections audit
+
+- Fait : `install.sh --prune` et nettoyage de `~/.config/opencode/standards/memory.md`.
+- Fait : `.new` existant preserve par `sync-project.sh` avec suffixe timestamp.
+- Fait : template projet generique, Angular conserve dans framework/exemple.
+- Fait : README priorite corrigee.
+- Fait : exemples alignes ou clarifies.
+- Fait : typos Astro/standards/docs corrigees.
+
+---
+
+## Snapshot reprise — 2026-06-28 — Analyse AIDD
+
+### Sujet
+
+Analyse des idees du projet `ai-driven-dev/framework` branche `next`, dossier `plugins`, reutilisables dans `opencode-config`.
 
 ### Conclusions appliquees
 

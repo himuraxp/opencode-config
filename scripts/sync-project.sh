@@ -7,10 +7,41 @@ PROJECT_DIR="$(pwd)"
 # Parse arguments
 DRY_RUN=false
 for arg in "$@"; do
-  if [[ "$arg" == "--dry-run" ]]; then
-    DRY_RUN=true
-  fi
+  case "$arg" in
+    --dry-run)
+      DRY_RUN=true
+      ;;
+    -h|--help)
+      echo "Usage: $(basename "$0") [--dry-run]"
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $arg" >&2
+      echo "Usage: $(basename "$0") [--dry-run]" >&2
+      exit 1
+      ;;
+  esac
 done
+
+new_candidate() {
+  local dest="$1"
+  local candidate="$dest.new"
+  local stamp
+  local index
+
+  if [[ ! -e "$candidate" ]]; then
+    echo "$candidate"
+  else
+    stamp="$(date +%Y%m%d-%H%M%S)"
+    candidate="$dest.new.$stamp"
+    index=1
+    while [[ -e "$candidate" ]]; do
+      candidate="$dest.new.$stamp.$index"
+      index=$((index + 1))
+    done
+    echo "$candidate"
+  fi
+}
 
 sync_file() {
   local src="$1"
@@ -27,11 +58,13 @@ sync_file() {
   elif cmp -s "$src" "$dest"; then
     echo "up-to-date: $dest"
   else
+    local new_dest
+    new_dest="$(new_candidate "$dest")"
     if [[ "$DRY_RUN" == true ]]; then
-      echo "would create: $dest.new (review and replace if needed)"
+      echo "would create: $new_dest (review and replace if needed)"
     else
-      cp "$src" "$dest.new"
-      echo "diff: $dest.new (review and replace if needed)"
+      cp "$src" "$new_dest"
+      echo "diff: $new_dest (review and replace if needed)"
     fi
   fi
 }

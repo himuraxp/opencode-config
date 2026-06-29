@@ -10,7 +10,7 @@
 - [ ] WARNINGS.md est à jour si applicable
 - [ ] DECISIONS.md est à jour si des décisions ont été prises
 
-## Si docs/ai/ n'existe pas
+## Si docs/ai/ n'existe pas et que le projet doit adopter la mémoire IA
 
 1. Créer le répertoire `docs/ai/`
 2. Générer tous les fichiers à partir des templates

@@ -25,6 +25,7 @@ Ce projet inclus la documentation de session complète :
 
 - **Mode EXECUTION** (par défaut) : modifier uniquement les fichiers dans le scope
 - **Mode BRAINSTORM** : conception et planning uniquement, aucun code modifié
+- **Mode AUDIT** : diagnostic read-only multi-axes, aucun code modifié
 
 ## Conventions
 

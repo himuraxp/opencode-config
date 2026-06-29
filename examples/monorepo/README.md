@@ -1,6 +1,6 @@
 # Exemple Monorepo
 
-Exemple de monorepo avec `AGENTS.md` et documentation IA.
+Exemple de monorepo montrant la structure cible avec `AGENTS.md` et documentation IA.
 
 Initialisé via :
 
@@ -8,7 +8,7 @@ Initialisé via :
 ~/.config/opencode-config/scripts/init-project.sh
 ```
 
-## Structure
+## Structure cible après initialisation
 
 ```txt
 monorepo/
@@ -25,9 +25,11 @@ monorepo/
   packages/          → packages du monorepo
 ```
 
+Ce dossier ne contient volontairement que le README d'exemple. Pour créer la structure complète dans un vrai monorepo, lancer `init-project.sh`, puis documenter les packages dans `docs/ai/INDEX.md`.
+
 ## Standards appliqués
 
-Ce monorepo suit les standards : framework Angular 20+
+Ce monorepo peut suivre plusieurs frameworks selon ses packages. Documenter chaque package dans `docs/ai/INDEX.md`.
 
 - Séparation des concerns
 - Tests par package

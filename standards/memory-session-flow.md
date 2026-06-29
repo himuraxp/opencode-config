@@ -21,7 +21,7 @@ docs/
 Aurora doit **impérativement vérifier** à chaque session si le projet courant contient `docs/ai/`.
 
 - Si le dossier existe, l'ordre de lecture de session s'applique **automatiquement et obligatoirement**.
-- Si le dossier n'existe pas, aucune action particulière n'est requise.
+- Si le dossier n'existe pas, ne rien lire au démarrage ; appliquer `memory-checklist.md` en fin de session si le projet doit adopter la mémoire IA.
 
 Aucune modification du `AGENTS.md` local n'est requise pour activer cette découverte. C'est un comportement global d'Aurora, non une configuration projet.
 

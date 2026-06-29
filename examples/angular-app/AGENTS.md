@@ -18,17 +18,25 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 - Ne jamais lire globalement des fichiers énormes si une recherche ciblée suffit.
 - Utiliser `INDEX.md` pour comprendre où chercher avant de scanner le projet.
 - Ne pas polluer `DECISIONS.md` avec des micro-décisions temporaires.
+- **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée**.
+- **Stopper et reset après 2 corrections échouées** sur le même problème.
+- **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement.
 
 ## Standards globaux
 
 Les standards suivants sont chargés automatiquement par l'agent principal (Aurora) :
 
-- **workflow** : cycle Explorer → Planifier → Implémenter → Vérifier → Committer
-- **memory** : gestion de la session et de la documentation IA
-- **verification** : vérifications build/lint/test obligatoires avant considérer fini
+- **workflow** : cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer
+- **verification** : vérifications build/lint/test obligatoires avant de considérer une tâche terminée
 - **communication** : directivité, ownership, pushback constructif
 - **escalation** : gestion des blocages et arrêt propre
 - **commits** : format et règles de commit
+- **review-before-done** : examen contradictoire obligatoire avant déclaration de fin
+- **audit** : audit read-only multi-axes pour health-checks et dette technique
+- **exploration-limits** : délimiter les investigations, utiliser subagents pour exploration lourde
+- **error-correction** : reset après 2 corrections échouées, ne jamais corriger sans cause profonde
+- **anti-patterns** : reconnaitre et stopper les 5 patterns d'échec courants
+- **artifact-authoring** : création homogène de standards, agents, frameworks et templates
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
 
@@ -44,6 +52,8 @@ Règles :
 - Documenter les écarts dans `BUFFER.md`.
 - Stopper immédiatement si contradiction avec `DECISIONS.md` ou `WARNINGS.md`.
 - Consulter `INDEX.md` avant de toucher un fichier inconnu du projet.
+- **Exécuter un examen contradictoire (review adversarial) avant de considérer terminé** via subagent ou skill `code-review`.
+- **Stopper et reset après 2 corrections échouées** sur le même problème.
 
 ### Mode BRAINSTORM
 
@@ -55,45 +65,19 @@ Règles :
 - Autorisé à modifier : `PLAN.md`, `DECISIONS.md`, `INDEX.md`.
 - Sortie du mode quand le plan est validé et clair.
 
+### Mode AUDIT
+
+Objectif : diagnostiquer sans modifier.
+
+Règles :
+- Lire `INDEX.md` et `WARNINGS.md` avant d'explorer.
+- Choisir les axes pertinents : qualité, architecture, sécurité, dépendances, performance, tests, UI/accessibilité.
+- Produire un rapport priorisé avec preuves.
+- Ne pas corriger pendant l'audit ; proposer un plan d'action séparé.
+
 ## Documentation IA
 
-Utiliser `docs/ai/` pour conserver le contexte long terme.
-
-### Ordre de lecture — Début de session
-
-```txt
-1. STATUS.md   → état actuel, bloqueurs
-2. PLAN.md     → plan en cours
-3. WARNINGS.md → alertes actives
-4. INDEX.md    → cartographie du projet
-5. BUFFER.md   → si reprise de session interrompue
-```
-
-### Ordre de mise à jour — Fin de session
-
-```txt
-1. STATUS.md    → fait, à faire, bloqueurs, prochaine étape
-2. BUFFER.md   → sujets hors-scope, micro-décisions, snapshot
-3. CHANGELOG.md → changements significatifs uniquement
-```
-
-### Rôle de chaque document
-
-- **PLAN.md** : plan technique courant (objectif, étapes, risques, tests).
-- **STATUS.md** : état d'avancement dynamique (en cours, fait, bloqué, prochaine action).
-- **DECISIONS.md** : décisions structurantes (contexte, décision, impact, alternative rejetée).
-- **CHANGELOG.md** : historique significatif des sessions IA (quoi, quand, pourquoi).
-- **BUFFER.md** : mémoire tampon temporaire (hors-scope, micro-décisions, snapshot de session).
-- **INDEX.md** : cartographie du projet (structure, modules, fichiers clés, conventions).
-- **WARNINGS.md** : alertes actives et dettes connues (zones sensibles, workarounds).
-
-### Règles de synchronisation
-
-- BUFFER.md : vider ou archiver en fin de session si vide.
-- Un sujet hors-scope persistant dans BUFFER.md doit être promu dans WARNINGS.md.
-- Ne pas mettre les micro-décisions dans DECISIONS.md (réservé aux décisions structurantes).
-- Ne pas documenter les unif, typo ou micro-corrections dans CHANGELOG.md.
-- Mettre à jour INDEX.md si la structure du projet change significativement.
+Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
 
 ## Angular 20 — Conventions
 
@@ -144,5 +128,6 @@ Pour une tâche complexe :
 2. Identifier les fichiers concernés.
 3. Proposer un plan court (pour >2 fichiers).
 4. Implémenter par petits changements.
-5. Lancer ou indiquer les tests pertinents.
-6. Résumer clairement les modifications.
+5. Exécuter un review contradictoire si du code ou des règles changent.
+6. Lancer ou indiquer les tests pertinents.
+7. Résumer clairement les modifications.

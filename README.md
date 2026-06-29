@@ -63,6 +63,12 @@ cd ~/.config/opencode-config
 ./scripts/install.sh
 ```
 
+Après un renommage ou une suppression de standard, nettoyer les anciens fichiers installés :
+
+```bash
+./scripts/install.sh --prune
+```
+
 Cela installe dans `~/.config/opencode/` :
 
 ```txt
@@ -113,7 +119,7 @@ Pour prévisualiser sans rien modifier :
 ~/.config/opencode-config/scripts/sync-project.sh --dry-run
 ```
 
-Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà.
+Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà. Si un `.new` existe déjà, il crée un fichier horodaté pour ne pas écraser une fusion en cours.
 
 Opérationnel en moins de 2 minutes.
 
@@ -140,7 +146,7 @@ Si `docs/ai/` existe, Aurora charge immédiatement :
 
 ### Pourquoi les fichiers `.new` ne sont pas lus
 
-Lors d'une synchronisation (`sync-project.sh`), les fichiers existants ne sont pas écrasés. Le script génère des fichiers `.new` comme propositions de mise à jour.
+Lors d'une synchronisation (`sync-project.sh`), les fichiers existants ne sont pas écrasés. Le script génère des fichiers `.new` comme propositions de mise à jour, ou `.new.YYYYMMDD-HHMMSS` si une proposition existe déjà.
 **OpenCode ne lit jamais les fichiers `.new` automatiquement.** Ils doivent être fusionnés manuellement dans les fichiers officiels.
 
 ### Existing Project Adoption Checklist
@@ -251,6 +257,15 @@ Le nom du fichier sera le nom du framework. Relancez `./scripts/install.sh` pour
 
 Modifiez `standards/workflow.md` et `standards/memory-session-flow.md` pour adapter le cycle de travail et la gestion de la mémoire de session.
 
+### Adapter la stack d'un projet
+
+Le template `AGENTS.md` est volontairement générique. Ajoutez dans le `AGENTS.md` local les conventions de stack utiles, ou référencez un framework global :
+
+- `frameworks/angular-20.md`
+- `frameworks/nodejs.md`
+- `frameworks/nestjs.md`
+- `frameworks/astro.md`
+
 ---
 
 ## Structure du repo
@@ -327,13 +342,13 @@ opencode-config/
 
 L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 
-1. Instructions explicites de la tâche en cours.
-2. **`AGENTS.md`** local du projet.
-3. Agents spécialisés enregistrés dans la session.
+1. Bonnes pratiques générales.
+2. **Agents** globaux `~/.config/opencode/agents/` (aurora, reviewer, tester, security, architect).
+3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
 4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring).
-5. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
-6. **Agents** globaux `~/.config/opencode/agents/` (aurora, reviewer, tester, security, architect).
-7. Bonnes pratiques générales.
+5. Agents spécialisés enregistrés dans la session.
+6. **`AGENTS.md`** local du projet.
+7. Instructions explicites de la tâche en cours.
 
 ---
 

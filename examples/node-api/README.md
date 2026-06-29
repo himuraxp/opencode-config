@@ -1,6 +1,6 @@
 # Exemple Node.js API
 
-Exemple de projet Node.js / Express avec `AGENTS.md` et documentation IA.
+Exemple de projet Node.js / Express montrant les conventions attendues pour un projet API.
 
 Initialisé via :
 
@@ -8,7 +8,7 @@ Initialisé via :
 ~/.config/opencode-config/scripts/init-project.sh
 ```
 
-## Structure
+## Structure cible après initialisation
 
 ```txt
 node-api/
@@ -24,6 +24,8 @@ node-api/
       WARNINGS.md    → alertes et dettes techniques
   src/               → sources Node.js
 ```
+
+Ce dossier ne contient volontairement que le README d'exemple. Pour créer la structure complète dans un vrai projet, lancer `init-project.sh`, puis référencer `frameworks/nodejs.md` dans le `AGENTS.md` local.
 
 ## Standards appliqués
 

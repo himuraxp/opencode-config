@@ -56,7 +56,7 @@ const blog = defineCollection({
 - Configurer `i18n` avec `defaultLocale` et `locales` dans `astro.config.mjs`.
 - Utiliser un helper pour générer les liens traduits (préfixe par locale).
 - Ne pas dupliquer le layout par langue. Passer la locale en contexte.
-- Traduire le frontmatter ou remuse les strings depuis des fichiers `.json`.
+- Traduire le frontmatter ou réutiliser les chaînes depuis des fichiers `.json`.
 - Carousel/Gallery : gestion des alt et aria-label traduits.
 
 ## SEO
@@ -86,10 +86,10 @@ const blog = defineCollection({
 
 ## Performance
 
-- Preload uniquement les polices/CSS/JS en interactivity nécessaire.
-- Astors : compresser et lazy-load les composants si possible.
+- Précharger uniquement les polices/CSS/JS nécessaires à l'interactivité.
+- Assets : compresser et lazy-load les composants si possible.
 - Lighthouse minimum : 95 performance, 100 accessibilité.
-- Ne pas embarquer de framework lourd (React/Vue) si interactivity = 1-2 composants.
+- Ne pas embarquer de framework lourd (React/Vue) si l'interactivité concerne 1 ou 2 composants.
 - Utiliser les composants Server si possible.
 
 ## Images optimisées
@@ -114,7 +114,7 @@ const blog = defineCollection({
 - Chaque composant doit être testable en isolation (props, id, variant).
 - Eviter la duplication de logique.
 - Utiliser des modules de composants UI (Design System) si le projet est moyen/grand.
-- Transformer les composants réutilisables en `islands` si interactivity client-side.
+- Transformer les composants réutilisables en `islands` si l'interactivité côté client est nécessaire.
 
 ## Pages .astro
 
@@ -142,14 +142,14 @@ image: string  // OG image
 
 ## Markdown / MDX
 
-- Markdown pur dans la collection. Composants de présentaiton MDX propres.
+- Markdown pur dans la collection. Composants de présentation MDX propres.
 - Utiliser les rehype/remark pour échapper automatiquement.
 - Ne pas autoriser d'HTML brut dans `content/`.
 
 ## Tracking analytics
 
 - Ne pas bloquer le blocking de script via async/defer.
-- Respester le GDPR (consent bannière et contrôle).
+- Respecter le GDPR (bannière de consentement et contrôle).
 - Utiliser les routes côté serveur par les analytics si possible.
 - Charger le script uniquement après consentement explicite (sauf analytics anonymisé et local).
 
@@ -158,7 +158,7 @@ image: string  // OG image
 - Output en dossiers séparés : `/en/page`, `/fr/page`.
 - Utiliser `astro-i18n-utils` ou `astrojs: i18n` pour routing.
 - Générer automatiquement les `hreflang` pour les pages traduites en `head`.
-- Lors du préchargE des liens, prÉvoir le préchargE des traductions pour améliorer la navigation.
+- Lors du préchargement des liens, prévoir le préchargement des traductions pour améliorer la navigation.
 
 ## Anti-patterns Astro
 
@@ -166,7 +166,7 @@ image: string  // OG image
 - ❌ Duplication de code par locale au lieu d'abstraction.
 - ❌ Ignorer les dimensions d'images ( CLS élevé ).
 - ❌ Mettre `async` sur les scripts analytics avant le body.
-- ❌ Emasquer des composants React/Vue inutilement.
+- ❌ Embarquer des composants React/Vue inutilement.
 - ❌ Frontmatter non validé.
 - ❌ Contenu non sécurisé (HTML brut).
 
@@ -179,6 +179,6 @@ image: string  // OG image
 - [ ] Accessibilité : lighthouse >=95 a11y
 - [ ] Internationalisation : routing par locale, hreflang
 - [ ] Analytics chargé en mode consent / non-blocking
-- [ ] RSS / atoms feed options
-- [ ] Contenu collections validé s' build
+- [ ] RSS / Atom feed configuré si nécessaire
+- [ ] Contenu des collections validé au build
 - [ ] Aucune route en staging ou environnement non prod n'est accessible au public

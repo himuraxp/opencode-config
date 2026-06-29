@@ -9,6 +9,7 @@
 
 - La memoire locale de ce repo doit rester alignee avec les templates injectes dans les projets utilisateurs.
 - Les futures ameliorations inspirees d'AIDD doivent eviter de creer une deuxieme taxonomie concurrente avec `standards/`, `agents/`, `frameworks/`.
+- `install.sh --prune` supprime les `.md` orphelins dans les dossiers installes ; a utiliser seulement quand `~/.config/opencode/{agents,standards,frameworks}` est gere par ce repo.
 
 ## Zones sensibles du projet
 
@@ -24,4 +25,20 @@
 
 ## Historique des warnings clotures
 
-- Aucun warning cloture documente.
+### 2026-06-28 — Artefact `memory.md` obsolete installe
+
+- Warning : la config installee contenait encore `~/.config/opencode/standards/memory.md`.
+- Resolution : ajout de `install.sh --prune` et execution sur ce Mac.
+- Date cloture : 2026-06-28
+
+### 2026-06-28 — Exemples en retard
+
+- Warning : `examples/angular-app` documentait encore un workflow sans Review.
+- Resolution : exemple Angular aligne, exemples Node/monorepo clarifies comme structures cibles.
+- Date cloture : 2026-06-28
+
+### 2026-06-28 — `.new` ecrasable
+
+- Warning : `sync-project.sh` pouvait ecraser un fichier `.new` existant.
+- Resolution : creation de propositions horodatees si `.new` existe deja.
+- Date cloture : 2026-06-28

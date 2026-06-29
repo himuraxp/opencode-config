@@ -4,6 +4,49 @@
 
 ## Fait
 
+### 2026-06-28 — Correction des 7 findings d'audit
+
+- Corrige :
+  - `install.sh` : ajout `--prune`, `--dry-run`, `--help`, detection des orphelins
+  - config installee : suppression de `~/.config/opencode/standards/memory.md` via `install.sh --prune`
+  - `sync-project.sh` : preservation des `.new` existants via suffixe timestamp
+  - `templates/AGENTS.md` : retrait des conventions Angular 20 du template generique
+  - README : hierarchie de priorite corrigee, documentation `--prune`, `.new` horodates, stack explicite
+  - memoire : clarification `docs/ai/` absent entre `memory-session-flow.md` et `memory-checklist.md`
+  - exemples : Angular mis a jour ; Node/monorepo clarifies comme structures cibles
+  - Astro/standards/docs : corrections de typos et formulations
+- Verifications :
+  - `bash -n scripts/install.sh`
+  - `bash -n scripts/init-project.sh`
+  - `bash -n scripts/sync-project.sh`
+  - `scripts/install.sh --dry-run --prune`
+  - `scripts/install.sh --prune`
+  - `init-project.sh --dry-run`
+  - `sync-project.sh --dry-run`
+  - test `.new` existant preserve
+  - `git diff --check`
+
+### 2026-06-28 — Audit read-only opencode-config
+
+- Audit complet read-only du repo :
+  - scripts d'installation/synchronisation
+  - standards et agents
+  - templates projet
+  - documentation utilisateur
+  - exemples
+  - config installee dans `~/.config/opencode`
+- Verifications :
+  - `bash -n scripts/install.sh`
+  - `bash -n scripts/init-project.sh`
+  - `bash -n scripts/sync-project.sh`
+- Findings principaux :
+  - `install.sh` ne nettoie pas les anciens fichiers installes ; `~/.config/opencode/standards/memory.md` est encore present
+  - `sync-project.sh` peut ecraser un `.new` existant
+  - `templates/AGENTS.md` injecte Angular 20 dans tous les projets
+  - README : hierarchie de priorite contradictoire avec la regle locale
+  - exemples non synchronises avec les templates actuels
+  - contradictions/typos dans standards et docs
+
 ### 2026-06-28
 
 - Analyse comparative du dossier `plugins` de `ai-driven-dev/framework` branche `next`
@@ -49,3 +92,4 @@
 - [ ] Pusher les changements sur le remote
 - [ ] Optionnel : tester sur un nouveau projet que la mémoire docs/ai/ fonctionne correctement avec le nouveau workflow
 - [x] Choisir avec l'utilisateur les ameliorations AIDD a implementer en priorite
+- [x] Prioriser et corriger les findings de l'audit read-only

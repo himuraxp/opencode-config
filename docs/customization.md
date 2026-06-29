@@ -16,6 +16,12 @@ Pour personnaliser :
 2. Relancez `./scripts/install.sh`
 3. Les fichiers sont copiés dans `~/.config/opencode/agents/`
 
+Après un renommage ou une suppression d'artefact, utilisez :
+
+```bash
+./scripts/install.sh --prune
+```
+
 ## Ajouter un framework
 
 Dans `frameworks/`, les règles techniques par stack :
@@ -163,6 +169,7 @@ Ne jamais ajouter une capacité par intuition métier. Exemple : un produit avec
 
 - **Ne modifiez jamais directement** `~/.config/opencode/*`.
 - **Les fichiers `.new`** générés par `sync-project.sh` ne sont pas lus automatiquement par OpenCode. Fusionnez-les manuellement dans les fichiers existants avant de les supprimer.
+- Si un fichier `.new` existe déjà, `sync-project.sh` crée une proposition horodatée au lieu de l'écraser.
 - Faîtes les modifications dans le repo forké, puis `install.sh`.
 - Versionnez votre fork pour suivre vos personnalisations.
 - Utilisez `git pull` pour récupérer les mises à jour upstream.

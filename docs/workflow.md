@@ -66,7 +66,7 @@ Le plan doit contenir :
 - Tests attendus
 - Statut : `pending`, `in-progress`, `implemented`, `reviewed` ou `blocked`
 
-Storez-le dans `docs/ai/PLAN.md`.
+Stockez-le dans `docs/ai/PLAN.md`.
 
 ### Implémenter
 

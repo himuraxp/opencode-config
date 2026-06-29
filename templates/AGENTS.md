@@ -39,7 +39,7 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 Les standards suivants sont chargés automatiquement par l'agent principal (Aurora) :
 
 - **workflow** : cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer
-- **verification** : vérifications build/lint/test obligatoires avant considérer fini
+- **verification** : vérifications build/lint/test obligatoires avant de considérer une tâche terminée
 - **communication** : directivité, ownership, pushback constructif
 - **escalation** : gestion des blocages et arrêt propre
 - **commits** : format et règles de commit
@@ -92,46 +92,16 @@ Règles :
 Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour (persistance) est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
 L'AGENTS.md local n'a **pas** besoin de répéter ces règles.
 
-## Angular 20 — Conventions
+## Framework / Stack
 
-### Templates HTML
+Décrire ici les conventions techniques spécifiques au projet, ou référencer un standard global dans `~/.config/opencode/frameworks/`.
 
-- Utiliser `@if` / `@else`.
-- Utiliser `@for (...; track ...)`.
-- Ne pas utiliser `*ngIf`, `*ngFor`, `ngSwitch`.
-- Ne pas utiliser `let` dans `@for`.
-- Les blocs `@if` et `@for` doivent entourer des balises HTML complètes.
-- Ne jamais utiliser `@if` ou `@for` comme attribut.
-- Éviter les expressions complexes dans le HTML.
+Exemples :
 
-### TypeScript
-
-- Composants standalone uniquement.
-- Pas de NgModule manuel.
-- Injection via `inject()` uniquement.
-- Variables privées avec `#variable`.
-- Éviter `private`.
-- Inputs avec `input()` / `input.required()`.
-- Outputs avec `output()`.
-- Ne pas utiliser `@Input()` / `@Output()`.
-- Utiliser `signal()`, `computed()`, `effect()`.
-- RxJS uniquement dans les services métier, sauf contrainte existante.
-- Éviter `null`, préférer `undefined`.
-- Ne pas utiliser `any`.
-
-### Tests
-
-- Utiliser Jest.
-- Pour les inputs standalone, utiliser `fixture.componentRef.setInput()`.
-- Tester les comportements visibles.
-- Ajouter les tests nécessaires pour toute logique modifiée.
-
-### SCSS
-
-- Éviter la duplication.
-- Ne pas ajouter de style global sans nécessité.
-- Respecter la structure SCSS existante.
-- Préserver le responsive.
+- Angular : appliquer `frameworks/angular-20.md`.
+- Node.js API : appliquer `frameworks/nodejs.md`.
+- NestJS : appliquer `frameworks/nestjs.md`.
+- Astro : appliquer `frameworks/astro.md`.
 
 ## Workflow attendu
 
@@ -141,5 +111,6 @@ Pour une tâche complexe :
 2. Identifier les fichiers concernés.
 3. Proposer un plan court (pour >2 fichiers).
 4. Implémenter par petits changements.
-5. Lancer ou indiquer les tests pertinents.
-6. Résumer clairement les modifications.
+5. Exécuter un review contradictoire si du code ou des règles changent.
+6. Lancer ou indiquer les tests pertinents.
+7. Résumer clairement les modifications.

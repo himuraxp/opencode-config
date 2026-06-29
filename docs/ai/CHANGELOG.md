@@ -1,5 +1,63 @@
 # CHANGELOG
 
+## 2026-06-28 — Correction findings audit
+
+### Scripts
+
+- `scripts/install.sh` : ajout `--prune`, `--dry-run`, `--help`, affichage des orphelins, suppression optionnelle des `.md` installes mais absents du repo.
+- `scripts/sync-project.sh` : ajout `--help`, rejet des arguments inconnus, creation de `.new.YYYYMMDD-HHMMSS` si `.new` existe deja.
+
+### Templates et exemples
+
+- `templates/AGENTS.md` : template generique, sans conventions Angular injectees par defaut.
+- `examples/angular-app/AGENTS.md` : workflow avec Review, standards recents, mode Audit.
+- `examples/angular-app/docs/ai/PLAN.md` : frontmatter `status: pending`.
+- `examples/angular-app/docs/ai/INDEX.md` : section capacites prouvees.
+- `examples/node-api/README.md` et `examples/monorepo/README.md` : clarification de structure cible.
+
+### Documentation et standards
+
+- `README.md` : ordre de priorite corrige, documentation `install.sh --prune`, `.new` horodates, stack explicite.
+- `docs/customization.md` : ajout `install.sh --prune` et comportement `.new` horodate.
+- `standards/memory-session-flow.md` et `standards/memory-checklist.md` : clarification du cas `docs/ai/` absent.
+- `frameworks/astro.md`, `standards/error-correction.md`, `standards/escalation.md`, `docs/workflow.md` : corrections de typos/formulations.
+
+### Verification
+
+- `bash -n scripts/install.sh`
+- `bash -n scripts/init-project.sh`
+- `bash -n scripts/sync-project.sh`
+- `scripts/install.sh --dry-run --prune`
+- `scripts/install.sh --prune`
+- `init-project.sh --dry-run`
+- `sync-project.sh --dry-run`
+- test temporaire `.new` existant preserve et proposition horodatee creee
+- `git diff --check`
+
+## 2026-06-28 — Audit read-only opencode-config
+
+### Perimetre
+
+- Scripts : `install.sh`, `init-project.sh`, `sync-project.sh`
+- Standards, agents, frameworks, templates, docs et exemples
+- Etat installe dans `~/.config/opencode`
+
+### Findings
+
+- `install.sh` copie les fichiers mais ne supprime pas les artefacts obsoletes ; `~/.config/opencode/standards/memory.md` reste installe.
+- `sync-project.sh` ecrit `dest.new` sans proteger un `.new` deja present.
+- `templates/AGENTS.md` contient des conventions Angular 20 injectees dans tous les projets.
+- README : la section priorite dit "le dernier l'emporte" mais place `AGENTS.md` local avant les standards globaux.
+- `standards/memory-checklist.md` demande de creer `docs/ai/` si absent, tandis que `memory-session-flow.md` dit qu'aucune action n'est requise.
+- `examples/angular-app` et ses `docs/ai` ne sont pas synchronises avec les templates actuels.
+- `frameworks/astro.md` contient plusieurs fautes et formulations degradant la qualite du standard.
+
+### Verification
+
+- `bash -n scripts/install.sh`
+- `bash -n scripts/init-project.sh`
+- `bash -n scripts/sync-project.sh`
+
 ## 2026-06-28 — Analyse inspirations AIDD plugins
 
 ### Contexte
