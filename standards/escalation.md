@@ -18,7 +18,7 @@ Tenté : [actions déjà essayées et résultats]
 Besoin : [ce qui manque pour débloquer : info, décision, accès, etc.]
 ```
 
-## Bloquages liés à la mémoire projet
+## Blocages liés à la mémoire projet
 
 - Si `docs/ai/WARNINGS.md` contient un warning critique actif concernant la zone de travail : **arrêter immédiatement** et demander clarification.
 - En cas de contradiction entre `AGENTS.md` local et `docs/ai/DECISIONS.md` : **arrêter immédiatement** et demander à l'utilisateur quelle source prévaut.

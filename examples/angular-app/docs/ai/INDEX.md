@@ -30,6 +30,14 @@ racine/
 
 - 
 
+## Capacités prouvées
+
+Documenter uniquement les capacités démontrées par un signal concret du dépôt.
+
+| Capacité | Signal observé | Fichiers |
+|----------|----------------|----------|
+| UI | Exemple Angular 20+ | `AGENTS.md`, `README.md` |
+
 ## Commandes de recherche utiles
 
 ```bash

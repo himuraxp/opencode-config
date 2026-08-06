@@ -9,6 +9,7 @@
 
 - La memoire locale de ce repo doit rester alignee avec les templates injectes dans les projets utilisateurs.
 - Les futures ameliorations inspirees d'AIDD doivent eviter de creer une deuxieme taxonomie concurrente avec `standards/`, `agents/`, `frameworks/`.
+- `install.sh --prune` supprime les `.md` orphelins dans les dossiers installes ; a utiliser seulement quand `~/.config/opencode/{agents,standards,frameworks}` est gere par ce repo.
 - **`aurora-heavy.md`** est present dans la config active (`~/.config/opencode/agents/`) mais **non versionne** dans le repo source. Perdu a la prochaine reinstall propre. A ajouter au repo ou documenter son statut.
 - **`cat *: allow` sur Spark** : permet la lecture de fichiers sensibles (`.env`, `~/.ssh/id_rsa`). Spark dispose du tool `read` pour le contexte code. Restreindre `cat` aux fichiers de travail (`cat ./mr-*.md`, `cat ./*.md`) ou passer en `ask`. Non bloque pour l'instant (hors scope de la delegation).
 - Le dossier `~/.config/opencode/agent/` (singulier) est maintenant vide apres suppression du doublon `vision.md`. Supprimable.
@@ -27,4 +28,20 @@
 
 ## Historique des warnings clotures
 
-- Aucun warning cloture documente.
+### 2026-06-28 — Artefact `memory.md` obsolete installe
+
+- Warning : la config installee contenait encore `~/.config/opencode/standards/memory.md`.
+- Resolution : ajout de `install.sh --prune` et execution sur ce Mac.
+- Date cloture : 2026-06-28
+
+### 2026-06-28 — Exemples en retard
+
+- Warning : `examples/angular-app` documentait encore un workflow sans Review.
+- Resolution : exemple Angular aligne, exemples Node/monorepo clarifies comme structures cibles.
+- Date cloture : 2026-06-28
+
+### 2026-06-28 — `.new` ecrasable
+
+- Warning : `sync-project.sh` pouvait ecraser un fichier `.new` existant.
+- Resolution : creation de propositions horodatees si `.new` existe deja.
+- Date cloture : 2026-06-28
