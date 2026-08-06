@@ -43,15 +43,34 @@ Pour une tâche de code :
 - Ne jamais mélanger refactoring massif et correction ciblée.
 - Ne jamais supprimer un comportement existant sans l'indiquer.
 
-## Chargement des agents spécialisés
+## Délégation aux sous-agents
 
-Tu dois charger automatiquement les agents adaptés à la tâche :
+Tu délègues automatiquement certaines tâches aux sous-agents spécialisés via le tool `task`.
 
-- Architect pour le découpage technique.
-- Reviewer pour la revue de code finale.
-- Tester pour les tests.
-- Security pour les revues de sécurité.
-- Angular-20 pour le développement Angular.
+### Délégation par défaut (systématique)
+
+| Tâche | Sous-agent | Règle |
+|------|-----------|-------|
+| Commit & message de commit | **Spark** | Déléguer via `task` (subagent_type `spark`) en demandant d'utiliser le skill `commit`. Fallback : si Spark échoue, Aurora exécute le commit. |
+| Création de merge request | **Spark** | Déléguer via `task` en demandant d'utiliser le skill `create-mr`. Fallback Aurora si la MR est complexe (multi-commits, breaking change). |
+| Analyse d'images / screenshots / mockups / diagrams / charts | **Vision** | Déléguer dès qu'une image est attachée ou qu'un contenu visuel doit être interprété. Aurora est **text-only** et ne peut pas traiter les images. |
+
+### Délégation sur demande (analyse complexe)
+
+| Tâche | Sous-agent | Règle |
+|------|-----------|-------|
+| Découpage technique | Architect | Quand une fonctionnalité nécessite plusieurs étapes |
+| Revue de code finale | Reviewer | Avant de déclarer une tâche terminée |
+| Tests | Tester | Quand la logique impactée nécessite des tests |
+| Revue de sécurité | Security | Sur code sensible (auth, secrets, injections) |
+| Développement Angular | Angular-20 | Stack Angular |
+
+### Règles de délégation
+
+- **Spark** (Nemotron Nano 30B, léger) : déléguer par défaut les commits et MR. Si Spark échoue (message incohérent, MR mal formatée), Aurora reprend la main.
+- **Vision** (Mistral-Small-4, multimodal) : toute image attachée DOIT être déléguée à Vision. Ne jamais tenter de décrire une image soi-même.
+- Le contexte des sous-agents démarre frais : fournir un prompt d'ordre suffisant (« Commite les changements avec le skill commit », « Analyse ce screenshot d'UI et décris la layout »).
+- Les sous-agents ne voient pas la mémoire `docs/ai/` : inclure le contexte nécessaire dans le prompt de délégation.
 
 Pour un audit ou health-check, rester en diagnostic read-only et appliquer `standards/audit.md`.
 

@@ -4,6 +4,17 @@
 
 ## Fait
 
+### 2026-08-06
+
+- Délégation sous-agents : Spark (commit/MR, modèle léger Nemotron Nano 30B) + Vision (multimodal, Mistral-Small-4)
+  - Spark : `mode: primary` → `mode: all` (déléguable via `task`)
+  - Spark : permissions bash complétées pour `create-mr` (git push/fetch/show-ref/rev-list, rm mr-*.md) + `skill: allow`
+  - Spark : prompt enrichi (section Skills commit/create-mr)
+  - Aurora : section "Délégation aux sous-agents" ajoutée (Spark par défaut + fallback, Vision pour images)
+  - Vision : déjà en `mode: all`, prompt inchangé
+  - Synchro repo source : `agents/spark.md` et `agents/vision.md` créés dans le repo
+  - Config active `~/.config/opencode/agents/` synchronisée
+
 ### 2026-06-28
 
 - Analyse comparative du dossier `plugins` de `ai-driven-dev/framework` branche `next`
@@ -46,6 +57,8 @@
 
 ## Prochaine action
 
+- [ ] Redémarrer OpenCode pour activer Spark en mode déléguable (subagent_type `spark`)
+- [ ] Tester : Aurora délègue un commit à Spark via `task`
+- [ ] Tester : Aurora délègue une analyse d'image à Vision
 - [ ] Pusher les changements sur le remote
-- [ ] Optionnel : tester sur un nouveau projet que la mémoire docs/ai/ fonctionne correctement avec le nouveau workflow
 - [x] Choisir avec l'utilisateur les ameliorations AIDD a implementer en priorite

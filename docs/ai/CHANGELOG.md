@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 2026-08-06 — Délégation sous-agents Spark & Vision
+
+### Contexte
+
+Aurora (euria-code, text-only) ne peut pas déléguer les tâches répétitives (commit, MR) à un modèle léger, ni traiter les images. Spark existait mais en `mode: primary` (non déléguable). Vision existait déjà en `mode: all`.
+
+### Changements
+
+- `agents/spark.md` : `mode: primary` → `mode: all` (déléguable via `task` + sélectionnable manuellement)
+- `agents/spark.md` : permissions bash complétées pour le skill `create-mr` (git push/fetch/show-ref/rev-list/rev-parse, rm ./mr-*.md) + `skill: allow`
+- `agents/spark.md` : ajout section "Skills" (charge et suit commit/create-mr)
+- `agents/aurora.md` : section "Chargement des agents spécialisés" → "Délégation aux sous-agens" avec tableau délégation par défaut (Spark commit/MR, Vision images) + sur demande + règles de fallback
+- `agents/vision.md` : créé dans le repo source (déjà présent en config active, mode all, Mistral-Small-4)
+- Synchro config active `~/.config/opencode/agents/` effectuée
+
+### Décisions
+
+- Spark en `mode: all` (pas `subagent`) : garde la possibilité d'utilisation manuelle dans le TUI
+- Délégation Spark par défaut + fallback Aurora (si message incohérent ou MR complexe)
+- Délégation Vision obligatoire pour toute image (Aurora text-only)
+- `git push` en `ask` pour garde-fou humain sur le push remote
+
 ## 2026-06-28 — Analyse inspirations AIDD plugins
 
 ### Contexte
