@@ -6,16 +6,18 @@ set -euo pipefail
 # This script:
 #   1. Checks prerequisites (Node.js, npm)
 #   2. Installs or updates external dependencies (opencode-ai, rtk)
-#   3. Runs install.sh (agents, standards, frameworks, config files)
-#   4. Installs npm dependencies for plugins
-#   5. Collects environment variables interactively (skips if .env is complete)
-#   6. Writes ~/.config/opencode/.env
-#   7. Runs a final verification
+#   3. Optionally installs MCP servers (chrome-devtools, ios-simulator)
+#   4. Runs install.sh (agents, standards, frameworks, config files)
+#   5. Installs npm dependencies for plugins
+#   6. Collects environment variables interactively (skips if .env is complete)
+#   7. Writes ~/.config/opencode/.env
+#   8. Runs a final verification
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_BASE="${HOME}/.config/opencode"
 ENV_FILE="${TARGET_BASE}/.env"
 FORCE_ENV=false
+IDB_VENV="${HOME}/.local/idb-venv"
 
 # Colors
 RED='\033[0;31m'
@@ -142,7 +144,92 @@ else
   fi
 fi
 
-# ─── Step 3: Run install.sh ──────────────────────────────────────────────────
+# ─── Step 2.5: MCP Servers ──────────────────────────────────────────────────
+
+echo -e "\n${BOLD}--- MCP Servers ---${NC}\n"
+
+# chrome-devtools-mcp: auto-installed by npx, no manual setup needed
+if npm list -g chrome-devtools-mcp &>/dev/null; then
+  ok "chrome-devtools-mcp installed globally"
+else
+  ok "chrome-devtools-mcp: will auto-install via npx on first use"
+fi
+
+# ios-simulator-mcp: requires idb-companion (brew) + fb-idb (python venv) + UDID
+# Detect if already installed
+IOS_MCP_READY=false
+if command -v idb_companion &>/dev/null && [[ -f "${IDB_VENV}/bin/idb" ]]; then
+  IOS_MCP_READY=true
+  ok "ios-simulator-mcp dependencies already installed (idb-companion + fb-idb)"
+fi
+
+if [[ "$IOS_MCP_READY" == false ]]; then
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo ""
+    echo "The iOS Simulator MCP requires:"
+    echo "  - idb-companion (Homebrew: facebook/fb tap)"
+    echo "  - fb-idb (Python venv at ${IDB_VENV})"
+    echo "  - Xcode (for iOS Simulator)"
+    printf "Install iOS Simulator MCP dependencies? [y/N] "
+    read -r install_ios_mcp || install_ios_mcp="n"
+
+    if [[ "$install_ios_mcp" =~ ^[Yy]$ ]]; then
+      # Check Xcode
+      if ! xcrun simctl help &>/dev/null; then
+        warn "Xcode or Command Line Tools not found."
+        warn "Install Xcode from the App Store, then re-run setup.sh"
+      else
+        # Install idb-companion via Homebrew
+        if command -v brew &>/dev/null; then
+          if ! brew tap | grep -q "facebook/fb"; then
+            info "Tapping facebook/fb..."
+            brew tap facebook/fb
+          fi
+          if command -v idb_companion &>/dev/null; then
+            ok "idb-companion already installed: $(idb_companion --version 2>/dev/null || echo 'unknown')"
+          else
+            info "Installing idb-companion..."
+            brew install idb-companion
+            ok "idb-companion installed"
+          fi
+        else
+          warn "Homebrew not found — cannot install idb-companion automatically"
+          warn "Install manually: brew tap facebook/fb && brew install idb-companion"
+        fi
+
+        # Install fb-idb via Python venv
+        if command -v python3 &>/dev/null; then
+          if [[ -f "${IDB_VENV}/bin/idb" ]]; then
+            ok "fb-idb already installed in ${IDB_VENV}"
+          else
+            info "Creating Python venv at ${IDB_VENV}..."
+            python3 -m venv "${IDB_VENV}"
+            info "Installing fb-idb..."
+            "${IDB_VENV}/bin/pip" install --quiet fb-idb
+            ok "fb-idb installed in ${IDB_VENV}"
+          fi
+        else
+          warn "python3 not found — cannot create venv for fb-idb"
+          warn "Install manually: python3 -m venv ${IDB_VENV} && ${IDB_VENV}/bin/pip install fb-idb"
+        fi
+      fi
+
+      # Verify
+      if command -v idb_companion &>/dev/null && [[ -f "${IDB_VENV}/bin/idb" ]]; then
+        IOS_MCP_READY=true
+        ok "iOS Simulator MCP dependencies installed successfully"
+      else
+        warn "iOS Simulator MCP setup incomplete — check warnings above"
+      fi
+    else
+      info "Skipping iOS Simulator MCP. You can install it later with: setup.sh"
+      info "The ios-simulator MCP config will remain in opencode.json but may fail at runtime."
+    fi
+  else
+    info "iOS Simulator MCP is only available on macOS — skipping"
+    info "The ios-simulator MCP config will remain in opencode.json but is disabled on non-macOS."
+  fi
+fi
 
 echo -e "\n${BOLD}--- Installing configuration files ---${NC}\n"
 
@@ -258,23 +345,29 @@ else
     "Enter the B300 endpoint (Kimi K2.6, optional)" \
     "https://kimi-k26-nvfp4.ia2-kub.infomaniak.ch/v1" false
 
-  # iOS Simulator — auto-detect UDID on macOS
-  if [[ "$(uname)" == "Darwin" ]]; then
-    AUTO_UDID=$(xcrun simctl list devices available 2>/dev/null | grep -m1 "Booted\|(" | grep -o '[0-9A-F-]\{36\}' | head -1)
-    if [[ -z "${AUTO_UDID}" ]]; then
-      AUTO_UDID=$(xcrun simctl list devices available 2>/dev/null | grep -o '[0-9A-F-]\{36\}' | head -1)
+  # iOS Simulator — only ask if MCP dependencies are installed
+  if [[ "$IOS_MCP_READY" == true ]]; then
+    if [[ "$(uname)" == "Darwin" ]]; then
+      AUTO_UDID=$(xcrun simctl list devices available 2>/dev/null | grep -m1 "Booted\|(" | grep -o '[0-9A-F-]\{36\}' | head -1)
+      if [[ -z "${AUTO_UDID}" ]]; then
+        AUTO_UDID=$(xcrun simctl list devices available 2>/dev/null | grep -o '[0-9A-F-]\{36\}' | head -1)
+      fi
+      prompt_var IDB_UDID \
+        "Enter iOS Simulator UDID (auto-detected, press Enter to skip)" \
+        "${AUTO_UDID}" false
+    else
+      prompt_var IDB_UDID \
+        "Enter iOS Simulator UDID (skip if not on macOS)" "" false
     fi
-    prompt_var IDB_UDID \
-      "Enter iOS Simulator UDID (auto-detected, press Enter to skip)" \
-      "${AUTO_UDID}" false
-  else
-    prompt_var IDB_UDID \
-      "Enter iOS Simulator UDID (skip if not on macOS)" "" false
-  fi
 
-  prompt_var IDB_PATH \
-    "Enter PATH for idb binaries" \
-    "${HOME}/.local/idb-venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" false
+    prompt_var IDB_PATH \
+      "Enter PATH for idb binaries" \
+      "${IDB_VENV}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" false
+  else
+    info "Skipping iOS Simulator variables (MCP not installed)"
+    IDB_UDID=""
+    IDB_PATH=""
+  fi
 
   # ─── Step 6: Write .env file ─────────────────────────────────────────────────
 
@@ -341,6 +434,26 @@ if command -v rtk &>/dev/null; then
   ok "rtk available"
 else
   warn "rtk not in PATH — plugin will be disabled until installed"
+fi
+
+# Check MCP servers
+ok "chrome-devtools-mcp: auto-installed via npx"
+
+if [[ "$IOS_MCP_READY" == true ]]; then
+  if command -v idb_companion &>/dev/null; then
+    ok "ios-simulator-mcp: idb-companion available"
+  else
+    warn "ios-simulator-mcp: idb-companion not in PATH"
+    ERRORS=$((ERRORS + 1))
+  fi
+  if [[ -f "${IDB_VENV}/bin/idb" ]]; then
+    ok "ios-simulator-mcp: fb-idb available"
+  else
+    warn "ios-simulator-mcp: fb-idb not found in ${IDB_VENV}"
+    ERRORS=$((ERRORS + 1))
+  fi
+else
+  info "ios-simulator-mcp: not installed (skipped by user or non-macOS)"
 fi
 
 # Summary
