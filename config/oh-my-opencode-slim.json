@@ -15,7 +15,7 @@
         ]
       },
       "oracle": {
-        "model": "infomaniak/euria-code",
+        "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
         "variant": "high",
         "skills": [
           "simplify"
@@ -23,7 +23,7 @@
         "mcps": []
       },
       "librarian": {
-        "model": "infomaniak/euria-code-tiny",
+        "model": "infomaniak/mistralai/Ministral-3-14B-Instruct-2512",
         "variant": "low",
         "skills": [],
         "mcps": [
@@ -33,19 +33,19 @@
         ]
       },
       "explorer": {
-        "model": "infomaniak/euria-code-tiny",
+        "model": "infomaniak/mistralai/Ministral-3-14B-Instruct-2512",
         "variant": "low",
         "skills": [],
         "mcps": []
       },
       "designer": {
-        "model": "infomaniak/euria-code-tiny",
+        "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
         "variant": "medium",
         "skills": [],
         "mcps": []
       },
       "fixer": {
-        "model": "infomaniak/euria-code",
+        "model": "infomaniak/Qwen/Qwen3.5-122B-A10B-FP8",
         "variant": "low",
         "skills": [],
         "mcps": []

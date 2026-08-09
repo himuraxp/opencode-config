@@ -1,7 +1,7 @@
 ---
 description: Agent Spark - Agent rapide et leger pour les mini-taches simples (commit, MR, appels de skills, etc.) qui ne necessitent pas de raisonnement complexe.
 mode: all
-model: infomaniak/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8
+model: infomaniak/mistralai/Ministral-3-14B-Instruct-2512
 permission:
   edit: deny
   skill: allow
