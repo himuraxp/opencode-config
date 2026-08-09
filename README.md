@@ -1,11 +1,10 @@
 # OpenCode Config
 
-[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/himuraxp/opencode-config/releases/tag/v1.0.0)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/himuraxp/opencode-config.svg)](https://github.com/himuraxp/opencode-config/commits/main)
 [![OpenCode Compatible](https://img.shields.io/badge/OpenCode-Compatible-brightgreen.svg)](https://opencode.ai)
 
-> **La référence OpenCode pour les développeurs Angular, TypeScript et les workflows IA en production.**
+> **La référence OpenCode pour les workflows IA en production — Angular, Node.js, NestJS, Astro.**
 
 Forkable. Multi-couches. Prête à l'emploi.
 
@@ -40,8 +39,8 @@ Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser
 
 Ce repo apporte :
 
-- **Agents spécialisés** : aurora (principal), reviewer, tester, security, architect
-- **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts
+- **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security, architect, spark (sous-agent léger), vision (multimodal)
+- **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
 - **Audit read-only** : health-check multi-axes sans modification de code
@@ -65,6 +64,7 @@ git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-con
 `setup.sh` est un script interactif qui :
 - Vérifie les prérequis (Node.js 18+, npm)
 - Installe ou met à jour `opencode-ai` (npm global) et `rtk` (Homebrew sur macOS)
+- Propose d'installer les MCP servers (chrome-devtools auto, iOS Simulator optionnel avec idb-companion + fb-idb)
 - Copie agents, standards, frameworks et fichiers de config
 - Installe les dépendances npm des plugins
 - Demande interactivement les variables d'environnement (clé API, endpoints)
@@ -139,7 +139,39 @@ Les secrets sont stockés dans `~/.config/opencode/.env` et référencés via `{
 
 `setup.sh` demande ces valeurs interactivement. Pour les modifier ultérieurement, éditez `~/.config/opencode/.env` directement.
 
-### 4. Initialiser un projet
+### 4. MCP Servers
+
+La configuration inclut deux MCP servers dans `opencode.json` :
+
+| MCP Server | Rôle | Installation |
+|------------|------|-------------|
+| `chrome-devtools` | Navigation, screenshots, audit Lighthouse, debug Chrome | Auto-installé via `npx` au premier lancement |
+| `ios-simulator` | Interaction avec le simulateur iOS (tap, swipe, screenshots, UI tree) | Optionnel — nécessite `idb-companion` + `fb-idb` |
+
+#### chrome-devtools-mcp
+
+Aucune installation manuelle nécessaire. Le package `chrome-devtools-mcp` est téléchargé automatiquement par `npx` au premier appel.
+
+#### ios-simulator-mcp (macOS uniquement)
+
+Ce MCP nécessite 3 dépendances externes :
+
+| Dépendance | Installation |
+|------------|-------------|
+| Xcode | App Store (nécessaire pour `xcrun simctl`) |
+| `idb-companion` | `brew tap facebook/fb && brew install idb-companion` |
+| `fb-idb` | `python3 -m venv ~/.local/idb-venv && ~/.local/idb-venv/bin/pip install fb-idb` |
+
+`setup.sh` propose d'installer ces dépendances automatiquement. Si vous refusez ou si vous êtes sur Linux, le MCP reste configuré dans `opencode.json` mais plantera au runtime — vous pouvez le désactiver en passant `"enabled": false`.
+
+Variables d'environnement associées (dans `.env`) :
+
+| Variable | Usage |
+|----------|-------|
+| `IDB_UDID` | UDID du simulateur iOS cible (auto-détecté par `setup.sh`) |
+| `IDB_PATH` | Chemin vers les binaires `idb` (défaut: `~/.local/idb-venv/bin:...`) |
+
+### 5. Initialiser un projet
 
 ```bash
 cd mon-projet
@@ -168,7 +200,7 @@ mon-projet/
         └── WARNINGS.md   → alertes et dettes techniques
 ```
 
-### 5. Synchroniser un projet existant
+### 6. Synchroniser un projet existant
 
 ```bash
 ~/.config/opencode-config/scripts/sync-project.sh
@@ -229,9 +261,9 @@ Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/a
 ```txt
 Global Configuration
         ↓
-     Standards    (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring)
+     Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring)
         ↓
-      Agents       (aurora, reviewer, tester, security, architect)
+       Agents       (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision)
         ↓
     Frameworks     (angular-20, nodejs, nestjs, astro...)
         ↓
@@ -419,7 +451,7 @@ opencode-config/
 L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 
 1. Bonnes pratiques générales.
-2. **Agents** globaux `~/.config/opencode/agents/` (aurora, reviewer, tester, security, architect).
+2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
 4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring).
 5. Agents spécialisés enregistrés dans la session.
