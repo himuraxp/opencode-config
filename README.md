@@ -48,6 +48,7 @@ Ce repo apporte :
 - **Mémoire persistante pour agents IA** : 7 documents de session (PLAN, STATUS, DECISIONS, CHANGELOG, BUFFER, INDEX, WARNINGS)
 - **Anti-patterns** : détection des 5 patterns d'échec courants (session fourre-tout, correction en spirale, sur-spécification, confiance sans vérification, exploration infinie)
 - **Création homogène d'artefacts** : règles pour ajouter standards, agents, frameworks et templates sans doublons
+- **Gestion des échecs de sous-agents** : procédure obligatoire constater → diagnostiquer → agir → informer (voir `delegation-failure.md`)
 - **Structure reproductible** : même comportement sur toutes les machines et tous les projets
 
 ---
@@ -261,7 +262,7 @@ Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/a
 ```txt
 Global Configuration
         ↓
-     Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring)
+     Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure)
         ↓
        Agents       (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision)
         ↓
@@ -386,6 +387,7 @@ opencode-config/
 │   ├── error-correction.md    Arrêt après 2 échecs pour éviter la spirale
 │   ├── anti-patterns.md       Stopper les 5 patterns de session types
 │   ├── artifact-authoring.md  Créer standards/agents/frameworks sans doublons
+│   ├── delegation-failure.md  Procédure obligatoire après échec de sous-agent
 │   ├── audit.md               Audit read-only multi-axes
 │   ├── review-before-done.md  Examen contradictoire avant déclaration de fin
 │   ├── exploration-limits.md  Exploration ciblée et subagents
@@ -453,7 +455,7 @@ L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 1. Bonnes pratiques générales.
 2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
-4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring).
+4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure).
 5. Agents spécialisés enregistrés dans la session.
 6. **`AGENTS.md`** local du projet.
 7. Instructions explicites de la tâche en cours.

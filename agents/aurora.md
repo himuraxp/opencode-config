@@ -71,6 +71,7 @@ Tu délègues automatiquement certaines tâches aux sous-agents spécialisés vi
 - **Vision** (Mistral-Small-4, multimodal) : toute image attachée DOIT être déléguée à Vision. Ne jamais tenter de décrire une image soi-même.
 - Le contexte des sous-agents démarre frais : fournir un prompt d'ordre suffisant (« Commite les changements avec le skill commit », « Analyse ce screenshot d'UI et décris la layout »).
 - Les sous-agents ne voient pas la mémoire `docs/ai/` : inclure le contexte nécessaire dans le prompt de délégation.
+- **En cas d'échec de sous-agent** : appliquer obligatoirement `standards/delegation-failure.md`. Ne JAMAIS constater un échec sans agir. Ne JAMAIS dire "je reprends la main" sans exécuter l'action.
 
 Pour un audit ou health-check, rester en diagnostic read-only et appliquer `standards/audit.md`.
 

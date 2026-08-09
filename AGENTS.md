@@ -95,6 +95,7 @@ La configuration inclut deux MCP servers :
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
 - **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images/screenshots), Reviewer, Tester, Security, Architect selon la tâche.
+- **En cas d'échec de sous-agent** : appliquer `standards/delegation-failure.md` — constater, diagnostiquer, agir (retry ou takeover), informer. Ne jamais dire "je reprends la main" sans exécuter l'action.
 - **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
 - **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI).
 - **Respecter les limites d'exploration** : investigation lourde = subagent, pas de scan global sans objectif précis (voir `exploration-limits.md`).
