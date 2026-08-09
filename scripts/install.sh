@@ -7,6 +7,12 @@ PRUNE=false
 DRY_RUN=false
 NO_CONFIG=false
 
+# Counters
+NEW_COUNT=0
+UPDATED_COUNT=0
+UNCHANGED_COUNT=0
+PRUNED_COUNT=0
+
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [--prune] [--dry-run] [--no-config]
@@ -41,6 +47,37 @@ for arg in "$@"; do
   esac
 done
 
+# copy_file <src> <dest> — copies a file, tracking new/updated/unchanged
+copy_file() {
+  local src="$1"
+  local dest="$2"
+
+  if [[ "$DRY_RUN" == true ]]; then
+    if [[ ! -f "$dest" ]]; then
+      echo "  new:     $dest"
+    elif ! diff -q "$src" "$dest" &>/dev/null; then
+      echo "  updated: $dest"
+    else
+      echo "  unchanged: $dest"
+    fi
+    return
+  fi
+
+  if [[ ! -f "$dest" ]]; then
+    mkdir -p "$(dirname "$dest")"
+    cp "$src" "$dest"
+    echo "  new:     $dest"
+    NEW_COUNT=$((NEW_COUNT + 1))
+  elif ! diff -q "$src" "$dest" &>/dev/null; then
+    cp "$src" "$dest"
+    echo "  updated: $dest"
+    UPDATED_COUNT=$((UPDATED_COUNT + 1))
+  else
+    echo "  unchanged: $dest"
+    UNCHANGED_COUNT=$((UNCHANGED_COUNT + 1))
+  fi
+}
+
 install_dir() {
   local src="$1"
   local dest="$2"
@@ -57,12 +94,7 @@ install_dir() {
   for file in "$src"/*.md; do
     [[ -e "$file" ]] || continue
     name="$(basename "$file")"
-    if [[ "$DRY_RUN" == true ]]; then
-      echo "would install: $dest/$name"
-    else
-      cp "$file" "$dest/$name"
-      echo "installed: $dest/$name"
-    fi
+    copy_file "$file" "$dest/$name"
   done
 
   if [[ "$PRUNE" == true && -d "$dest" ]]; then
@@ -71,10 +103,11 @@ install_dir() {
       name="$(basename "$installed")"
       if [[ ! -e "$src/$name" ]]; then
         if [[ "$DRY_RUN" == true ]]; then
-          echo "would prune: $installed"
+          echo "  would prune: $installed"
         else
           rm "$installed"
-          echo "pruned: $installed"
+          echo "  pruned:  $installed"
+          PRUNED_COUNT=$((PRUNED_COUNT + 1))
         fi
       fi
     done
@@ -83,7 +116,7 @@ install_dir() {
       [[ -e "$installed" ]] || continue
       name="$(basename "$installed")"
       if [[ ! -e "$src/$name" ]]; then
-        echo "orphan: $installed (run with --prune to remove)"
+        echo "  orphan:  $installed (run with --prune to remove)"
       fi
     done
   fi
@@ -106,66 +139,37 @@ install_config() {
 
   # opencode.json
   if [[ -f "$src/opencode.json" ]]; then
-    if [[ "$DRY_RUN" == true ]]; then
-      echo "would install: $dest/opencode.json"
-    else
-      mkdir -p "$dest"
-      cp "$src/opencode.json" "$dest/opencode.json"
-      echo "installed: $dest/opencode.json"
-    fi
+    copy_file "$src/opencode.json" "$dest/opencode.json"
   fi
 
   # oh-my-opencode-slim.json
   if [[ -f "$src/oh-my-opencode-slim.json" ]]; then
-    if [[ "$DRY_RUN" == true ]]; then
-      echo "would install: $dest/oh-my-opencode-slim.json"
-    else
-      mkdir -p "$dest"
-      cp "$src/oh-my-opencode-slim.json" "$dest/oh-my-opencode-slim.json"
-      echo "installed: $dest/oh-my-opencode-slim.json"
-    fi
+    copy_file "$src/oh-my-opencode-slim.json" "$dest/oh-my-opencode-slim.json"
   fi
 
   # package.json (for plugin dependencies)
   if [[ -f "$src/package.json" ]]; then
-    if [[ "$DRY_RUN" == true ]]; then
-      echo "would install: $dest/package.json"
-    else
-      mkdir -p "$dest"
-      cp "$src/package.json" "$dest/package.json"
-      echo "installed: $dest/package.json"
-    fi
+    copy_file "$src/package.json" "$dest/package.json"
   fi
 
   # .env.example (template — user copies to .env manually or via setup.sh)
   if [[ -f "$src/.env.example" ]]; then
-    if [[ "$DRY_RUN" == true ]]; then
-      echo "would install: $dest/.env.example"
-    else
-      mkdir -p "$dest"
-      cp "$src/.env.example" "$dest/.env.example"
-      echo "installed: $dest/.env.example"
-    fi
+    copy_file "$src/.env.example" "$dest/.env.example"
   fi
 
   # plugins/ directory
   if [[ -d "$src/plugins" ]]; then
-    if [[ "$DRY_RUN" == true ]]; then
-      echo "would install: $dest/plugins/*"
-    else
-      mkdir -p "$dest/plugins"
-      for pfile in "$src/plugins"/*; do
-        [[ -e "$pfile" ]] || continue
-        pname="$(basename "$pfile")"
-        cp "$pfile" "$dest/plugins/$pname"
-        echo "installed: $dest/plugins/$pname"
-      done
-    fi
+    mkdir -p "$dest/plugins"
+    for pfile in "$src/plugins"/*; do
+      [[ -e "$pfile" ]] || continue
+      pname="$(basename "$pfile")"
+      copy_file "$pfile" "$dest/plugins/$pname"
+    done
   fi
 
   # npm install is handled by setup.sh to avoid double-install and give better error output
   if [[ "$DRY_RUN" == false && -f "$dest/package.json" ]]; then
-    echo "note: run 'npm install' in $dest or use setup.sh for full installation"
+    echo "  note: run 'npm install' in $dest or use setup.sh for full installation"
   fi
 }
 
@@ -174,8 +178,14 @@ if [[ "$NO_CONFIG" == false ]]; then
 fi
 
 if [[ "$DRY_RUN" == true ]]; then
+  echo ""
   echo "Dry run complete. No files were modified."
 else
+  echo ""
+  echo "Summary: ${NEW_COUNT} new, ${UPDATED_COUNT} updated, ${UNCHANGED_COUNT} unchanged"
+  if [[ ${PRUNED_COUNT} -gt 0 ]]; then
+    echo "         ${PRUNED_COUNT} pruned"
+  fi
   echo "OpenCode configuration installed in $TARGET_BASE."
   if [[ "$NO_CONFIG" == false ]]; then
     echo "Config files installed. Run scripts/setup.sh for first-time setup with secrets."

@@ -63,13 +63,21 @@ git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-con
 ```
 
 `setup.sh` est un script interactif qui :
-- Vérifie les prérequis (Node.js, npm)
-- Installe `opencode-ai` (npm global) et `rtk` (Homebrew sur macOS)
+- Vérifie les prérequis (Node.js 18+, npm)
+- Installe ou met à jour `opencode-ai` (npm global) et `rtk` (Homebrew sur macOS)
 - Copie agents, standards, frameworks et fichiers de config
 - Installe les dépendances npm des plugins
 - Demande interactivement les variables d'environnement (clé API, endpoints)
 - Écrit `~/.config/opencode/.env` (permissions 600, jamais versionné)
 - Vérifie que tout est fonctionnel
+
+Si `.env` existe déjà et contient les variables requises, l'étape de configuration est automatiquement skipée. Utilisez `--force` pour reconfigurer :
+
+```bash
+~/.config/opencode-config/scripts/setup.sh --force
+```
+
+Si une mise à jour de `opencode-ai` ou `rtk` est disponible, `setup.sh` propose de la faire.
 
 ### 2. Mettre à jour la configuration (modifications ultérieures)
 
@@ -77,6 +85,16 @@ git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-con
 cd ~/.config/opencode-config
 git pull
 ./scripts/install.sh
+```
+
+`install.sh` affiche pour chaque fichier s'il est `new`, `updated` ou `unchanged`. Seuls les fichiers modifiés sont réécrits.
+
+Pour une mise à jour complète (config + dépendances + vérification) :
+
+```bash
+cd ~/.config/opencode-config
+git pull
+./scripts/setup.sh
 ```
 
 Après un renommage ou une suppression de standard, nettoyer les anciens fichiers installés :
