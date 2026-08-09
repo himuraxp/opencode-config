@@ -108,3 +108,27 @@ Après 2 échecs :
 - ✅ Agir : retry avec correction OU takeover direct
 - ✅ Informer l'utilisateur du résultat final
 - ✅ Si l'échec bloque le workflow : appliquer `escalation.md`
+
+## Limite connue — Hang silencieux
+
+Ce standard couvre les cas où le `task` tool **retourne** un résultat (échec, annulation, vide). Il ne peut pas couvrir le cas où le sous-agent **ne répond plus** (hang silencieux).
+
+### Pourquoi
+
+Quand Aurora appelle le tool `task`, elle est bloquée en attente du résultat. Pendant cette attente, elle ne peut pas :
+- Mesurer le temps écoulé (pas de timer)
+- Lancer un check en parallèle (bloquée sur le tool call)
+- S'auto-interrompre (pas de boucle d'exécution)
+
+C'est une limite du runtime OpenCode : le `task` tool est bloquant et n'accepte pas de `timeout` configurable.
+
+### Ce qui est hors de portée
+
+| Cas | Détection | Action |
+|-----|-----------|--------|
+| Le tool `task` retourne un échec | ✅ Automatique | `delegation-failure.md` s'applique |
+| Le tool `task` hang sans réponse | ❌ Non détectable par Aurora | L'utilisateur doit intervenir manuellement |
+
+### Action possible
+
+Le vrai fix serait un paramètre `timeout` sur le `task` tool côté OpenCode. Au timeout, le tool retournerait `state: timeout` et ce standard s'appliquerait automatiquement. Côté config, on ne peut rien faire — c'est une évolution du runtime OpenCode.
