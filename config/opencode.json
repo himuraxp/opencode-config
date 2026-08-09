@@ -1,0 +1,423 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "share": "disabled",
+  "provider": {
+    "infomaniak-b300": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "infomaniak",
+      "options": {
+        "baseURL": "{env:OPENAI_B300_BASE_URL}",
+        "headers": {
+          "X-LLM-Application-Tag": "codegpt"
+        }
+      },
+      "models": {
+        "euria-code": {
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 262144,
+            "output": 131072
+          },
+          "cost": {
+            "input": 0.6,
+            "output": 3
+          },
+          "parameters": {
+            "repetitionPenalty": 1.15,
+            "stopSequences": [
+              "!!!",
+              "!!!!",
+              "!\\n!"
+            ],
+            "thinking": {
+              "enabled": true,
+              "budgetTokens": 16384
+            }
+          }
+        }
+      }
+    },
+    "infomaniak": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "infomaniak",
+      "options": {
+        "baseURL": "{env:OPENAI_BASE_URL}",
+        "headers": {
+          "X-LLM-Application-Tag": "codegpt",
+          "Authorization": "Bearer {env:OPENAI_API_KEY}"
+        }
+      },
+      "models": {
+        "euria-code": {
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "euria-code",
+          "limit": {
+            "context": 250000,
+            "output": 100000
+          }
+        },
+        "euria-code-tiny": {
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "euria-code-tiny",
+          "limit": {
+            "context": 200000,
+            "output": 100000
+          }
+        },
+        "mistralai/Ministral-3-14B-Instruct-2512": {
+          "name": "mistralai/Ministral-3-14B-Instruct-2512",
+          "tool_call": true,
+          "cost": {
+            "input": 0.30,
+            "output": 0.40
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 100000,
+            "output": 100000
+          }
+        },
+        "mistralai/Mistral-Small-4-119B-2603": {
+          "name": "mistralai/Mistral-Small-4-119B-2603",
+          "tool_call": true,
+          "cost": {
+            "input": 0.20,
+            "output": 0.75
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 256000,
+            "output": 100000
+          }
+        },
+        "Qwen/Qwen3.5-122B-A10B-FP8": {
+          "name": "Qwen/Qwen3.5-122B-A10B-FP8",
+          "tool_call": true,
+          "cost": {
+            "input": 0.40,
+            "output": 3.20
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 100000
+          }
+        },
+        "Qwen/Qwen3.5-397B-A17B-FP8": {
+          "name": "Qwen/Qwen3.5-397B-A17B-FP8",
+          "tool_call": true,
+          "cost": {
+            "input": 0.80,
+            "output": 3.60
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 100000
+          }
+        },
+        "google/gemma-4-31B-it": {
+          "name": "google/gemma-4-31B-it",
+          "tool_call": true,
+          "cost": {
+            "input": 0.20,
+            "output": 0.40
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 100000,
+            "output": 100000
+          }
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "moonshotai/Kimi-K2.6",
+          "tool_call": true,
+          "cost": {
+            "input": 0.60,
+            "output": 3.00
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 256000,
+            "output": 100000
+          }
+        },
+        "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8": {
+          "name": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8",
+          "tool_call": true,
+          "cost": {
+            "input": 0.05,
+            "output": 0.20
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 100000
+          }
+        },
+        "swiss-ai/Apertus-v1.5-70B": {
+          "name": "swiss-ai/Apertus-v1.5-70B",
+          "tool_call": true,
+          "cost": {
+            "input": 0.70,
+            "output": 2.50
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 100000,
+            "output": 100000
+          }
+        }
+      }
+    }
+  },
+  "model": "infomaniak/euria-code",
+  "default_agent": "plan",
+  "agent": {
+    "orchestrator": {
+      "model": "infomaniak/euria-code"
+    },
+    "build": {
+      "model": "infomaniak/euria-code",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "ask",
+          "echo *": "allow",
+          "jq *": "allow",
+          "cat *": "allow",
+          "date*": "allow",
+          "date *": "allow",
+          "tr *": "allow",
+          "curl *": "allow",
+          "git add *": "allow",
+          "git branch --show-current": "allow",
+          "git checkout *": "allow",
+          "git commit *": "allow",
+          "git log *": "allow",
+          "git status *": "allow",
+          "git push *": "ask",
+          "git diff*": "allow",
+          "glab *": "allow",
+          "yarn test *": "allow",
+          "yarn build *": "allow",
+          "yarn lint *": "allow",
+          "yarn lint:fix *": "allow",
+          "npm run build *": "allow",
+          "rtk *": "allow",
+          "grep *": "allow",
+          "ls *": "allow",
+          "pwd": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "awk *": "allow",
+          "kill *": "allow",
+          "lsof *": "allow",
+          "awk *inplace*": "ask",
+          "awk *system*": "ask",
+          "sort *": "allow",
+          "uniq *": "allow",
+          "wc *": "allow",
+          "sed *": "allow",
+          "osascript *": "ask",
+          "xargs *": "ask",
+          "*-exec*": "ask",
+          "watch *": "ask",
+          "env *": "ask",
+          "sudo *": "deny",
+          "su *": "deny",
+          "doas *": "deny"
+        },
+        "webfetch": "ask"
+      }
+    },
+    "plan": {
+      "model": "infomaniak/euria-code",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      }
+    },
+    "build-b300": {
+      "model": "infomaniak-b300/euria-code",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "ask",
+          "echo *": "allow",
+          "jq *": "allow",
+          "cat *": "allow",
+          "date*": "allow",
+          "date *": "allow",
+          "tr *": "allow",
+          "curl *": "allow",
+          "git add *": "allow",
+          "git branch --show-current": "allow",
+          "git checkout *": "allow",
+          "git commit *": "allow",
+          "git log *": "allow",
+          "git status *": "allow",
+          "git push *": "ask",
+          "git diff*": "allow",
+          "glab *": "allow",
+          "yarn test *": "allow",
+          "yarn build *": "allow",
+          "yarn lint *": "allow",
+          "yarn lint:fix *": "allow",
+          "npm run build *": "allow",
+          "rtk *": "allow",
+          "grep *": "allow",
+          "ls *": "allow",
+          "pwd": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "awk *": "allow",
+          "kill *": "allow",
+          "lsof *": "allow",
+          "awk *inplace*": "ask",
+          "awk *system*": "ask",
+          "sort *": "allow",
+          "uniq *": "allow",
+          "wc *": "allow",
+          "sed *": "allow",
+          "osascript *": "ask",
+          "xargs *": "ask",
+          "*-exec*": "ask",
+          "watch *": "ask",
+          "env *": "ask",
+          "sudo *": "deny",
+          "su *": "deny",
+          "doas *": "deny"
+        },
+        "webfetch": "ask"
+      }
+    },
+    "explore": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    }
+  },
+  "plugin": [
+    "oh-my-opencode-slim"
+  ],
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--headless",
+        "--isolated"
+      ],
+      "enabled": true,
+      "timeout": 30000
+    },
+    "ios-simulator": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "ios-simulator-mcp"
+      ],
+      "enabled": true,
+      "timeout": 30000,
+      "env": {
+        "PATH": "{env:IDB_PATH}",
+        "IDB_UDID": "{env:IDB_UDID}"
+      }
+    }
+  },
+  "lsp": true
+}

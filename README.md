@@ -55,11 +55,27 @@ Ce repo apporte :
 
 ## Quick Start
 
-### 1. Installer la configuration globale
+### 1. Installer la configuration complète (première fois)
 
 ```bash
 git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-config
+~/.config/opencode-config/scripts/setup.sh
+```
+
+`setup.sh` est un script interactif qui :
+- Vérifie les prérequis (Node.js, npm)
+- Installe `opencode-ai` (npm global) et `rtk` (Homebrew sur macOS)
+- Copie agents, standards, frameworks et fichiers de config
+- Installe les dépendances npm des plugins
+- Demande interactivement les variables d'environnement (clé API, endpoints)
+- Écrit `~/.config/opencode/.env` (permissions 600, jamais versionné)
+- Vérifie que tout est fonctionnel
+
+### 2. Mettre à jour la configuration (modifications ultérieures)
+
+```bash
 cd ~/.config/opencode-config
+git pull
 ./scripts/install.sh
 ```
 
@@ -69,16 +85,43 @@ Après un renommage ou une suppression de standard, nettoyer les anciens fichier
 ./scripts/install.sh --prune
 ```
 
+Pour mettre à jour sans toucher aux fichiers de config (`opencode.json`, plugins) :
+
+```bash
+./scripts/install.sh --no-config
+```
+
 Cela installe dans `~/.config/opencode/` :
 
 ```txt
 ~/.config/opencode/
-├── agents/        # Personnalités IA
-├── standards/     # Comportements universels
-└── frameworks/    # Règles par stack technique
+├── agents/                    # Personnalités IA
+├── standards/                 # Comportements universels
+├── frameworks/                # Règles par stack technique
+├── opencode.json              # Config principale (providers, models, permissions, MCP)
+├── oh-my-opencode-slim.json   # Presets sous-agents
+├── package.json               # Dépendances plugins
+├── plugins/
+│   └── rtk.ts                 # Plugin RTK (token savings)
+├── .env                       # Secrets (jamais versionné)
+└── .env.example               # Template des variables d'environnement
 ```
 
-### 2. Initialiser un projet
+### 3. Variables d'environnement
+
+Les secrets sont stockés dans `~/.config/opencode/.env` et référencés via `{env:...}` dans `opencode.json`.
+
+| Variable | Usage | Requis |
+|----------|-------|--------|
+| `OPENAI_API_KEY` | Clé API Infomaniak AI | Oui |
+| `OPENAI_BASE_URL` | Endpoint API Infomaniak | Oui |
+| `OPENAI_B300_BASE_URL` | Endpoint B300 (Kimi K2.6) | Non |
+| `IDB_UDID` | UDID simulateur iOS | Non |
+| `IDB_PATH` | Chemin binaires idb | Non |
+
+`setup.sh` demande ces valeurs interactivement. Pour les modifier ultérieurement, éditez `~/.config/opencode/.env` directement.
+
+### 4. Initialiser un projet
 
 ```bash
 cd mon-projet
@@ -107,7 +150,7 @@ mon-projet/
         └── WARNINGS.md   → alertes et dettes techniques
 ```
 
-### 3. Synchroniser un projet existant
+### 5. Synchroniser un projet existant
 
 ```bash
 ~/.config/opencode-config/scripts/sync-project.sh
@@ -227,10 +270,13 @@ Les agents disponibles sont dans `agents/` :
 | Agent | Rôle |
 |-------|------|
 | `aurora.md` | Agent principal — chargement et coordination |
+| `aurora-heavy.md` | Agent pour tâches complexes (Qwen 397B) |
 | `reviewer.md` | Code review stricte |
 | `tester.md` | Tests qualité |
 | `security.md` | Risques sécurité |
 | `architect.md` | Découpage technique |
+| `spark.md` | Sous-agent léger (commit, MR) |
+| `vision.md` | Sous-agent multimodal (images, screenshots) |
 
 ### Ajouter un framework
 
@@ -277,6 +323,14 @@ opencode-config/
 ├── LICENSE
 ├── CHANGELOG.md
 │
+├── config/                     Config OpenCode (versionnée, sans secrets)
+│   ├── opencode.json             Providers, models, permissions, MCP servers
+│   ├── oh-my-opencode-slim.json  Presets sous-agents (euria-code, opencode-go)
+│   ├── package.json              Dépendance @opencode-ai/plugin
+│   ├── .env.example              Template des variables d'environnement
+│   └── plugins/
+│       └── rtk.ts                Plugin RTK (token savings via rtk rewrite)
+│
 ├── standards/               Comportements universels
 │   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Review→Vérifier→Committer
 │   ├── error-correction.md    Arrêt après 2 échecs pour éviter la spirale
@@ -295,10 +349,13 @@ opencode-config/
 │
 ├── agents/                    Personnalités spécialisées
 │   ├── aurora.md              Agent principal et coordinateur
+│   ├── aurora-heavy.md        Agent pour tâches complexes (Qwen 397B)
 │   ├── reviewer.md            Code review stricte
 │   ├── tester.md              Tests Jest + Angular
 │   ├── security.md            Risques et remédiations
-│   └── architect.md           Découpage technique
+│   ├── architect.md           Découpage technique
+│   ├── spark.md               Sous-agent léger (commit, MR)
+│   └── vision.md              Sous-agent multimodal (images, screenshots)
 │
 ├── frameworks/                Règles par stack technique
 │   ├── angular-20.md          Conventions Angular 20+ stand-alone
@@ -323,7 +380,8 @@ opencode-config/
 │   └── monorepo/              Monorepo exemple
 │
 ├── scripts/                   Automatisation
-│   ├── install.sh             Installer la config globale
+│   ├── setup.sh                Installation complète (première fois, interactive)
+│   ├── install.sh              Installer/mettre à jour la config globale
 │   ├── init-project.sh         Initialiser un nouveau projet
 │   └── sync-project.sh         Synchroniser les templates
 │
