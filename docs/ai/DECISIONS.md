@@ -1,5 +1,26 @@
 # DECISIONS
 
+## 2026-08-10 — Renommage Oracle → Sage pour éviter le conflit avec le preset `oracle`
+
+### Contexte
+
+Le plugin `oh-my-opencode-slim` définit un preset nommé `oracle` (modèle Qwen 397B, variant high) pour les skills de raisonnement critique : `code-review`, `pre-mr-review`, `verification-planning`, `simplify`. Un nouvel agent AIO/GEO devait être créé. Le nom "Oracle" était le choix naturel pour ce rôle, mais entrait en conflit avec le preset du plugin.
+
+### Décision
+
+Renonmer l'agent AIO/GEO en **Sage** au lieu d'Oracle. Le preset `oracle` du plugin et l'agent `sage.md` coexistent sans ambiguïté :
+
+1. **Preset `oracle`** (plugin `oh-my-opencode-slim.json`) : gère les skills de raisonnement critique via la configuration du plugin. Invoqué par OpenCode pour `code-review`, `pre-mr-review`, `verification-planning`, `simplify`.
+2. **Agent `agents/sage.md`** (AIO/GEO) : agent subagent invocable via `task` avec `subagent_type: sage`. Gère l'optimisation pour AI Overviews, ChatGPT Search, Perplexity, Gemini.
+
+Les deux utilisent le même modèle (`Qwen/Qwen3.5-397B-A17B-FP8`) mais c'est une coïncidence, pas une dépendance.
+
+### Impact
+
+- Les skills `code-review`, `pre-mr-review`, `verification-planning`, `simplify` continuent d'être routés vers le preset `oracle` du plugin sans changement.
+- L'agent `sage.md` est invoqué via `task` pour les tâches AIO/GEO.
+- Aucune ambiguïté de nommage : "Oracle" désigne toujours le preset du plugin, "Sage" désigne l'agent AIO/GEO.
+
 ## 2026-08-06 — Délégation sous-agents Spark & Vision
 
 ### Contexte

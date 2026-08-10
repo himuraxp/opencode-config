@@ -4,6 +4,51 @@
 
 ## Fait
 
+### 2026-08-10 — Équipe Search & Growth Agents
+
+- **7 nouveaux agents créés** dans `agents/` :
+  - `atlas.md` — SEO Strategist (Qwen 397B, edit: deny, webfetch: allow)
+  - `crawler.md` — Technical SEO Engineer (edit: allow, webfetch: allow) — modèle par défaut (euria-code)
+  - `sage.md` — AIO/GEO Specialist (Qwen 397B, edit: ask, webfetch: allow) — renommé Oracle → Sage pour éviter le conflit avec le preset `oracle` du plugin
+  - `scribe.md` — SEO Content Strategist (edit: allow, webfetch: allow) — modèle par défaut (euria-code)
+  - `pulse.md` — Growth Marketing Strategist (edit: deny, webfetch: allow) — modèle par défaut (euria-code)
+  - `echo.md` — Social & Distribution Strategist (Mistral-Small-4, edit: allow, webfetch: ask)
+  - `beacon.md` — Analytics & Intelligence (edit: deny, webfetch: allow) — modèle par défaut (euria-code)
+- **Permissions** : moindre privilège appliqué (Atlas/Pulse/Beacon read-only, Crawler/Scribe/Echo edit, Sage edit:ask)
+- **AGENTS.md** : section "Search & Growth Agents" ajoutée (table, architecture, workflow, routing, note renommage Sage)
+- **README.md** : table des agents (15 agents), structure du repo, architecture, principe de priorité mis à jour
+- **aurora.md** : table de délégation Search & Growth ajoutée (7 agents) + clarification preset Oracle vs agent Sage
+- **DECISIONS.md** : décision de renommage Oracle → Sage documentée
+- **Review contradictoire** : effectué via subagent Reviewer (frontmatter, cohérence, frontières, délégation, conflit de nom, models)
+
+### 2026-08-09 — Portabilité du repo + optimisation modèles
+
+- **Portabilité complète du repo** : `git clone + setup.sh` reproduit toute la config sur une nouvelle machine
+  - `config/` créé : `opencode.json` (secrets → `{env:...}`), `oh-my-opencode-slim.json`, `package.json`, `plugins/rtk.ts`, `.env.example`
+  - `scripts/setup.sh` créé : installation interactive (prérequis, opencode-ai, rtk, MCP optionnel, secrets, vérification)
+  - `scripts/install.sh` modifié : copie `config/`, tracking `new/updated/unchanged`, `--no-config` flag
+  - `agents/aurora-heavy.md` ajouté au repo (était installé mais non versionné)
+  - `.gitignore` ajouté (`.env`, `node_modules`, etc.)
+  - Aucun secret dans le repo (vérifié par scan + `git check-ignore`)
+- **Détection intelligente** : `setup.sh` skip `.env` existant, check mises à jour `opencode-ai`/`rtk`, `--force` pour reconfigurer
+- **MCP iOS Simulator optionnel** : `setup.sh` propose `idb-companion` (brew) + `fb-idb` (venv Python), collecte `IDB_UDID`/`IDB_PATH` adaptative
+- **Standard `delegation-failure.md`** créé : procédure obligatoire après échec de sous-agent (constater → diagnostiquer → agir → informer), règle 1-retry-then-takeover, limite connue documentée (hang silencieux non détectable)
+- **Optimisation modèles** par agent :
+  - oracle: euria-code → Qwen3.5-397B (raisonnement stratégique)
+  - explorer/librarian: euria-code-tiny → Ministral-3 (économie)
+  - designer: euria-code-tiny → Mistral-Small-4 (multimodal)
+  - fixer: euria-code → Qwen3.5-122B (-33% input)
+  - spark: Nemotron-Nano-30B → Ministral-3 (qualité commit/MR)
+- **README et AGENTS.md synchronisés** : 4 couches (config/ ajouté), 8 agents listés, section MCP, section Installation, `delegation-failure.md` référencé
+- 7 commits pushés sur `origin/main` :
+  - `d0bde4f` Portabilité : config/, setup.sh, secrets externalisés
+  - `675a6f1` Détection intelligente : skip .env, check updates, track files
+  - `3ec52e0` MCP iOS Simulator optionnel
+  - `3e6bdf9` README sync (agents, MCP, standards)
+  - `3380867` AGENTS.md sync (4 layers, setup.sh, MCP, sub-agents)
+  - `cb274c9` Standard delegation-failure.md
+  - (model optimization) perf(models): optimize model selection per agent
+
 ### 2026-08-06
 
 - Délégation sous-agents : Spark (commit/MR, modèle léger Nemotron Nano 30B) + Vision (multimodal, Mistral-Small-4)
@@ -100,9 +145,12 @@
 
 ## Prochaine action
 
-- [ ] Redémarrer OpenCode pour activer Spark en mode déléguable (subagent_type `spark`)
-- [ ] Tester : Aurora délègue un commit à Spark via `task`
+- [ ] Lancer `./scripts/install.sh` sur ce Mac pour synchroniser la config active avec le repo (modèles optimisés + 7 nouveaux agents)
+- [ ] Redémarrer OpenCode pour activer les nouveaux modèles et agents
+- [ ] Tester : Aurora délègue un commit à Spark (Ministral-3) via `task`
 - [ ] Tester : Aurora délègue une analyse d'image à Vision
+- [ ] Tester : Aurora délègue une stratégie SEO à Atlas via `task`
+- [ ] Tester : Aurora délègue un audit technique SEO à Crawler via `task`
 - [x] Pusher les changements sur le remote
 - [x] Choisir avec l'utilisateur les ameliorations AIDD a implementer en priorite
 - [x] Prioriser et corriger les findings de l'audit read-only

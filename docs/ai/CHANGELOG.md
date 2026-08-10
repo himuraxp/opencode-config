@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## 2026-08-10 — Équipe Search & Growth Agents
+
+### Contexte
+
+Extension du repository avec une équipe spécialisée SEO / AIO / Growth orchestrée par Aurora. 7 nouveaux agents pour couvrir le périmètre search & growth.
+
+### Changements
+
+- `agents/atlas.md` : créé — SEO Strategist (stratégie, keyword research, content gaps, roadmap). Qwen 397B, edit: deny, webfetch: allow.
+- `agents/crawler.md` : créé — Technical SEO Engineer (audit et correction SEO technique, SSR/SSG, Angular/React/Vue). edit: allow, webfetch: allow. Modèle par défaut (euria-code).
+- `agents/sage.md` : créé — AIO/GEO Specialist (AI Overviews, ChatGPT Search, Perplexity, Gemini). Qwen 397B, edit: ask, webfetch: allow. Renommé Sage (au lieu d'Oracle) pour éviter le conflit avec le preset `oracle` du plugin `oh-my-opencode-slim`.
+- `agents/scribe.md` : créé — SEO Content Strategist (copywriting, content briefs, meta, H1/H2/H3, FAQ). edit: allow, webfetch: allow. Modèle par défaut (euria-code).
+- `agents/pulse.md` : créé — Growth Marketing Strategist (acquisition, conversion, funnel, A/B testing). edit: deny, webfetch: allow. Modèle par défaut (euria-code).
+- `agents/echo.md` : créé — Social & Distribution Strategist (LinkedIn, Instagram, X, YouTube, TikTok, Reddit, Discord, newsletter). Mistral-Small-4, edit: allow, webfetch: ask.
+- `agents/beacon.md` : créé — Analytics & Intelligence (GSC, GA4, PageSpeed, rank tracking, conversion, engagement). edit: deny, webfetch: allow. Modèle par défaut (euria-code).
+- `AGENTS.md` : section "Search & Growth Agents" ajoutée (table des 7 agents, architecture de collaboration, workflow SEO complet, séparation des responsabilités, routing rapide, note renommage Sage).
+- `README.md` : table des agents (8 → 15), structure du repo, architecture, principe de priorité mis à jour.
+- `agents/aurora.md` : table de délégation Search & Growth ajoutée (7 agents) + clarification preset Oracle vs agent Sage.
+- `docs/ai/DECISIONS.md` : décision de renommage Oracle → Sage documentée.
+
+### Décisions
+
+- Renommage Oracle → Sage pour éviter le conflit avec le preset `oracle` du plugin `oh-my-opencode-slim`.
+- Permissions par moindre privilège : Atlas/Pulse/Beacon en read-only (stratégie/analyse), Crawler/Scribe/Echo en edit (implémentation/contenu), Sage en edit:ask.
+- Models : Qwen 397B pour Atlas et Sage (raisonnement stratégique/AIO nuancé), Mistral-Small-4 pour Echo (créativité multi-canal), euria-code par défaut pour Crawler/Scribe/Pulse/Beacon (cohérent avec les subagents existants reviewer/architect/tester/security).
+- Tous les agents en `mode: subagent`, invoqués via `task` par Aurora.
+
+### Vérification
+
+- Review contradictoire via subagent Reviewer : frontmatter, cohérence, frontières, délégation, conflit de nom, models.
+- Greppé toutes les références à "Oracle" → restantes sont des mentions explicites du preset du plugin ou des notes de renommage.
+
 ## 2026-08-06 — Délégation sous-agents Spark & Vision
 
 ### Contexte

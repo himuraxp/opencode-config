@@ -1,5 +1,43 @@
 # BUFFER
 
+## Snapshot reprise — 2026-08-10
+
+### Sujet
+
+Création de l'équipe Search & Growth Agents (7 nouveaux agents SEO/AIO/Growth).
+
+### Fichiers impactés
+
+- `agents/atlas.md` (créé)
+- `agents/crawler.md` (créé)
+- `agents/sage.md` (créé, renommé depuis oracle.md)
+- `agents/scribe.md` (créé)
+- `agents/pulse.md` (créé)
+- `agents/echo.md` (créé)
+- `agents/beacon.md` (créé)
+- `agents/aurora.md` (modifié — table de délégation Search & Growth + clarification Oracle preset vs Sage)
+- `AGENTS.md` (modifié — section Search & Growth Agents + liste agents + note renommage)
+- `README.md` (modifié — table agents, structure, architecture, priorité)
+- `docs/ai/DECISIONS.md` (modifié — décision renommage Oracle → Sage)
+- `docs/ai/STATUS.md` (modifié)
+- `docs/ai/CHANGELOG.md` (modifié)
+- `docs/ai/INDEX.md` (modifié)
+- `docs/ai/BUFFER.md` (modifié)
+
+### Décisions clés
+
+- Oracle renommé Sage pour éviter le conflit avec le preset `oracle` du plugin `oh-my-opencode-slim`.
+- Permissions par moindre privilège : 3 agents read-only, 3 agents edit, 1 agent edit:ask.
+- Models : Qwen 397B (Atlas, Sage), Mistral-Small-4 (Echo), euria-code par défaut (Crawler, Scribe, Pulse, Beacon).
+
+### État
+
+- Tous les fichiers sont créés et cohérents.
+- Review contradictoire effectué.
+- Non committé (en attente d'inspection par l'utilisateur).
+
+---
+
 ## Snapshot reprise — 2026-06-28
 
 ### Sujet

@@ -8,7 +8,7 @@ Ce repo sépare les responsabilités en 4 couches :
 
 ```txt
 config/      Configuration OpenCode (opencode.json, plugins, .env.example — sans secrets)
-agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision)
+agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
 ```
@@ -102,6 +102,82 @@ La configuration inclut deux MCP servers :
 - **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
 - **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
 - **Créer les nouveaux standards/agents/frameworks via une structure homogène** et seulement s'ils ne dupliquent pas un artefact existant (voir `artifact-authoring.md`).
+
+## Search & Growth Agents
+
+Une équipe spécialisée SEO / AIO / Growth est orchestrée par Aurora. Ces agents ne sont pas invoqués automatiquement pour chaque tâche — Aurora sélectionne uniquement les spécialistes utiles.
+
+### Agents
+
+| Agent | Rôle | Quand l'invoquer |
+|-------|------|-----------------|
+| **Atlas** | SEO Strategy | Stratégie SEO globale, keyword research, search intent, clusters sémantiques, content gaps, architecture éditoriale, roadmap |
+| **Crawler** | Technical SEO | Audit et correction SEO technique (indexation, SSR/SSG, Core Web Vitals, structured data, routing, Angular/React/Vue) |
+| **Sage** | AIO / GEO | Optimisation pour moteurs de recherche génératifs (AI Overviews, ChatGPT Search, Perplexity, Gemini), entity clarity, citation potential |
+| **Scribe** | SEO Content | Production et optimisation éditoriale SEO (copywriting, content briefs, meta, H1/H2/H3, FAQ, featured snippets) |
+| **Pulse** | Growth Marketing | Acquisition, conversion, funnel analysis, landing pages, A/B testing, onboarding, rétention |
+| **Echo** | Social Distribution | Distribution multi-canal (LinkedIn, Instagram, X, YouTube, TikTok, Reddit, Discord, newsletter), adaptation par plateforme |
+| **Beacon** | Analytics | Mesure SEO et marketing (GSC, GA4, PageSpeed, rank tracking, conversion, engagement), transforme les données en décisions |
+
+### Architecture de collaboration
+
+```txt
+                         Aurora
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+     Engineering          Search           Growth
+          │                 │                 │
+      Architect           Atlas             Pulse
+      Reviewer           Crawler             Echo
+      Security           Sage             Beacon
+      Tester             Scribe
+      Vision
+      Spark
+```
+
+### Workflow SEO complet
+
+```txt
+User → Aurora → Atlas
+                    ├── Crawler (technique)
+                    ├── Sage  (AIO/GEO)
+                    └── Scribe (contenu)
+                         └── Pulse (growth)
+                              └── Echo (distribution)
+                                   └── Beacon (mesure)
+                                        └── feedback → Atlas / Aurora
+```
+
+Tous les agents ne sont pas invoqués automatiquement pour chaque tâche. Aurora sélectionne uniquement les spécialistes utiles.
+
+### Séparation des responsabilités
+
+```txt
+Atlas       = stratégie SEO
+Crawler     = implémentation et audit SEO technique
+Sage        = AI Search / AIO / GEO
+Scribe      = contenu SEO
+Pulse       = growth et conversion
+Echo        = social et distribution
+Beacon      = analytics et mesure
+```
+
+### Routing rapide
+
+| Demande | Agent |
+|---------|-------|
+| "Pourquoi ma page ne s'indexe pas ?" | Crawler |
+| "Quels articles devrais-je créer ?" | Atlas |
+| "Optimise cet article" | Scribe |
+| "Optimise cette page pour ChatGPT et Google AI Overview" | Sage |
+| "Comment obtenir plus d'utilisateurs ?" | Pulse |
+| "Transforme cet article en campagne LinkedIn/Instagram" | Echo |
+| "Pourquoi mes impressions montent mais pas mes clics ?" | Beacon |
+
+### Note — Renommage Oracle → Sage
+
+Le plugin `oh-my-opencode-slim` définit un preset `oracle` (Qwen 397B) pour les skills de raisonnement critique (code-review, pre-mr-review, verification-planning, simplify). Pour éviter le conflit, l'agent AIO/GEO a été nommé **Sage** au lieu d'Oracle. Le preset `oracle` du plugin et l'agent `sage.md` coexistent sans ambiguïté. Voir `docs/ai/DECISIONS.md`.
 
 ## Qualité attendue
 

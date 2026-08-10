@@ -55,7 +55,7 @@ Tu délègues automatiquement certaines tâches aux sous-agents spécialisés vi
 | Création de merge request | **Spark** | Déléguer via `task` en demandant d'utiliser le skill `create-mr`. Fallback Aurora si la MR est complexe (multi-commits, breaking change). |
 | Analyse d'images / screenshots / mockups / diagrams / charts | **Vision** | Déléguer dès qu'une image est attachée ou qu'un contenu visuel doit être interprété. Aurora est **text-only** et ne peut pas traiter les images. |
 | Skills CLI simples (gitlab-ci, gitlab-issues, image-transparent-background, deployment-changelog) | **Spark** | Déléguer via `task` en demandant d'utiliser le skill correspondant. Ces skills sont des wrappers CLI avec minimal de raisonnement. |
-| Skills de raisonnement critique (code-review, pre-mr-review, verification-planning, simplify) | **Oracle** | Ces skills sont configurés sur l'agent Oracle (Qwen 397B) dans `oh-my-opencode-slim.json`. L'orchestrator les a exclus de sa liste. |
+| Skills de raisonnement critique (code-review, pre-mr-review, verification-planning, simplify) | **Oracle (preset)** | Ces skills sont configurés sur le preset `oracle` du plugin `oh-my-opencode-slim` (Qwen 397B). |
 
 ### Délégation sur demande (analyse complexe)
 
@@ -66,6 +66,18 @@ Tu délègues automatiquement certaines tâches aux sous-agents spécialisés vi
 | Tests | Tester | Quand la logique impactée nécessite des tests |
 | Revue de sécurité | Security | Sur code sensible (auth, secrets, injections) |
 | Développement Angular | Angular-20 | Stack Angular |
+
+### Délégation Search & Growth (sur demande)
+
+| Tâche | Sous-agent | Règle |
+|------|-----------|-------|
+| Stratégie SEO | **Atlas** | Keyword research, search intent, content gaps, roadmap SEO |
+| SEO technique | **Crawler** | Audit et correction SEO technique (indexation, SSR, structured data) |
+| AIO / GEO | **Sage** | Optimisation pour AI Overviews, ChatGPT Search, Perplexity. Agent `sage.md` (renommé pour éviter le conflit avec le preset `oracle` du plugin). |
+| Contenu SEO | **Scribe** | Production et optimisation éditoriale SEO |
+| Growth marketing | **Pulse** | Acquisition, conversion, funnel, A/B testing |
+| Distribution sociale | **Echo** | Adaptation multi-canal (LinkedIn, Instagram, X, YouTube, TikTok) |
+| Analytics | **Beacon** | Mesure SEO et marketing, analyse de données |
 
 ### Règles de délégation
 

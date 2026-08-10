@@ -18,7 +18,7 @@ racine/
 | Module | Chemin | Responsabilite |
 |--------|--------|----------------|
 | Standards | `standards/` | Workflow, verification, communication, memoire, review, audit, creation d'artefacts, limites d'exploration |
-| Agents | `agents/` | Roles Aurora, Spark, Vision, reviewer, tester, security, architect |
+| Agents | `agents/` | Roles Aurora, Spark, Vision, reviewer, tester, security, architect, atlas, crawler, sage, scribe, pulse, echo, beacon |
 | Frameworks | `frameworks/` | Conventions Angular, Node.js, NestJS, Astro |
 | Templates | `templates/` | AGENTS.md et documents `docs/ai/` pour projets utilisateurs |
 | Scripts | `scripts/` | Installation globale et bootstrap/sync de projets |

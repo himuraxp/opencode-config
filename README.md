@@ -40,6 +40,7 @@ Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser
 Ce repo apporte :
 
 - **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security, architect, spark (sous-agent léger), vision (multimodal)
+- **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
@@ -264,7 +265,7 @@ Global Configuration
         ↓
      Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure)
         ↓
-       Agents       (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision)
+        Agents       (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
         ↓
     Frameworks     (angular-20, nodejs, nestjs, astro...)
         ↓
@@ -328,6 +329,13 @@ Les agents disponibles sont dans `agents/` :
 | `architect.md` | Découpage technique |
 | `spark.md` | Sous-agent léger (commit, MR) |
 | `vision.md` | Sous-agent multimodal (images, screenshots) |
+| `atlas.md` | SEO Strategy — stratégie, keyword research, content gaps |
+| `crawler.md` | Technical SEO — audit et correction SEO technique |
+| `sage.md` | AIO / GEO — optimisation pour moteurs de recherche génératifs |
+| `scribe.md` | SEO Content — production et optimisation éditoriale |
+| `pulse.md` | Growth Marketing — acquisition, conversion, funnel |
+| `echo.md` | Social Distribution — distribution multi-canal |
+| `beacon.md` | Analytics — mesure SEO et marketing |
 
 ### Ajouter un framework
 
@@ -407,7 +415,14 @@ opencode-config/
 │   ├── security.md            Risques et remédiations
 │   ├── architect.md           Découpage technique
 │   ├── spark.md               Sous-agent léger (commit, MR)
-│   └── vision.md              Sous-agent multimodal (images, screenshots)
+│   ├── vision.md              Sous-agent multimodal (images, screenshots)
+│   ├── atlas.md               SEO Strategy
+│   ├── crawler.md             Technical SEO
+│   ├── sage.md               AIO / GEO
+│   ├── scribe.md              SEO Content
+│   ├── pulse.md               Growth Marketing
+│   ├── echo.md                Social Distribution
+│   └── beacon.md              Analytics
 │
 ├── frameworks/                Règles par stack technique
 │   ├── angular-20.md          Conventions Angular 20+ stand-alone
@@ -453,7 +468,7 @@ opencode-config/
 L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
 
 1. Bonnes pratiques générales.
-2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision).
+2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
 4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure).
 5. Agents spécialisés enregistrés dans la session.
