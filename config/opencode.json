@@ -259,6 +259,7 @@
   },
   "model": "infomaniak/euria-code",
   "default_agent": "plan",
+  "subagent_depth": 3,
   "agent": {
     "orchestrator": {
       "model": "infomaniak/euria-code"
@@ -315,7 +316,11 @@
           "su *": "deny",
           "doas *": "deny"
         },
-        "webfetch": "ask"
+        "webfetch": "ask",
+        "external_directory": {
+          "/tmp/*": "allow",
+          "/private/tmp/*": "allow"
+        }
       }
     },
     "plan": {
@@ -378,7 +383,11 @@
           "su *": "deny",
           "doas *": "deny"
         },
-        "webfetch": "ask"
+        "webfetch": "ask",
+        "external_directory": {
+          "/tmp/*": "allow",
+          "/private/tmp/*": "allow"
+        }
       }
     },
     "explore": {
@@ -419,5 +428,11 @@
       }
     }
   },
-  "lsp": true
+  "lsp": true,
+  "permission": {
+    "external_directory": {
+      "/tmp/*": "allow",
+      "/private/tmp/*": "allow"
+    }
+  }
 }
