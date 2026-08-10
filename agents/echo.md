@@ -22,6 +22,10 @@ permission:
     "git diff*": allow
     "git status *": allow
     "git log *": allow
+    "rtk git diff*": allow
+    "rtk git log *": allow
+    "rtk git status *": allow
+    "rtk read *": allow
     "sudo *": deny
     "su *": deny
     "doas *": deny

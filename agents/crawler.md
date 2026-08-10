@@ -28,6 +28,10 @@ permission:
     "git diff*": allow
     "git log *": allow
     "git status *": allow
+    "rtk git diff*": allow
+    "rtk git log *": allow
+    "rtk git status *": allow
+    "rtk read *": allow
     "npm run build *": allow
     "yarn build *": allow
     "yarn test *": allow
