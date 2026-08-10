@@ -1,4 +1,6 @@
-# Testing
+# Angular Testing
+
+> Ce guide couvre les tests Angular. Pour les autres stacks, voir le framework correspondant (`frameworks/nodejs.md`, `frameworks/nestjs.md`, `frameworks/astro.md`).
 
 Guide pour écrire des tests utiles, lisibles et maintenables.
 

@@ -24,12 +24,16 @@ Aurora détecte automatiquement `docs/ai/` au démarrage et applique cet ordre s
 
 ### Mise à jour en fin de session
 
-Ordre recommandé :
+Aurora met à jour systématiquement les 7 fichiers de `docs/ai/` (selon `standards/memory-auto-update.md`) :
 
 ```txt
-1. STATUS.md    → résumer le travail fait
-2. BUFFER.md    → noter les sujets hors-scope, micro-décisions
-3. CHANGELOG.md → uniquement si changements significatifs
+1. STATUS.md     → résumer le travail fait, en cours, bloqué, prochaine action
+2. PLAN.md       → cocher les étapes terminées, mettre à jour le statut
+3. CHANGELOG.md  → entrée datée des changements significatifs
+4. INDEX.md      → ajouter modules/fichiers clés découverts
+5. BUFFER.md     → snapshot reprise, vider les notes temporaires
+6. WARNINGS.md   → ajouter zones sensibles et dettes identifiées
+7. DECISIONS.md  → documenter les décisions architecturales prises
 ```
 
 ### Utiliser INDEX.md pour éviter le scan global

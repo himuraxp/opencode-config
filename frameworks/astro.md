@@ -172,6 +172,8 @@ image: string  // OG image
 
 ## Checklist publication
 
+En plus des vérifications obligatoires de `verification.md`, vérifier :
+
 - [ ] Pour chaque page : title, description unique, Open Graph approprié
 - [ ] JSON-LD valide pour les types de contenus (Article, Product, FAQ, HowTo)
 - [ ] Sitemap et robots.txt distinct (pas de route Spam potential ou admin exposure)

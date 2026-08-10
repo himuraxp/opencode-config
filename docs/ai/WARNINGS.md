@@ -2,6 +2,8 @@
 
 ## Warnings actifs
 
+- [ ] **Sécurité — Permissions opencode.json permissives par choix utilisateur** : `curl`, `kill`, `find`, `sed` restent en `allow` par décision utilisateur — Aurora doit rester autonome sans interaction humaine. Ce n'est pas un bug, c'est un choix délibéré.
+- [ ] **Preset `opencode-go` sans provider** : `oh-my-opencode-slim.json` L65-121 référence le provider `opencode-go` non défini dans `opencode.json`. Si sélectionné, les agents échouent. *Hypothèse* : provider externe au plugin. À documenter ou marquer comme expérimental.
 - [ ] `docs/ai/` etait incomplet au demarrage de la session du 2026-06-28 : seuls `STATUS`, `CHANGELOG` et `BUFFER` existaient. Les fichiers manquants ont ete ajoutes.
 - [ ] Les idees AIDD liees a Claude (`.claude-plugin`, hooks Claude, skills Claude) ne doivent pas etre integrees telles quelles sans adapter explicitement au fonctionnement OpenCode.
 
@@ -17,7 +19,9 @@
 ## Zones sensibles du projet
 
 - `AGENTS.md`
-- `standards/memory-*.md`
+- `config/opencode.json` — permissions bash permissives par choix utilisateur (curl, kill, find, sed en `allow`)
+- `config/oh-my-opencode-slim.json` — preset `opencode-go` sans provider défini
+- `standards/memory-*.md` — 3 fichiers à maintenir en sync (session-flow, auto-update, checklist)
 - `templates/AGENTS.md`
 - `scripts/init-project.sh`
 - `scripts/sync-project.sh`

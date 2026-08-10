@@ -14,6 +14,17 @@ Utiliser ce standard quand l'utilisateur demande :
 
 Pour une modification prête à livrer, utiliser `review-before-done.md`.
 
+## Exception — audits SEO / AIO / Growth
+
+Les audits SEO, AIO/GEO et Growth **ne relèvent pas** de ce standard. Ils sont délégués aux agents spécialistes de l'équipe Search & Growth :
+
+- **Audit SEO** → Atlas (stratégie) + Crawler (technique)
+- **Audit AIO** → Sage + Crawler
+- **Audit SEO & AIO** → Atlas + Crawler + Sage
+- **Audit Growth** → Pulse + Beacon
+
+Aurora ne réalise **jamais** lui-même un audit SEO/AIO/Growth. Voir la section "Search & Growth Agents" du `AGENTS.md` et de `agents/aurora.md`.
+
 ## Axes d'audit
 
 Choisir uniquement les axes pertinents au contexte :

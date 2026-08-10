@@ -27,17 +27,19 @@ Sinon, enrichir un fichier existant.
 
 ## Structure recommandée
 
+Les structures ci-dessous sont des **guides**. Les artefacts existants peuvent utiliser des variations tant que le titre, le principe et les règles sont présents. L'homogénéité prime sur la rigidité du format.
+
 ### Standard
 
 ```md
 # Standard — Nom
 
 ## Principe
-## Quand l'appliquer
-## Procédure
-## Format attendu
-## Anti-patterns interdits
+## (sections métier selon le besoin : Procédure, Format de sortie, Règles, etc.)
+## Anti-patterns
 ```
+
+Sections minimales : `## Principe` + `## Règles` (ou équivalent métier). Le titre doit suivre `# Standard — Nom`.
 
 ### Agent
 
@@ -45,26 +47,34 @@ Sinon, enrichir un fichier existant.
 ---
 description: Rôle court et déclencheur clair.
 mode: subagent
+permission:
+  edit: deny
+  bash:
+    "*": deny
+  webfetch: deny
 ---
 
 # Nom
 
-## Mission
-## Checklist
-## Format de sortie
+## Role
+## When to use
 ## Règles
 ```
+
+Sections minimales : frontmatter (`description`, `mode`, `permission`) + `## Role`. Les agents Engineering peuvent utiliser `## Mission` au lieu de `## Role` + `## When to use`.
 
 ### Framework
 
 ```md
 # Framework — Nom
 
-## Détection
+## Objectif (ou conventions de la stack)
 ## Conventions
 ## Tests
 ## Anti-patterns
 ```
+
+Sections minimales : `# Framework — Nom` + `## Conventions` (ou section métier équivalente). La section `## Détection` est optionnelle.
 
 ## Procédure
 

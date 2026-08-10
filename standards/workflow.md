@@ -49,10 +49,7 @@ Avant de considérer le code comme terminé, exécuter un **examen adversarial**
 
 ### 5. Vérifier
 
-- Une tâche n'est jamais considérée comme terminée tant que build + lint + test ne passent pas.
-- Lancer les vérifications adaptées au projet.
-- Montrer les résultats réels.
-- Ne jamais affirmer qu'un changement fonctionne sans preuve.
+Appliquer `verification.md` : build + lint + test doivent passer avant de déclarer la tâche terminée.
 
 ### Audit read-only
 
@@ -64,6 +61,7 @@ Si l'utilisateur demande un audit, un health-check ou une analyse de dette techn
 - Jamais de commit avec build cassé.
 - Jamais de commit avec tests cassés.
 - Format : `type(scope): résumé`
+- Persister la mémoire projet selon `memory-auto-update.md` et vérifier via `memory-checklist.md`.
 
 ## Règles absolues
 

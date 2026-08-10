@@ -127,6 +127,8 @@ Tous doivent passer avant considérer une tâche terminée.
 
 ## Checklist avant validation
 
+En plus des vérifications obligatoires de `verification.md`, vérifier :
+
 - [ ] `build` passe.
 - [ ] `lint` passe.
 - [ ] `test` passe (coverage non nul).

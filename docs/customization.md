@@ -4,11 +4,23 @@
 
 Les agents spécialisés sont dans `agents/` du repo forké. Chacun a un rôle précis :
 
-- `aurora.md` — Agent principal, coordonne et charge les autres
-- `reviewer.md` — Code review stricte (checklist, verdict)
-- `tester.md` — Tests qualité (Jest, Angular standalone)
-- `security.md` — Risques et remédiations
-- `architect.md` — Découpage technique
+| Agent | Rôle |
+|-------|------|
+| `aurora.md` | Agent principal — chargement et coordination |
+| `aurora-heavy.md` | Agent pour tâches complexes (Qwen 397B) |
+| `reviewer.md` | Code review stricte (checklist, verdict) |
+| `tester.md` | Tests qualité (Jest, Angular standalone) |
+| `security.md` | Risques et remédiations |
+| `architect.md` | Découpage technique |
+| `spark.md` | Sous-agent léger (commit, MR, skills CLI) |
+| `vision.md` | Sous-agent multimodal (images, screenshots) |
+| `atlas.md` | SEO Strategy — stratégie, keyword research, content gaps |
+| `crawler.md` | Technical SEO — audit et correction SEO technique |
+| `sage.md` | AIO / GEO — optimisation pour moteurs de recherche génératifs |
+| `scribe.md` | SEO Content — production et optimisation éditoriale |
+| `pulse.md` | Growth Marketing — acquisition, conversion, funnel |
+| `echo.md` | Social Distribution — distribution multi-canal |
+| `beacon.md` | Analytics — mesure SEO et marketing |
 
 Pour personnaliser :
 
@@ -66,6 +78,11 @@ standards/
 ├── communication.md
 ├── escalation.md
 ├── commits.md
+├── review-before-done.md
+├── exploration-limits.md
+├── error-correction.md
+├── anti-patterns.md
+├── delegation-failure.md
 └── ma-regle.md   ← ici
 ```
 

@@ -1,6 +1,17 @@
 ---
 description: Agent spécialisé tests Jest et Angular standalone.
 mode: subagent
+permission:
+  edit: allow
+  bash:
+    "yarn test *": allow
+    "npm test *": allow
+    "npx jest *": allow
+    "jest *": allow
+    "yarn build *": allow
+    "npm run build *": allow
+    "*": deny
+  webfetch: deny
 ---
 
 # Tester

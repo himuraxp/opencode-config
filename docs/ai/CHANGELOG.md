@@ -1,5 +1,91 @@
 # CHANGELOG
 
+## 2026-08-10 — Correction des 54 findings d'audit
+
+### Contexte
+
+Correction des 54 findings de l'audit complet read-only (sur 55 — la sécurité des permissions opencode.json a été laissée en `allow` par choix utilisateur pour garder Aurora autonome).
+
+### Changements
+
+- `agents/aurora.md` : angular-20 corrigé comme framework (H4), section "Standards obligatoires" ajoutée (M12), référence workflow.md et memory en fin de cycle (M17), hiérarchie d'autorité corrigée (B10), clarification Oracle preset (M6)
+- `docs/customization.md` : 15 agents (table) + 15 standards listés (H9, H10)
+- `README.md` : ordre de priorité corrigé Standards → Agents → Frameworks (H11), section "Comment l'utiliser" alignée
+- `CHANGELOG.md` racine : 6 entrées ajoutées (M21)
+- `docs/workflow.md` : "Mise à jour en fin de session" complétée — 7 étapes (M22)
+- `standards/memory-checklist.md` : titre `Standard — Memory Checklist` (H6), critère docs/ai/ absent clarifié (M13), chemin templates précisé (B14)
+- `standards/memory-auto-update.md` : titre corrigé (H7), "Anti-patterns" (M18)
+- `standards/memory-session-flow.md` : titre corrigé, section fin de session → référence memory-auto-update.md (H8), règle langue → référence communication.md (M15), condition docs/ai/ absent clarifiée (M13)
+- `standards/artifact-authoring.md` : template mis à jour — guides flexibles reflétant la pratique (C1, H12)
+- `agents/vision.md` : permission ajoutée edit/bash/webfetch deny (M10)
+- `agents/architect.md`, `reviewer.md`, `tester.md`, `security.md` : permissions ajoutées (B7), reviewer titre corrigé (B5)
+- `agents/aurora-heavy.md` : accents corrigés (M7, B9), `refactore` → `refactoré`
+- `agents/spark.md` : accents corrigés (B9)
+- `scripts/setup.sh` : liste agents vérifiés étendue à 15 (M3)
+- `standards/review-before-done.md` : stack-agnostic (M14), "Anti-patterns" (M18)
+- `standards/verification.md` : section Langue supprimée — déjà dans communication.md (M15)
+- `standards/delegation-failure.md` : typo "délèue" → "délègue" (B13)
+- `standards/workflow.md` : étape 5 simplifiée → référence verification.md (M16), étape 6 ajoute référence memory-auto-update.md (M17)
+- `standards/error-correction.md`, `exploration-limits.md` : "Anti-patterns" (M18)
+- `.gitignore` : patterns corrigés (B1)
+- `config/package.json` : `~1.4.7` (B2)
+- `docs/testing.md` : renommé "Angular Testing" (B18)
+- `docs/angular-20.md` : note vers framework détaillé (B16)
+- `frameworks/nestjs.md` : note héritage nodejs.md (B11)
+- `frameworks/nodejs.md`, `astro.md` : checklists référence verification.md (B12)
+- `examples/angular-app/AGENTS.md` : section "Rôle" ajoutée (M19), exception SEO/AIO (M20), delegation-failure ajouté
+- `templates/AGENTS.md` : delegation-failure ajouté à la liste standards
+- `AGENTS.md` : tables routing SEO remplacées par référence aurora.md (M9)
+
+### Vérification
+
+- Review contradictoire via subagent Reviewer (4 gaps trouvés et corrigés)
+- bash -n scripts OK, JSON valide, frontmatter YAML 15 agents valides
+- Pas de références cassées, pas de "Anti-patterns interdits" restant
+
+## 2026-08-10 — Audit complet read-only du repo
+
+### Contexte
+
+Audit read-only du repo complet sur 4 zones (Scripts & Config, Agents, Standards & Frameworks, Templates & Docs & Examples). 4 subagents Reviewer lancés en parallèle, puis consolidation.
+
+### Résultats
+
+- **Verdict** : À corriger
+- **55 findings** : 1 critique, 12 hautes, 22 moyennes, 20 basses
+- **Sécurité** (6 findings) : `curl`, `kill`, `find`, `sed` en `allow` dans `opencode.json` — risque d'exfiltration, kill process, suppression fichiers. `git push *: allow` sur Spark (agent léger sans confirmation)
+- **Cohérence** (14 findings) : template `artifact-authoring.md` ignoré par tous les standards/frameworks, 3 fichiers mémoire se chevauchent, titres incohérents, `aurora-heavy.md` sans accents
+- **Références** (5 findings) : `aurora.md` délègue à `angular-20` comme agent (c'est un framework), standards non référencés depuis aurora.md
+- **Doublons** (7 findings) : tables routing SEO dupliquées aurora.md ↔ AGENTS.md, bloc `## Boundaries` dupliqué 7 fois, gestion langue dans 3 standards
+- **Permissions** (3 findings) : Vision sans section permission, agents Engineering sans permission explicite
+- **Docs** (6 findings) : `docs/customization.md` (5 agents sur 15, 10 standards sur 15), README contradiction ordre priorité, CHANGELOG racine (1 entrée), `docs/testing.md` Angular-spécifique
+- **Sync** (4 findings) : `examples/angular-app/AGENTS.md` en retard vs template (section "Rôle" + exception SEO/AIO absentes)
+- **Rapport** livré à l'utilisateur en format `standards/audit.md`
+
+### Vérifications recommandées
+
+- Confirmer précédence patterns bash (curl, find -exec, sed -i) dans OpenCode runtime
+- Valider schémas JSON (`ajv`)
+- Confirmer qu'Angular-20 n'est pas un agent (`ls ~/.config/opencode/agents/angular-20.md`)
+- Vérifier permissions par défaut de Vision en runtime
+
+## 2026-08-10 — Correction du routing Search & Growth (automatique + multi-agents)
+
+### Contexte
+
+Le prompt "Tu peux vérifier qu'on est bon niveau SEO & AIO ?" ne déclenchait pas la délégation aux bons agents (Atlas + Crawler + Sage). Causes : délégation "sur demande" non automatique, pas de routing multi-agents, conflit avec l'instruction audit générique, mots-clés déclencheurs absents.
+
+### Changements
+
+- `agents/aurora.md` : section "Délégation Search & Growth (sur demande)" → "(automatique)" avec mots-clés déclencheurs (8 domaines), routing multi-agents (10 patterns dont Audit Growth), 6 règles de délégation, exception SEO/AIO/Growth sur la ligne audit
+- `AGENTS.md` : sync des mêmes tables (mots-clés, routing multi-agents, règles), suppression phrase "ne sont pas invoqués automatiquement", exception SEO/AIO/Growth dans "Comportement attendu"
+- `standards/audit.md` : section "Exception — audits SEO / AIO / Growth" qui redirige vers les agents spécialistes
+- `templates/AGENTS.md` : exception SEO/AIO/Growth ajoutée dans le Mode AUDIT
+- Mots-clés trop larges retirés : "article", "données", "mesure", "performance", "newsletter", "calendrier éditorial social", "stratégie SEO", "performance SEO", "AIO/GEO", "optimisation contenu"
+- Tables de mots-clés synchronisées entre `aurora.md` et `AGENTS.md` (identiques)
+- Review contradictoire effectué via subagent Reviewer (6 findings corrigés)
+- Config active `~/.config/opencode/` synchronisée
+
 ## 2026-08-10 — Équipe Search & Growth Agents
 
 ### Contexte

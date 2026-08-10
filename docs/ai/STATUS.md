@@ -4,6 +4,54 @@
 
 ## Fait
 
+### 2026-08-10 — Correction des 54 findings d'audit (sur 55, hors sécurité permissions)
+
+- **Scope** : 54 findings sur 55 corrigés (le point 1 sécurité permissions curl/kill/find/sed laissé en `allow` par choix utilisateur — Aurora doit rester autonome)
+- **Priorité 2 (H4)** : `aurora.md` — `angular-20` corrigé comme framework (pas agent), ajout section "Standards obligatoires", référence workflow.md, hiérarchie d'autorité corrigée (Standards → Agents → Frameworks), clarification Oracle preset, référence memory en fin de cycle
+- **Priorité 4 (H9/H10/H11/M21/M22)** :
+  - `docs/customization.md` — 15 agents (table) + 15 standards listés
+  - `README.md` — ordre de priorité corrigé (Standards → Agents → Frameworks), section "Comment l'utiliser" alignée
+  - `CHANGELOG.md` racine — 6 entrées ajoutées (06-05 à 08-10)
+  - `docs/workflow.md` — "Mise à jour en fin de session" complétée (7 étapes)
+- **Priorité 5 (H6/H7/H8/M13)** :
+  - `memory-checklist.md` — titre `Standard — Memory Checklist`, critère docs/ai/ absent clarifié, référence templates précisée
+  - `memory-auto-update.md` — titre `Standard — Mémoire...` corrigé
+  - `memory-session-flow.md` — titre `Standard — Memory Session Flow`, section fin de session remplacée par référence vers memory-auto-update.md, règle langue → référence communication.md
+- **Priorité 6 (C1/H12)** : `artifact-authoring.md` — template mis à jour (guides flexibles reflétant la pratique réelle)
+- **Priorité 7 (M10/B7)** : Permissions ajoutées à Vision (deny all), Architect (deny all), Reviewer (deny all), Tester (edit + bash tests), Security (deny edit + bash audit/grep)
+- **Moyennes** : M2 (duplication tables AGENTS.md → référence aurora.md), M3 (setup.sh 15 agents), M6 (clarification Oracle), M7 (aurora-heavy accents), M8 (spark accents), M9 (duplication tables SEO), M12 (standards obligatoires aurora.md), M14 (review-before-done stack-agnostic), M15 (langue centralisée communication.md), M16 (workflow référence verification.md), M17 (workflow référence memory), M18 (Anti-patterns standardisé), M19/M20 (examples sync)
+- **Basses** : B1 (.gitignore), B2 (package.json ~), B5 (Reviewer titre), B9 (accents), B10 (hiérarchie aurora.md), B11 (nestjs héritage nodejs), B12 (checklists référence verification.md), B13 (typo délègue), B14 (chemin templates), B16 (note angular-20.md), B18 (testing.md Angular)
+- **Review contradictoire** : effectué via subagent Reviewer (4 gaps trouvés et corrigés : hiérarchie aurora.md, refactore→refactoré, delegation-failure example, README Comment l'utiliser)
+- **Vérifications** : bash -n scripts OK, JSON valide, frontmatter YAML 15 agents valides, pas de références cassées, pas de "Anti-patterns interdits" restant
+
+### 2026-08-10 — Audit complet read-only du repo
+
+- **Périmètre** : 4 zones auditées en parallèle via subagents Reviewer (Scripts & Config, Agents, Standards & Frameworks, Templates & Docs & Examples)
+- **Verdict** : À corriger (1 critique, 12 hautes, 22 moyennes, 20 basses = 55 findings)
+- **Findings clés** :
+  - Sécurité : `curl`, `kill`, `find`, `sed` en `allow` dans opencode.json (exfiltration, kill process, suppression fichiers)
+  - Référence cassée : `aurora.md` délègue à `angular-20` comme agent (c'est un framework)
+  - Permissions : Spark `git push *: allow` (agent léger sans confirmation), Vision sans section permission
+  - Cohérence : template `artifact-authoring.md` ignoré par tous les standards/frameworks existants
+  - Doublons : 3 fichiers mémoire se chevauchent, tables routing SEO dupliquées aurora.md ↔ AGENTS.md
+  - Docs désynchronisées : `docs/customization.md` (5 agents sur 15, 10 standards sur 15), README (contradiction ordre priorité), CHANGELOG racine (1 entrée)
+  - Examples : `angular-app/AGENTS.md` en retard vs template (section "Rôle" + exception SEO/AIO absentes)
+- **Rapport** : livré à l'utilisateur en format audit.md (Verdict, Findings triés par sévérité, Hors scope, Vérifications recommandées, Synthèse par axe, Plan d'action)
+
+### 2026-08-10 — Correction du routing Search & Growth
+
+- **Problème** : le prompt "Tu peux vérifier qu'on est bon niveau SEO & AIO ?" ne déclenquait pas la délégation aux bons agents
+- **Causes identifiées** : délégation "sur demande" (non automatique), pas de routing multi-agents, conflit avec l'instruction audit générique, mots-clés déclencheurs absents
+- **Corrections** :
+  - `aurora.md` : délégation Search & Growth → automatique + mots-clés déclencheurs (8 domaines) + routing multi-agents (10 patterns) + 6 règles de délégation + exception SEO/AIO/Growth sur audit
+  - `AGENTS.md` : sync des mêmes tables + exception dans "Comportement attendu"
+  - `audit.md` : section "Exception — audits SEO / AIO / Growth"
+  - `templates/AGENTS.md` : exception SEO/AIO/Growth dans Mode AUDIT
+  - Mots-clés trop larges retirés (article, données, mesure, performance, etc.)
+  - Tables aurora.md ↔ AGENTS.md synchronisées
+- **Review contradictoire** : effectué via subagent Reviewer (6 findings : 4 MEDIUM + 2 LOW, tous corrigés)
+- **Config active** : `~/.config/opencode/` synchronisée
+
 ### 2026-08-10 — Équipe Search & Growth Agents
 
 - **7 nouveaux agents créés** dans `agents/` :
@@ -145,12 +193,14 @@
 
 ## Prochaine action
 
-- [ ] Lancer `./scripts/install.sh` sur ce Mac pour synchroniser la config active avec le repo (modèles optimisés + 7 nouveaux agents)
+- [ ] Lancer `./scripts/install.sh` sur ce Mac pour synchroniser la config active avec le repo
 - [ ] Redémarrer OpenCode pour activer les nouveaux modèles et agents
-- [ ] Tester : Aurora délègue un commit à Spark (Ministral-3) via `task`
+- [ ] Tester : Aurora délègue un commit à Spark via `task`
 - [ ] Tester : Aurora délègue une analyse d'image à Vision
 - [ ] Tester : Aurora délègue une stratégie SEO à Atlas via `task`
 - [ ] Tester : Aurora délègue un audit technique SEO à Crawler via `task`
+- [x] Correction des 54 findings d'audit (sécurité permissions laissées en allow par choix utilisateur)
 - [x] Pusher les changements sur le remote
 - [x] Choisir avec l'utilisateur les ameliorations AIDD a implementer en priorite
 - [x] Prioriser et corriger les findings de l'audit read-only
+- [x] Audit complet read-only du repo (55 findings sur 4 zones)

@@ -1,8 +1,8 @@
 # Secrets — never commit
 .env
-*.env
+**/.env
 !config/.env.example
-!*.env.example
+!**/.env.example
 
 # macOS
 .DS_Store
@@ -16,3 +16,9 @@ bun.lock
 
 # IDE
 .idea/
+.vscode/
+
+# Logs & tmp
+*.log
+*.tmp
+dist/

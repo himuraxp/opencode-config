@@ -2,6 +2,10 @@
 
 Ce fichier est la source de vérité pour les agents travaillant sur ce projet.
 
+## Rôle de ce fichier
+
+Ce fichier fournit le contexte métier, les règles spécifiques, les conventions locales et les exceptions projet. L'agent le lit à chaque session et l'applique par défaut. Les standards globaux (`~/.config/opencode/standards/`) et frameworks (`~/.config/opencode/frameworks/`) sont chargés automatiquement — ce fichier ne répète pas ce qui est déjà couvert globalement, sauf pour préciser ou déroger.
+
 ## Objectif du projet
 
 Décrire ici le produit, le contexte métier et les contraintes principales.
@@ -37,6 +41,7 @@ Les standards suivants sont chargés automatiquement par l'agent principal (Auro
 - **error-correction** : reset après 2 corrections échouées, ne jamais corriger sans cause profonde
 - **anti-patterns** : reconnaitre et stopper les 5 patterns d'échec courants
 - **artifact-authoring** : création homogène de standards, agents, frameworks et templates
+- **delegation-failure** : procédure obligatoire après échec de sous-agent
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
 
@@ -74,10 +79,11 @@ Règles :
 - Choisir les axes pertinents : qualité, architecture, sécurité, dépendances, performance, tests, UI/accessibilité.
 - Produire un rapport priorisé avec preuves.
 - Ne pas corriger pendant l'audit ; proposer un plan d'action séparé.
+- *Exception* : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, Pulse, Beacon).
 
 ## Documentation IA
 
-Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
+Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour (persistance) est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
 
 ## Angular 20 — Conventions
 

@@ -5,6 +5,8 @@ mode: subagent
 
 # NestJS
 
+> Les conventions TypeScript de base sont héritées de `frameworks/nodejs.md`. Ce framework ne documente que les spécificités NestJS.
+
 ## Objectif
 
 Produire du code NestJS propre, modulaire, testé et maintenable.

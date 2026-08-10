@@ -302,9 +302,10 @@ Après installation, l'agent Aurora (principal) charge automatiquement :
 
 ```txt
 1. Standards globaux (workflow, communication, verification...)
-2. Framework ciblé (Angular 20+, Node.js, etc.)
-3. Standards entreprise (si configurés)
-4. Standards projet (AGENTS.md local + docs/ai/)
+2. Agents globaux (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
+3. Framework ciblé (Angular 20+, Node.js, etc.)
+4. Standards entreprise (si configurés)
+5. AGENTS.md local + docs/ai/
 ```
 
 La règle d'or : **le local l'emporte toujours**. `AGENTS.md` à la racine du projet est la source de vérité ultime.
@@ -465,15 +466,14 @@ opencode-config/
 
 ## Principe de priorité
 
-L'agent reçoit et applique dans cet ordre (le dernier l'emporte) :
+L'agent reçoit et applique dans cet ordre (du plus général au plus spécifique, le plus spécifique l'emporte) :
 
-1. Bonnes pratiques générales.
+1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure).
 2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon).
-3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs...).
-4. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure).
-5. Agents spécialisés enregistrés dans la session.
-6. **`AGENTS.md`** local du projet.
-7. Instructions explicites de la tâche en cours.
+3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs, astro).
+4. Standards entreprise (si configurés).
+5. **`AGENTS.md`** local du projet.
+6. Instructions explicites de la tâche en cours.
 
 ---
 

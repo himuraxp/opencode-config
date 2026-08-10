@@ -58,7 +58,7 @@ Après une investigation réussie, mettre à jour `docs/ai/INDEX.md` avec les fi
 - `src/auth/guard.ts` : Protection des routes
 ```
 
-## Anti-patterns interdits
+## Anti-patterns
 
 - ❌ "Explorer le code pour comprendre" sans objectif précis
 - ❌ Lire l'intégralité d'un fichier de > 200 lignes si grep suffit

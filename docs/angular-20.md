@@ -1,5 +1,7 @@
 # Angular 20 — Conventions
 
+> Version détaillée (agent) : `frameworks/angular-20.md`
+
 Guide pratique pour produire du code Angular 20 moderne et maintenable.
 
 ## Templates HTML

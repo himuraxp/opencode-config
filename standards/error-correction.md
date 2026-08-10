@@ -66,7 +66,7 @@ Après chaque correction :
 - [ ] Le lint passe-t-il ?
 - [ ] Si suppression de code : aucun autre fichier ne l'importe/utilise ?
 
-## Anti-patterns interdits
+## Anti-patterns
 
 - ❌ 3+ tentatives sur le même problème sans reset
 - ❌ Corriger sans comprendre la cause racine

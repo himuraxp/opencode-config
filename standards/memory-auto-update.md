@@ -1,4 +1,4 @@
-# Standard : Mémoire Projet Auto-Entretenue
+# Standard — Mémoire Projet Auto-Entretenue
 
 ## Principe
 
@@ -116,7 +116,7 @@ Valeurs autorisées : `pending`, `in-progress`, `implemented`, `reviewed`, `bloc
 
 > Si `docs/ai/` existe, il DOIT être à jour avant de rendre la main. Vider le BUFFER des notes temporaires tout en préservant le snapshot.
 
-## Anti-patterns interdits
+## Anti-patterns
 
 - ❌ Ne JAMAIS laisser STATUS.md vide si du travail a été fait
 - ❌ Ne JAMAIS oublier de cocher les étapes terminées dans PLAN.md

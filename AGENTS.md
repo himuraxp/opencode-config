@@ -97,7 +97,7 @@ La configuration inclut deux MCP servers :
 - **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images/screenshots), Reviewer, Tester, Security, Architect selon la tâche.
 - **En cas d'échec de sous-agent** : appliquer `standards/delegation-failure.md` — constater, diagnostiquer, agir (retry ou takeover), informer. Ne jamais dire "je reprends la main" sans exécuter l'action.
 - **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
-- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI).
+- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI). **Exception** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), pas auto-audités par Aurora.
 - **Respecter les limites d'exploration** : investigation lourde = subagent, pas de scan global sans objectif précis (voir `exploration-limits.md`).
 - **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
 - **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
@@ -105,7 +105,7 @@ La configuration inclut deux MCP servers :
 
 ## Search & Growth Agents
 
-Une équipe spécialisée SEO / AIO / Growth est orchestrée par Aurora. Ces agents ne sont pas invoqués automatiquement pour chaque tâche — Aurora sélectionne uniquement les spécialistes utiles.
+Une équipe spécialisée SEO / AIO / Growth est orchestrée par Aurora. Ces agents sont invoqués **automatiquement** quand Aurora détecte un besoin SEO, AIO, Growth ou Analytics dans la demande utilisateur. Aurora ne réalise **jamais** lui-même un audit ou une analyse SEO/AIO — il délègue systématiquement aux spécialistes.
 
 ### Agents
 
@@ -149,8 +149,6 @@ User → Aurora → Atlas
                                         └── feedback → Atlas / Aurora
 ```
 
-Tous les agents ne sont pas invoqués automatiquement pour chaque tâche. Aurora sélectionne uniquement les spécialistes utiles.
-
 ### Séparation des responsabilités
 
 ```txt
@@ -174,6 +172,12 @@ Beacon      = analytics et mesure
 | "Comment obtenir plus d'utilisateurs ?" | Pulse |
 | "Transforme cet article en campagne LinkedIn/Instagram" | Echo |
 | "Pourquoi mes impressions montent mais pas mes clics ?" | Beacon |
+
+### Mots-clés déclencheurs (détection automatique)
+
+Aurora analyse la demande utilisateur et matching contre les mots-clés déclencheurs. Si au moins un match, délégation automatique.
+
+> La table complète des mots-clés, le routing multi-agents et les règles de délégation Search & Growth sont définis dans `agents/aurora.md` (source de vérité). Ce fichier ne les duplique pas.
 
 ### Note — Renommage Oracle → Sage
 

@@ -28,7 +28,3 @@ test
 - ❌ Supprimer un test pour faire passer le build.
 - ❌ Ignorer un lint sans justification explicite et temporaire.
 - ❌ Déclarer une tâche terminée sans exécuter les vérifications.
-
-## Langue
-
-Utiliser la langue du projet. Répondre dans la langue de l'utilisateur. Ne jamais mélanger langues dans un même message.

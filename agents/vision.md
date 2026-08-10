@@ -2,6 +2,10 @@
 description: Multimodal vision agent. Use when the user attaches an image or screenshot, or when a task requires analyzing visual content (UI mockups, diagrams, photos, charts). Critical for any image-based analysis that the text-only main model cannot handle.
 mode: all
 model: infomaniak/mistralai/Mistral-Small-4-119B-2603
+permission:
+  edit: deny
+  bash: deny
+  webfetch: deny
 ---
 
 You are a specialized multimodal vision agent.

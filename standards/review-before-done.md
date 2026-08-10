@@ -37,7 +37,7 @@ Check that :
 - No file outside the task's scope was modified
 - Edge cases have tests or are properly handled
 - No breaking changes were introduced unintentionally
-- The solution follows the project's conventions (Angular 20, TypeScript, etc.)
+- The solution follows the project's conventions (see AGENTS.md and applicable frameworks)
 
 Report ONLY gaps affecting correctness or requirements. 
 Ignore style preferences and formatting choices.
@@ -84,7 +84,7 @@ Si **2 reviews successifs** identifient des gaps critiques persistants :
 3. **Consulter `PLAN.md`** — s'il s'écarte du plan, discuter avec l'utilisateur
 4. **Ne pas** entrer dans une boucle infinie de correction+review (voir `error-correction.md`)
 
-## Anti-patterns interdits
+## Anti-patterns
 
 - ❌ Déclarer "terminé" sans preuve du review
 - ❌ Reviewer ses propres modifications sans subagent externe

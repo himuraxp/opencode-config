@@ -1,6 +1,10 @@
 ---
 description: Agent architecture pour découpage technique et décisions structurantes.
 mode: subagent
+permission:
+  edit: deny
+  bash: deny
+  webfetch: deny
 ---
 
 # Architect

@@ -86,7 +86,7 @@ Retry 1 : sous-agent échoue encore (OU Aurora skip le retry si cause évidente)
 Takeover : Aurora exécute la tâche lui-même
 ```
 
-**Aurora ne délèue JAMAIS plus de 2 fois la même tâche au même type de sous-agent.**
+**Aurora ne délègue JAMAIS plus de 2 fois la même tâche au même type de sous-agent.**
 
 Après 2 échecs :
 1. Constater : "2 échecs de [sous-agent], je prends la main"

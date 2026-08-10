@@ -1,9 +1,13 @@
 ---
 description: Agent spécialisé code review stricte.
 mode: subagent
+permission:
+  edit: deny
+  bash: deny
+  webfetch: deny
 ---
 
-# Code Review
+# Reviewer
 
 ## Mission
 

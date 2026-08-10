@@ -49,6 +49,7 @@ Les standards suivants sont chargés automatiquement par l'agent principal (Auro
 - **error-correction** : reset après 2 corrections échouées, ne jamais corriger sans cause profonde
 - **anti-patterns** : reconnaitre et stopper les 5 patterns d'échec courants
 - **artifact-authoring** : création homogène de standards, agents, frameworks et templates
+- **delegation-failure** : procédure obligatoire après échec de sous-agent
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
 
@@ -86,6 +87,7 @@ Règles :
 - Choisir les axes pertinents : qualité, architecture, sécurité, dépendances, performance, tests, UI/accessibilité.
 - Produire un rapport priorisé avec preuves.
 - Ne pas corriger pendant l'audit ; proposer un plan d'action séparé.
+- **Exception** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, Pulse, Beacon) — voir `AGENTS.md` global section "Search & Growth Agents".
 
 ## Documentation IA
 

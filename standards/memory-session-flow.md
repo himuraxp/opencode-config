@@ -1,4 +1,6 @@
-# Standard — Memory
+# Standard — Memory Session Flow
+
+> Structure et ordre de lecture de la mémoire projet. La procédure d'écriture détaillée est dans `memory-auto-update.md` et la checklist de fin de session dans `memory-checklist.md`.
 
 ## Documentation IA par projet
 
@@ -21,7 +23,7 @@ docs/
 Aurora doit **impérativement vérifier** à chaque session si le projet courant contient `docs/ai/`.
 
 - Si le dossier existe, l'ordre de lecture de session s'applique **automatiquement et obligatoirement**.
-- Si le dossier n'existe pas, ne rien lire au démarrage ; appliquer `memory-checklist.md` en fin de session si le projet doit adopter la mémoire IA.
+- Si le dossier n'existe pas, ne rien lire au démarrage. Créer `docs/ai/` en fin de session uniquement si l'utilisateur demande explicitement la mémoire IA ou si une tâche d'implémentation est en cours (voir `memory-checklist.md`).
 
 Aucune modification du `AGENTS.md` local n'est requise pour activer cette découverte. C'est un comportement global d'Aurora, non une configuration projet.
 
@@ -42,22 +44,9 @@ Puis lire `docs/ai/BUFFER.md` **uniquement si** :
 - l'utilisateur demande explicitement de reprendre une tâche ;
 - le contexte projet est insuffisant.
 
-## Fin de session — Ordre de mise à jour
+## Fin de session — Persistance mémoire
 
-L'agent doit systématiquement :
-
-1. Mettre à jour `docs/ai/STATUS.md` avec :
-   - ce qui a été fait
-   - ce qui reste à faire
-   - les bloqueurs éventuels
-   - la prochaine étape recommandée
-
-2. Mettre à jour `docs/ai/BUFFER.md` :
-   - noter les sujets hors-scope, les micro-décisions, le snapshot si interruption ;
-   - vider ou archiver si le buffer est résolu ou vide ;
-   - **promouvoir dans `WARNINGS.md`** tout sujet persistant ou critique identifié dans le buffer.
-
-3. Ajouter une entrée dans `docs/ai/CHANGELOG.md` si des changements significatifs ont été réalisés.
+Appliquer la procédure détaillée dans `memory-auto-update.md` (7 étapes : STATUS, PLAN, CHANGELOG, INDEX, BUFFER, WARNINGS, DECISIONS). Vérifier via `memory-checklist.md`.
 
 ## Rôle de chaque document
 
@@ -99,9 +88,9 @@ Certains documents ne sont pas lus systématiquement au démarrage, mais uniquem
 
 ## Règles
 
-- Écrire dans la langue du projet (français recommandé pour les projets francophones).
 - Ne pas documenter les micro-corrections (unif, typo, formatage).
 - Documenter les décisions d'architecture, les pivots, les découvertes importantes.
 - Garder STATUS.md concis et à jour.
 - Promouvoir immédiatement tout risque persistant de `BUFFER.md` vers `WARNINGS.md`.
 - Ne jamais lire un fichier `.new` généré par `sync-project.sh` : il s'agit d'une proposition de fusion manuelle, non d'une source de vérité.
+- Langue : suivre `communication.md` (répondre dans la langue du projet).

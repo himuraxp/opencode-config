@@ -1,6 +1,15 @@
 ---
 description: Agent spécialisé sécurité — revue de code, secrets, injections, XSS et bonnes pratiques.
 mode: subagent
+permission:
+  edit: deny
+  bash:
+    "npm audit *": allow
+    "yarn audit *": allow
+    "rg *": allow
+    "grep *": allow
+    "*": deny
+  webfetch: deny
 ---
 
 # Security
