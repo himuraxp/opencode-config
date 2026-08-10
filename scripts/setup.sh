@@ -257,7 +257,7 @@ fi
 # Check if .env already exists and is complete
 env_is_complete() {
   [[ -f "$ENV_FILE" ]] || return 1
-  grep -q "^OPENAI_API_KEY=.\+" "$ENV_FILE" || return 1
+  grep -q "^OPENAI_API_KEY_INFOMANIAK=.\+" "$ENV_FILE" || return 1
   grep -q "^OPENAI_BASE_URL=.\+" "$ENV_FILE" || return 1
   return 0
 }
@@ -322,17 +322,44 @@ else
 
   # --- Required variables ---
 
-  OPENAI_API_KEY=""
+  OPENAI_API_KEY_INFOMANIAK=""
   OPENAI_BASE_URL=""
   OPENAI_B300_BASE_URL=""
   IDB_UDID=""
   IDB_PATH=""
 
-  prompt_var OPENAI_API_KEY \
+  # Migration: if an old installation used OPENAI_API_KEY for Infomaniak,
+  # carry its value over to OPENAI_API_KEY_INFOMANIAK (without displaying the secret).
+  if [[ -f "$ENV_FILE" ]]; then
+    OLD_OPENAI_API_KEY=$(grep "^OPENAI_API_KEY=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- || echo "")
+    NEW_INFOMANIAK_KEY=$(grep "^OPENAI_API_KEY_INFOMANIAK=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- || echo "")
+    if [[ -n "$OLD_OPENAI_API_KEY" && -z "$NEW_INFOMANIAK_KEY" ]]; then
+      warn "Migrating OPENAI_API_KEY → OPENAI_API_KEY_INFOMANIAK in existing .env (value hidden)"
+      # Prepend the new variable; leave the old one in place for reference
+      # but it won't be used by opencode.json anymore.
+      {
+        echo "# Migrated from OPENAI_API_KEY on $(date '+%Y-%m-%d')"
+        echo "OPENAI_API_KEY_INFOMANIAK=${OLD_OPENAI_API_KEY}"
+        cat "$ENV_FILE"
+      } > "${ENV_FILE}.tmp" && mv "${ENV_FILE}.tmp" "$ENV_FILE"
+      chmod 600 "$ENV_FILE"
+      ok "Migration complete — OPENAI_API_KEY_INFOMANIAK added to .env"
+    fi
+    if [[ -n "$OLD_OPENAI_API_KEY" && -n "$NEW_INFOMANIAK_KEY" ]]; then
+      info "Both OPENAI_API_KEY and OPENAI_API_KEY_INFOMANIAK exist in .env — using OPENAI_API_KEY_INFOMANIAK"
+    fi
+    # Clean up: remove the old OPENAI_API_KEY line to prevent confusion
+    if [[ -n "$OLD_OPENAI_API_KEY" ]]; then
+      sed -i '' '/^OPENAI_API_KEY=/d' "$ENV_FILE" 2>/dev/null || sed -i '/^OPENAI_API_KEY=/d' "$ENV_FILE" 2>/dev/null || true
+      chmod 600 "$ENV_FILE"
+    fi
+  fi
+
+  prompt_var OPENAI_API_KEY_INFOMANIAK \
     "Enter your Infomaniak AI API key" "" true
 
-  if [[ -z "${OPENAI_API_KEY}" ]]; then
-    fail "OPENAI_API_KEY is required. Get it from the Infomaniak console."
+  if [[ -z "${OPENAI_API_KEY_INFOMANIAK}" ]]; then
+    fail "OPENAI_API_KEY_INFOMANIAK is required. Get it from the Infomaniak console."
   fi
 
   prompt_var OPENAI_BASE_URL \
@@ -381,7 +408,7 @@ else
 # DO NOT commit this file. It contains secrets.
 
 # Required
-OPENAI_API_KEY=${OPENAI_API_KEY}
+OPENAI_API_KEY_INFOMANIAK=${OPENAI_API_KEY_INFOMANIAK}
 OPENAI_BASE_URL=${OPENAI_BASE_URL}
 
 # Optional

@@ -52,7 +52,7 @@
         "baseURL": "{env:OPENAI_BASE_URL}",
         "headers": {
           "X-LLM-Application-Tag": "codegpt",
-          "Authorization": "Bearer {env:OPENAI_API_KEY}"
+          "Authorization": "Bearer {env:OPENAI_API_KEY_INFOMANIAK}"
         }
       },
       "models": {

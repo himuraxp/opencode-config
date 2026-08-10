@@ -1,5 +1,37 @@
 # BUFFER
 
+## Snapshot reprise — 2026-08-10 (fix auth + displayName)
+
+### Sujet
+
+Correction de deux bugs d'installation : collision de variable `OPENAI_API_KEY` et displayName incompatibles avec la regex du plugin oh-my-opencode-slim.
+
+### Fichiers impactés
+
+- `config/opencode.json` (modifié — Authorization header)
+- `config/.env.example` (modifié — variable renommée + commentaire)
+- `config/oh-my-opencode-slim.json` (modifié — 7 displayName normalisés)
+- `scripts/setup.sh` (modifié — env_is_complete, prompt, write .env, migration + cleanup)
+- `README.md` (modifié — table variables)
+- `docs/ai/STATUS.md` (modifié)
+- `docs/ai/CHANGELOG.md` (modifié)
+- `docs/ai/BUFFER.md` (modifié)
+
+### Décisions clés
+
+- `OPENAI_API_KEY` → `OPENAI_API_KEY_INFOMANIAK` pour éviter la collision avec une variable globale tierce.
+- Migration automatique idempotente dans `setup.sh` : lit l'ancienne valeur, la copie sous le nouveau nom, supprime l'ancienne ligne, masque le secret.
+- displayName normalisés en kebab-case lowercase pour respecter `^[a-z][a-z0-9_-]*$`.
+
+### État
+
+- Tous les fichiers modifiés et cohérents.
+- Review contradictoire effectué (subagent Reviewer — APPROVED).
+- Vérifications passées : jq, bash -n, regex, migration test, diff hors scope = 0.
+- Prêt à committer.
+
+---
+
 ## Snapshot reprise — 2026-08-10
 
 ### Sujet

@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 2026-08-10 — Fix auth Infomaniak + displayName plugin compat
+
+### Contexte
+
+Deux bugs causaient des échecs au démarrage : (1) collision entre `OPENAI_API_KEY` (globale, autre fournisseur) et la clé Infomaniak, (2) `displayName` avec espaces/tirets cadratins incompatibles avec la regex `^[a-z][a-z0-9_-]*$` du plugin oh-my-opencode-slim.
+
+### Changements
+
+- `config/opencode.json` : `OPENAI_API_KEY` → `OPENAI_API_KEY_INFOMANIAK` dans le header Authorization
+- `config/.env.example` : variable renommée + commentaire expliquant la séparation
+- `scripts/setup.sh` : `env_is_complete` check, prompt, write .env migrés vers `OPENAI_API_KEY_INFOMANIAK` + logique de migration automatique de l'ancienne variable (idempotente, secret masqué) + cleanup de l'ancienne ligne
+- `config/oh-my-opencode-slim.json` : 7 displayName normalisés en kebab-case lowercase
+- `README.md` : table des variables d'environnement mise à jour
+
+### Vérifications
+
+- `jq` valide sur `opencode.json` et `oh-my-opencode-slim.json`
+- `bash -n scripts/setup.sh` OK
+- 7 displayName respectent `^[a-z][a-z0-9_-]*$`
+- Migration testée en temporaire (first-run + idempotency)
+- Review contradictoire via subagent Reviewer — APPROVED (2 suggestions LOW appliquées)
+
 ## 2026-08-10 — Correction des 54 findings d'audit
 
 ### Contexte

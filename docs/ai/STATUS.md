@@ -4,6 +4,18 @@
 
 ## Fait
 
+### 2026-08-10 — Fix auth Infomaniak + displayName plugin compat
+
+- **Problème 1 — Collision de variable** : `OPENAI_API_KEY` (globale, autre fournisseur) écrasait la clé Infomaniak → `AI_APICallError: Invalid Authentication`
+  - `config/opencode.json` : header Authorization → `OPENAI_API_KEY_INFOMANIAK`
+  - `config/.env.example` : variable renommée + commentaire de séparation
+  - `scripts/setup.sh` : `env_is_complete`, prompt, write .env migrés + migration auto idempotente de l'ancienne variable + cleanup de l'ancienne ligne
+  - `README.md` : table des variables mise à jour
+- **Problème 2 — displayName incompatibles** : 7 displayName avec espaces/tirets cadratins/majuscules → regex `^[a-z][a-z0-9_-]*$` du plugin échouait au démarrage
+  - `config/oh-my-opencode-slim.json` : 7 displayName normalisés en kebab-case lowercase
+- **Review contradictoire** : subagent Reviewer — APPROVED (2 suggestions LOW appliquées : cleanup `OPENAI_API_KEY` + entrée CHANGELOG)
+- **Vérifications** : `jq` valide, `bash -n` OK, regex displayName OK, migration testée en temporaire (first-run + idempotency), diff hors scope = 0
+
 ### 2026-08-10 — Correction des 54 findings d'audit (sur 55, hors sécurité permissions)
 
 - **Scope** : 54 findings sur 55 corrigés (le point 1 sécurité permissions curl/kill/find/sed laissé en `allow` par choix utilisateur — Aurora doit rester autonome)

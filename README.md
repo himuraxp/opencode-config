@@ -133,7 +133,7 @@ Les secrets sont stockés dans `~/.config/opencode/.env` et référencés via `{
 
 | Variable | Usage | Requis |
 |----------|-------|--------|
-| `OPENAI_API_KEY` | Clé API Infomaniak AI | Oui |
+| `OPENAI_API_KEY_INFOMANIAK` | Clé API Infomaniak AI | Oui |
 | `OPENAI_BASE_URL` | Endpoint API Infomaniak | Oui |
 | `OPENAI_B300_BASE_URL` | Endpoint B300 (Kimi K2.6) | Non |
 | `IDB_UDID` | UDID simulateur iOS | Non |
