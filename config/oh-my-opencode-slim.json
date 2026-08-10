@@ -119,5 +119,49 @@
         "mcps": []
       }
     }
+  },
+  "agents": {
+    "atlas": {
+      "displayName": "Atlas — SEO Strategy",
+      "description": "Stratégie SEO, keyword research, search intent, content gaps, roadmap",
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "orchestratorPrompt": "Delegate to @atlas for SEO strategy, keyword research, search intent, content gaps, topical authority, architecture éditoriale, roadmap SEO. Not for technical SEO implementation or content production."
+    },
+    "crawler": {
+      "displayName": "Crawler — Technical SEO",
+      "description": "Audit et correction SEO technique (SSR, structured data, Core Web Vitals, Angular/React/Vue)",
+      "model": "infomaniak/euria-code",
+      "orchestratorPrompt": "Delegate to @crawler for technical SEO issues: indexation, SSR/SSG, structured data, Core Web Vitals, routing, robots.txt, sitemap. Can modify code. Not for content or strategy."
+    },
+    "sage": {
+      "displayName": "Sage — AIO / GEO",
+      "description": "Optimisation pour moteurs de recherche génératifs (AI Overviews, ChatGPT Search, Perplexity, Gemini)",
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "orchestratorPrompt": "Delegate to @sage for AIO/GEO optimization: entity clarity, extractability, citation potential, AI Overviews, ChatGPT Search, Perplexity. Distinguish established practice from hypothesis."
+    },
+    "scribe": {
+      "displayName": "Scribe — SEO Content",
+      "description": "Production et optimisation éditoriale SEO (copywriting, content briefs, meta, H1/H2/H3, FAQ)",
+      "model": "infomaniak/euria-code",
+      "orchestratorPrompt": "Delegate to @scribe for SEO content production and optimization: copywriting, content briefs, meta tags, H1/H2/H3, FAQ, featured snippets. Can edit content files. Not for strategy or technical SEO."
+    },
+    "pulse": {
+      "displayName": "Pulse — Growth Marketing",
+      "description": "Acquisition, conversion, funnel analysis, A/B testing, landing pages, onboarding, rétention",
+      "model": "infomaniak/euria-code",
+      "orchestratorPrompt": "Delegate to @pulse for growth marketing: acquisition, conversion optimization, funnel analysis, A/B testing, landing pages, onboarding, retention, referral. Not for SEO or social distribution."
+    },
+    "echo": {
+      "displayName": "Echo — Social Distribution",
+      "description": "Distribution multi-canal (LinkedIn, Instagram, X, YouTube, TikTok, Reddit, Discord, newsletter)",
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "orchestratorPrompt": "Delegate to @echo for social distribution and multi-cannel content adaptation: LinkedIn, Instagram, X, YouTube, TikTok, Reddit, Discord, newsletter. Adapts message per platform. Can edit content files."
+    },
+    "beacon": {
+      "displayName": "Beacon — Analytics",
+      "description": "Mesure SEO et marketing (GSC, GA4, PageSpeed, rank tracking, conversion, engagement)",
+      "model": "infomaniak/euria-code",
+      "orchestratorPrompt": "Delegate to @beacon for analytics and measurement: GSC, GA4, PageSpeed, rank tracking, conversion, engagement. Transforms data into recommendations. Read-only, no code modification."
+    }
   }
 }
