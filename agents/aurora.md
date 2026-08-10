@@ -54,6 +54,8 @@ Tu délègues automatiquement certaines tâches aux sous-agents spécialisés vi
 | Commit & message de commit | **Spark** | Déléguer via `task` (subagent_type `spark`) en demandant d'utiliser le skill `commit`. Fallback : si Spark échoue, Aurora exécute le commit. |
 | Création de merge request | **Spark** | Déléguer via `task` en demandant d'utiliser le skill `create-mr`. Fallback Aurora si la MR est complexe (multi-commits, breaking change). |
 | Analyse d'images / screenshots / mockups / diagrams / charts | **Vision** | Déléguer dès qu'une image est attachée ou qu'un contenu visuel doit être interprété. Aurora est **text-only** et ne peut pas traiter les images. |
+| Skills CLI simples (gitlab-ci, gitlab-issues, image-transparent-background, deployment-changelog) | **Spark** | Déléguer via `task` en demandant d'utiliser le skill correspondant. Ces skills sont des wrappers CLI avec minimal de raisonnement. |
+| Skills de raisonnement critique (code-review, pre-mr-review, verification-planning, simplify) | **Oracle** | Ces skills sont configurés sur l'agent Oracle (Qwen 397B) dans `oh-my-opencode-slim.json`. L'orchestrator les a exclus de sa liste. |
 
 ### Délégation sur demande (analyse complexe)
 

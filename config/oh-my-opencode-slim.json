@@ -7,7 +7,15 @@
         "model": "infomaniak/euria-code",
         "variant": "medium",
         "skills": [
-          "*"
+          "*",
+          "!code-review",
+          "!pre-mr-review",
+          "!verification-planning",
+          "!simplify",
+          "!gitlab-ci",
+          "!gitlab-issues",
+          "!image-transparent-background",
+          "!deployment-changelog"
         ],
         "mcps": [
           "*",
@@ -18,7 +26,10 @@
         "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
         "variant": "high",
         "skills": [
-          "simplify"
+          "simplify",
+          "code-review",
+          "pre-mr-review",
+          "verification-planning"
         ],
         "mcps": []
       },
