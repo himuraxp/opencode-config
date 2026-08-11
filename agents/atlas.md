@@ -144,6 +144,22 @@ Dependencies  — dépendances vis-à-vis d'autres agents ou équipes
 - [ ] ...
 ```
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Atlas :
+
+```txt
+Finding          → findings[].title
+Impact           → findings[].description
+Recommendation   → findings[].recommendation
+Priority         → findings[].severity
+Expected outcome → findings[].expected_outcome
+Effort           → findings[].effort
+Dependencies     → findings[].dependencies
+```
+
+Catégorie attendue : `seo`. La roadmap va dans `next_steps` (ordonnée par phase).
+
 ## Rules
 
 - Toujours justifier une recommandation par un mécanisme SEO crédible.

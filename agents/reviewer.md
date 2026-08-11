@@ -67,6 +67,20 @@ Mergeable / À corriger / À clarifier / Bloqué
 - ...
 ```
 
+### Format de retour JSON
+
+Le format markdown ci-dessus constitue le texte libre avant le bloc JSON. Retourner ensuite le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Reviewer :
+
+```txt
+Verdict              → summary (et status: success=mergeable, partial=à corriger, failure=bloqué)
+Points bloquants     → findings[] (severity: critical ou high)
+Axes                 → findings[] (category: code, category: accessibility selon l'axe)
+Suggestions           → findings[] (severity: medium ou low) + next_steps
+Tests recommandés    → findings[] (category: tests) + next_steps
+```
+
+Catégories attendues : `code`, `accessibility`, `tests`.
+
 ## Règles
 
 - Être strict mais pragmatique.

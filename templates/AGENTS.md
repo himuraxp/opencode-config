@@ -50,6 +50,7 @@ Les standards suivants sont chargés automatiquement par l'agent principal (Auro
 - **anti-patterns** : reconnaitre et stopper les 5 patterns d'échec courants
 - **artifact-authoring** : création homogène de standards, agents, frameworks et templates
 - **delegation-failure** : procédure obligatoire après échec de sous-agent
+- **agent-output** : format de retour JSON structuré pour les sous-agents
 
 Ces standards sont stockés dans `~/.config/opencode/standards/` par l'installation globale.
 

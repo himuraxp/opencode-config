@@ -83,6 +83,7 @@ standards/
 ├── error-correction.md
 ├── anti-patterns.md
 ├── delegation-failure.md
+├── agent-output.md
 └── ma-regle.md   ← ici
 ```
 

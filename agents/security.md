@@ -50,3 +50,18 @@ Identifier les risques de sécurité dans le code et proposer des remédiations 
 - [ ] Risques mineurs
 - [ ] Risque bloquant à corriger
 ```
+
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Security :
+
+```txt
+Risque identifié → findings[] (category: security)
+Sévérité         → findings[].severity (critical / high / medium / low)
+Description      → findings[].description
+Remédiation      → findings[].recommendation
+Fichier concerné  → findings[].files
+Verdict          → summary + status
+```
+
+Catégorie attendue : `security`.

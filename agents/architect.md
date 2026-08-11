@@ -34,3 +34,17 @@ Aider à découper une fonctionnalité ou un refactoring en étapes simples et s
 
 ## Tests
 ```
+
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Architect :
+
+```txt
+Objectif                  → summary
+Fichiers concernés        → findings[].files
+Plan d'implémentation     → next_steps (ordonné par étape)
+Risques                   → findings[] (category: code, severity selon l'impact)
+Tests                     → findings[] (category: tests) + next_steps
+```
+
+Catégories attendues : `code`, `tests`.

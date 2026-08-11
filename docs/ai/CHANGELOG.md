@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## 2026-08-11 — Standard agent-output.md (format de retour JSON des sous-agents)
+
+### Contexte
+
+Les sous-agents retournaient du texte libre, rendant la consolidation multi-agents manuelle et non déterministe. Aucun système de format structuré (JSON-LD, JSON schema) n'existait pour les retours de sous-agents vers Aurora.
+
+### Changements
+
+- **Nouveau standard** `standards/agent-output.md` :
+  - Schéma JSON v1 complet (agent, task, status, summary, findings[], metrics[], conflicts[], gaps[], next_steps[], metadata)
+  - 12 catégories normalisées pour les findings
+  - 5 niveaux de sévérité
+  - Format de transmission (bloc JSON en fin de message)
+  - Règles de remplissage (obligatoire vs optionnel)
+  - Procédure de consolidation multi-agents pour Aurora (parse, détection conflits, fusion, rapport unifié)
+  - Mapping de compatibilité avec les formats existants de chaque agent
+  - Exceptions Spark et Vision (texte libre)
+- **11 agents mis à jour** avec section "Format de retour JSON" : atlas, crawler, sage, scribe, pulse, echo, beacon, reviewer, security, architect, tester
+- **Spark et Vision** : initialement exemptés, l'exception a été retirée — ces 2 agents retournent aussi le format JSON (JSON minimal pour Spark, findings visuels pour Vision). Total : 13 agents.
+- **`agents/aurora.md`** : 2 références au standard ajoutées (règles de délégation + liste standards obligatoires)
+- **`AGENTS.md`** : référence dans "Comportement attendu" + liste standards
+
+### Vérifications
+
+- Schéma JSON valide (structure cohérente)
+- Mapping des champs existants vérifié pour chaque agent
+- Pas de contradiction avec les standards existants
+- Spark et Vision inclus (pas d'exception)
+
 ## 2026-08-10 — Fix auth Infomaniak + displayName plugin compat
 
 ### Contexte

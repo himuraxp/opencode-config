@@ -9,7 +9,7 @@ Ce repo sépare les responsabilités en 4 couches :
 ```txt
 config/      Configuration OpenCode (opencode.json, plugins, .env.example — sans secrets)
 agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
-standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns...)
+standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
 ```
 
@@ -102,6 +102,7 @@ La configuration inclut deux MCP servers :
 - **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
 - **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
 - **Créer les nouveaux standards/agents/frameworks via une structure homogène** et seulement s'ils ne dupliquent pas un artefact existant (voir `artifact-authoring.md`).
+- **Format de retour des sous-agents** : tout sous-agent sollicité via `task` doit retourner un résultat au format JSON structuré (voir `standards/agent-output.md`). Aurora parse, consolide et affiche les résultats de manière déterministe. Aucune exception.
 
 ## Search & Growth Agents
 

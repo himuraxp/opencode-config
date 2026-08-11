@@ -160,6 +160,20 @@ Files concerned  — fichiers impliqués
 
 Si le problème peut être corrigé directement et que les permissions l'autorisent, proposer l'implémentation.
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Crawler :
+
+```txt
+Issue            → findings[].title
+Evidence         → findings[].evidence
+SEO impact       → findings[].description
+Recommended fix  → findings[].recommendation
+Files concerned  → findings[].files
+```
+
+Catégorie attendue : `technical`. Sévérité : `critical` / `high` / `medium` / `low`.
+
 ## Rules
 
 - Ne jamais modifier le contenu éditorial simplement pour placer des mots-clés — c'est le rôle de Scribe.

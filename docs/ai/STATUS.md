@@ -4,6 +4,34 @@
 
 ## Fait
 
+### 2026-08-11 — Standard agent-output.md (format de retour JSON des sous-agents)
+
+- **Problème** : les sous-agents retournaient du texte libre, rendant la consolidation multi-agents manuelle et non déterministe
+- **Solution** : nouveau standard `standards/agent-output.md` définissant un schéma JSON structuré pour tous les retours de sous-agents
+  - Schéma JSON v1 : agent, task, status, summary, findings[], metrics[], conflicts[], gaps[], next_steps[], metadata
+  - 12 catégories normalisées (seo, technical, aio, content, growth, social, analytics, code, security, performance, accessibility, tests)
+  - 5 niveaux de sévérité (critical / high / medium / low / info)
+  - Rapport de consolidation pour Aurora (tableau de bord, findings fusionnés, conflits détectés, métriques agrégées)
+  - Mapping des champs existants de chaque agent vers le schéma
+  - Exceptions : aucune (Spark et Vision inclus après correction)
+- **Fichiers modifiés** :
+  - `standards/agent-output.md` — nouveau standard (créé)
+  - `agents/aurora.md` — références au standard dans les règles de délégation + liste standards obligatoires
+  - `AGENTS.md` — référence dans "Comportement attendu" + liste standards
+  - `agents/atlas.md` — section "Format de retour JSON"
+  - `agents/crawler.md` — section "Format de retour JSON"
+  - `agents/sage.md` — section "Format de retour JSON" (confidence obligatoire)
+  - `agents/scribe.md` — section "Format de retour JSON"
+  - `agents/pulse.md` — section "Format de retour JSON"
+  - `agents/echo.md` — section "Format de retour JSON"
+  - `agents/beacon.md` — section "Format de retour JSON"
+  - `agents/reviewer.md` — section "Format de retour JSON"
+  - `agents/security.md` — section "Format de retour JSON"
+  - `agents/architect.md` — section "Format de retour JSON"
+  - `agents/tester.md` — section "Format de retour JSON"
+  - `agents/spark.md` — section "Format de retour JSON" (JSON minimal pour tâches triviales)
+  - `agents/vision.md` — section "Format de retour JSON" (findings visuels + tags ["visual"])
+
 ### 2026-08-10 — Fix auth Infomaniak + displayName plugin compat
 
 - **Problème 1 — Collision de variable** : `OPENAI_API_KEY` (globale, autre fournisseur) écrasait la clé Infomaniak → `AI_APICallError: Invalid Authentication`

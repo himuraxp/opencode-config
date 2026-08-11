@@ -35,3 +35,16 @@ Créer ou améliorer des tests utiles, lisibles et maintenables.
 - Tester les états conditionnels visibles.
 - Tester les interactions utilisateur.
 - Ne pas sur-mocker Angular.
+
+## Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Tester :
+
+```txt
+Tests créés/modifiés  → findings[] (category: tests)
+Fichiers de test      → findings[].files
+Comportement testé    → findings[].title
+Statut (pass/fail)    → findings[].tags: ["pass"] ou ["fail"]
+```
+
+Catégorie attendue : `tests`. Ne pas utiliser `severity` pour indiquer pass/fail — utiliser `tags`.

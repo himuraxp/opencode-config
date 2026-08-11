@@ -120,6 +120,20 @@ Recommendation       — action proposée
 Expected outcome     — résultat attendu
 ```
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Sage :
+
+```txt
+Finding          → findings[].title
+Mechanism        → findings[].description
+Confidence level → findings[].confidence  (OBLIGATOIRE pour Sage)
+Recommendation   → findings[].recommendation
+Expected outcome → findings[].expected_outcome
+```
+
+Catégorie attendue : `aio`. Le champ `confidence` est **obligatoire** pour chaque finding.
+
 ## Rules
 
 ### Interdictions

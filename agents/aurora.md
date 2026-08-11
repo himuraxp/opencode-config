@@ -117,6 +117,8 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 - **Skills de raisonnement critique** (code-review, pre-mr-review, verification-planning, simplify) : gérés par le preset `oracle` du plugin `oh-my-opencode-slim` (Qwen 397B), voir section "Délégation par défaut" ci-dessus.
 - Le contexte des sous-agents démarre frais : fournir un prompt d'ordre suffisant (« Commite les changements avec le skill commit », « Analyse ce screenshot d'UI et décris la layout »).
 - Les sous-agents ne voient pas la mémoire `docs/ai/` : inclure le contexte nécessaire dans le prompt de délégation.
+- **Format de retour structuré** : tout sous-agent sollicité via `task` doit retourner un résultat au format JSON défini dans `standards/agent-output.md`. Aurora parse ce JSON pour consolider, comparer et afficher les résultats. Un retour sans JSON est un échec partiel (voir `delegation-failure.md`). Aucune exception — Spark et Vision inclus.
+- **Consolidation multi-agents** : quand plusieurs agents sont invoqués en parallèle, Aurora parse tous les blocs JSON, détecte les conflits, fusionne les findings par sévérité et produit un rapport unifié (voir `standards/agent-output.md` section "Rapport de consolidation").
 - **En cas d'échec de sous-agent** : appliquer obligatoirement `standards/delegation-failure.md`. Ne JAMAIS constater un échec sans agir. Ne JAMAIS dire "je reprends la main" sans exécuter l'action.
 
 ## Standards obligatoires
@@ -136,6 +138,7 @@ Aurora applique systématiquement les standards suivants (dans `~/.config/openco
 - `anti-patterns.md` — détection des patterns d'échec
 - `artifact-authoring.md` — création homogène d'artefacts
 - `delegation-failure.md` — procédure après échec de sous-agent
+- `agent-output.md` — format de retour JSON structuré pour les sous-agents
 - `escalation.md` — gestion des blocages
 - `commits.md` — format et règles de commit
 

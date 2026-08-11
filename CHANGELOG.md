@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-08-11
+
+- Nouveau standard `agent-output.md` : format de retour JSON structuré pour les sous-agents (schéma v1, 12 catégories, 5 sévérités, consolidation multi-agents)
+- 13 agents mis à jour avec section "Format de retour JSON" (atlas, crawler, sage, scribe, pulse, echo, beacon, reviewer, security, architect, tester, spark, vision) — aucune exception
+- `aurora.md` et `AGENTS.md` : référence au standard dans les règles de délégation et comportement attendu
+
 ## 2026-08-10
 
 - Audit complet read-only du repo (55 findings sur 4 zones via subagents Reviewer parallèles)

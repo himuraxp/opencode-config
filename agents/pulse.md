@@ -160,6 +160,22 @@ Chaque recommandation doit inclure un plan d'exécution, un KPI et une méthode 
 - ...
 ```
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Pulse :
+
+```txt
+Hypothesis      → findings[].title
+Target audience → findings[].tags
+Action          → findings[].recommendation
+Expected impact → findings[].expected_outcome
+Effort          → findings[].effort
+KPI             → findings[].kpi
+How to measure  → findings[].description
+```
+
+Catégorie attendue : `growth`. Les KPIs vont aussi dans `metrics[]`.
+
 ## Rules
 
 - Toute recommandation doit être actionnable et mesurable.

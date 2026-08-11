@@ -105,3 +105,26 @@ Cette règle prime sur tout le reste. Un échec rapporté honnêtement est toujo
 - Réserve les raisonnements complexes à Aurora ou Aurora Heavy
 - Fais simple, fais vite, fais bien
 - **Si une commande échoue ou ne retourne rien, le signaler — ne jamais inventer le résultat**
+
+## Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Le JSON peut être minimal pour les tâches triviales :
+
+```json
+{
+  "$schema": "agent-output.v1",
+  "agent": "spark",
+  "task": "Commit des changements",
+  "status": "success",
+  "summary": "Commit abc1234 créé sur branche feature/x",
+  "findings": [],
+  "metadata": { "scope": "git commit" }
+}
+```
+
+Règles Spark :
+- `status` : `success` / `partial` / `failure` selon le résultat de la commande.
+- `summary` : le résultat concret de l'action (hash du commit, URL de la MR, etc.).
+- `findings` : généralement vide `[]` sauf si un problème est rencontré.
+- `metadata.scope` : la commande ou skill exécuté (ex: `git commit`, `create-mr`, `deployment-changelog`).
+- En cas d'échec : `status: failure` + `gaps` expliquant ce qui a échoué. Ne jamais inventer le résultat.

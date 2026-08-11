@@ -1,5 +1,29 @@
 # DECISIONS
 
+## 2026-08-11 — Format de retour JSON structuré pour les sous-agents (agent-output.md)
+
+### Contexte
+
+Les sous-agents retournaient du texte libre, rendant la consolidation multi-agents manuelle et non déterministe. Aucun système de format structuré n'existait pour les retours de sous-agents vers Aurora.
+
+### Décision
+
+Créer un nouveau standard `standards/agent-output.md` définissant un schéma JSON v1 obligatoire pour tous les retours de sous-agents via `task`.
+
+1. **Schéma JSON v1** : agent, task, status, summary, findings[], metrics[], conflicts[], gaps[], next_steps[], metadata.
+2. **12 catégories normalisées** : seo, technical, aio, content, growth, social, analytics, code, security, performance, accessibility, tests.
+3. **5 niveaux de sévérité** : critical / high / medium / low / info.
+4. **Obligation** : tout sous-agent via `task` doit retourner le bloc JSON. Un retour sans JSON est un échec partiel.
+5. **Obligation universelle** : tout sous-agent via `task` doit retourner le bloc JSON, **sans exception**. Spark et Vision sont inclus. Le JSON peut être minimal pour les tâches triviales (Spark) ou descriptif pour l'analyse visuelle (Vision), mais le format est identique.
+6. **Consolidation** : Aurora parse les blocs JSON, détecte les conflits, fusionne les findings par sévérité et produit un rapport unifié.
+
+### Impact
+
+- 13 agents mis à jour avec une section "Format de retour JSON" et le mapping des champs existants vers le schéma (11 agents initiaux + Spark et Vision après suppression de l'exception).
+- `aurora.md` et `AGENTS.md` référencent le standard dans les règles de délégation et le comportement attendu.
+- Les formats métier existants (sévérité, niveaux de confiance, KPIs) sont préservés — le JSON est une couche de transport.
+- `confidence` est unifié sur `established | reasonable | experimental` pour tous les agents (Beacon aligné).
+
 ## 2026-08-10 — Renommage Oracle → Sage pour éviter le conflit avec le preset `oracle`
 
 ### Contexte

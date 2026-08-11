@@ -17,7 +17,7 @@ racine/
 
 | Module | Chemin | Responsabilite |
 |--------|--------|----------------|
-| Standards | `standards/` | Workflow, verification, communication, memoire, review, audit, creation d'artefacts, limites d'exploration |
+| Standards | `standards/` | Workflow, verification, communication, memoire, review, audit, creation d'artefacts, limites d'exploration, format de retour JSON des sous-agents |
 | Agents | `agents/` | Roles Aurora, Spark, Vision, reviewer, tester, security, architect, atlas, crawler, sage, scribe, pulse, echo, beacon |
 | Frameworks | `frameworks/` | Conventions Angular, Node.js, NestJS, Astro |
 | Templates | `templates/` | AGENTS.md et documents `docs/ai/` pour projets utilisateurs |
@@ -30,6 +30,7 @@ racine/
 | `AGENTS.md` | Instructions racine du repo |
 | `README.md` | Documentation principale |
 | `standards/workflow.md` | Cycle Explorer -> Planifier -> Implementer -> Review -> Verifier -> Committer |
+| `standards/agent-output.md` | Format de retour JSON structuré pour les sous-agents |
 | `standards/memory-checklist.md` | Checklist obligatoire de persistance memoire |
 | `standards/review-before-done.md` | Review adversarial avant fin de tache |
 | `standards/audit.md` | Audit read-only multi-axes |

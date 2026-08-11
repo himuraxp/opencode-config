@@ -41,7 +41,7 @@ Ce repo apporte :
 
 - **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security, architect, spark (sous-agent léger), vision (multimodal)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
-- **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns
+- **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
 - **Audit read-only** : health-check multi-axes sans modification de code
@@ -50,6 +50,7 @@ Ce repo apporte :
 - **Anti-patterns** : détection des 5 patterns d'échec courants (session fourre-tout, correction en spirale, sur-spécification, confiance sans vérification, exploration infinie)
 - **Création homogène d'artefacts** : règles pour ajouter standards, agents, frameworks et templates sans doublons
 - **Gestion des échecs de sous-agents** : procédure obligatoire constater → diagnostiquer → agir → informer (voir `delegation-failure.md`)
+- **Format de retour structuré** : tous les sous-agents retournent un JSON parsable pour consolidation déterministe, aucune exception (voir `agent-output.md`)
 - **Structure reproductible** : même comportement sur toutes les machines et tous les projets
 
 ---
@@ -263,7 +264,7 @@ Pour adopter la mémoire projet sur un projet existant possédant déjà `docs/a
 ```txt
 Global Configuration
         ↓
-     Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure)
+     Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output)
         ↓
         Agents       (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
         ↓
@@ -397,6 +398,7 @@ opencode-config/
 │   ├── anti-patterns.md       Stopper les 5 patterns de session types
 │   ├── artifact-authoring.md  Créer standards/agents/frameworks sans doublons
 │   ├── delegation-failure.md  Procédure obligatoire après échec de sous-agent
+│   ├── agent-output.md        Format de retour JSON structuré pour les sous-agents
 │   ├── audit.md               Audit read-only multi-axes
 │   ├── review-before-done.md  Examen contradictoire avant déclaration de fin
 │   ├── exploration-limits.md  Exploration ciblée et subagents
@@ -468,7 +470,7 @@ opencode-config/
 
 L'agent reçoit et applique dans cet ordre (du plus général au plus spécifique, le plus spécifique l'emporte) :
 
-1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure).
+1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output).
 2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs, astro).
 4. Standards entreprise (si configurés).

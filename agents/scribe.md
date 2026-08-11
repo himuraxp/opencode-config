@@ -166,6 +166,19 @@ CTA
 - ...
 ```
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Scribe :
+
+```txt
+Livrable (brief, article, meta) → summary + findings[]
+Title / Meta / H1 / H2 / H3     → findings[].title + findings[].description
+Recommendation éditoriale        → findings[].recommendation
+Structured data opportunities    → findings[] (category: content, tags: ["structured-data"])
+```
+
+Catégorie attendue : `content`. Le contenu produit va dans le texte libre avant le bloc JSON.
+
 ## Rules
 
 ### Interdictions

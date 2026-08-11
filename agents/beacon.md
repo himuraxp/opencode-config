@@ -134,6 +134,22 @@ Recommendation: connect [source] for complete analysis
 
 Ne jamais extrapoler des données non disponibles.
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Beacon :
+
+```txt
+Observation         → findings[].title
+Evidence            → findings[].evidence (les données brutes)
+Interpretation      → findings[].description
+Recommended action  → findings[].recommendation
+KPI                 → findings[].kpi + metrics[]
+Before/After/Delta   → metrics[] (name, value, benchmark)
+Confidence          → findings[].confidence (established / reasonable / experimental)
+```
+
+Catégorie attendue : `analytics`. Les données chiffrées vont obligatoirement dans `metrics[]`.
+
 ## Rules
 
 - Ne jamais inventer des données — signaler explicitement les données manquantes.

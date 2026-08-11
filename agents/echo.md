@@ -149,6 +149,19 @@ CTA
 KPIs
 ```
 
+### Format de retour JSON
+
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Echo :
+
+```txt
+Déclinaison par canal → findings[] (category: social, tags: [nom-du-canal])
+Hook                  → findings[].title
+Body / Format         → findings[].description
+CTA                   → findings[].recommendation
+```
+
+Catégorie attendue : `social`. Le contenu produit va dans le texte libre avant le bloc JSON.
+
 ## Rules
 
 - Ne jamais copier-coller le même contenu sur plusieurs canaux.
