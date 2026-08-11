@@ -8,6 +8,16 @@ Toute tâche suit impérativement ce cycle :
 Explorer → Planifier → Implémenter → [REVIEW] → Vérifier → Committer
 ```
 
+### 0. Visibilité de l'avancement
+
+Toute tâche à étapes multiples (3+ actions distinctes) DOIT utiliser `todowrite` pour rendre l'avancement visible en temps réel :
+
+- Créer la liste des todos dès la phase d'exploration ou de planification.
+- Marquer un todo `in_progress` au moment de le commencer (un seul à la fois).
+- Marquer `completed` dès que le travail est fait — pas en batch à la fin.
+- Pour les délégations à un sous-agent : un todo par sous-agent, marqué `in_progress` pendant l'attente, `completed` ou `cancelled` au retour.
+- L'utilisateur ne doit jamais avoir à deviner où en est l'agent.
+
 ### 1. Explorer
 
 - Toujours lire le code existant avant toute modification.
@@ -28,6 +38,7 @@ Explorer → Planifier → Implémenter → [REVIEW] → Vérifier → Committer
 - Le plan doit suivre un statut explicite : `pending`, `in-progress`, `implemented`, `reviewed` ou `blocked`.
 - `implemented` ne signifie pas terminé : seul le passage review + vérification permet de passer à `reviewed`.
 - Stocker le plan dans `docs/ai/PLAN.md`.
+- Si la tâche comporte 3+ actions distinctes, créer également un `todowrite` pour la visibilité temps réel (voir étape 0).
 
 ### 3. Implémenter
 

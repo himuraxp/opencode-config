@@ -111,6 +111,59 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 - **Pas de sur-délégation** : si la demande est simple et porte sur un seul domaine, un seul agent suffit. Ne pas invoquer toute l'équipe pour une question ciblée.
 - **Contexte** : inclure le contexte nécessaire (URL du site, fichiers concernés, objectifs business) dans le prompt de délégation — les sous-agents Search & Growth ne voient pas le projet.
 
+### Procédure de délégation et affichage des retours
+
+Toute délégation à un sous-agent suit cette procédure concrète en 3 temps :
+
+#### 1. Avant de déléguer — Visibilité de l'avancement
+
+- **Créer un `todowrite`** listant les sous-tâches de la délégation. L'utilisateur doit voir immédiatement ce qui est en cours.
+- **Pour les délégations parallèles multi-agents** : un todo par agent, tous en `in_progress` simultanément.
+- Le prompt envoyé au sous-agent DOIT :
+  - Inclure le contexte nécessaire (fichiers, URL, objectifs) — les sous-agents ne voient pas le projet.
+  - Demander explicitement le retour au format JSON `agent-output.v1` (voir `standards/agent-output.md`).
+  - Préciser les champs obligatoires (`agent`, `task`, `status`, `summary`, `findings`).
+
+#### 2. À la réception du retour — Extraction et résumé
+
+Aurora ne se contente pas de relayer le texte du sous-agent. Elle DOIT :
+
+1. **Extraire** le bloc JSON du message retourné (dernier bloc `json` du message).
+2. **Si pas de JSON** : échec partiel → appliquer `delegation-failure.md`.
+3. **Afficher un résumé structuré** pour l'utilisateur, au format suivant :
+
+```markdown
+### [NomAgent] — [task]
+
+**Statut** : success / partial / failure
+**Synthèse** : [summary du JSON]
+
+| # | Sévérité | Catégorie | Finding | Recommandation |
+|---|----------|----------|---------|----------------|
+| F-01 | critical | seo | [title] | [recommendation] |
+| F-02 | high | technical | [title] | [recommendation] |
+| ... | ... | ... | ... | ... |
+
+**Prochaines étapes** :
+1. [next_steps[0]]
+2. [next_steps[1]]
+```
+
+4. **Si `status: failure` ou `partial`** : appliquer `delegation-failure.md` avant d'afficher le résumé.
+5. **Marquer le `todowrite`** correspondant comme `completed` (ou `cancelled` si échec).
+
+#### 3. Consolidation multi-agents — Rapport unifié
+
+Quand plusieurs agents sont invoqués en parallèle, après avoir extrait tous les JSON :
+
+1. **Parser** chaque bloc JSON.
+2. **Détecter les conflits** : deux agents avec des `findings` ou `conflicts` contradictoires sur le même `category` + `tags`.
+3. **Fusionner** les `findings` de tous les agents en une liste unique triée par `severity` puis `effort`.
+4. **Agréger** les `metrics` dans un tableau de bord.
+5. **Produire le rapport de consolidation** au format défini dans `standards/agent-output.md` section "Rapport de consolidation" — et l'afficher à l'utilisateur.
+
+Le rapport de consolidation remplace les résumés individuels. Il DOIT être affiché même si tous les agents sont en `success`.
+
 ### Règles de délégation
 
 - **Spark** (Nemotron Nano 30B, léger) : déléguer par défaut les commits et MR. Si Spark échoue (message incohérent, MR mal formatée), Aurora reprend la main.
@@ -118,8 +171,7 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 - **Skills de raisonnement critique** (code-review, pre-mr-review, verification-planning, simplify) : gérés par le preset `oracle` du plugin `oh-my-opencode-slim` (Qwen 397B), voir section "Délégation par défaut" ci-dessus.
 - Le contexte des sous-agents démarre frais : fournir un prompt d'ordre suffisant (« Commite les changements avec le skill commit », « Analyse ce screenshot d'UI et décris la layout »).
 - Les sous-agents ne voient pas la mémoire `docs/ai/` : inclure le contexte nécessaire dans le prompt de délégation.
-- **Format de retour structuré** : tout sous-agent sollicité via `task` doit retourner un résultat au format JSON défini dans `standards/agent-output.md`. Aurora parse ce JSON pour consolider, comparer et afficher les résultats. Un retour sans JSON est un échec partiel (voir `delegation-failure.md`). Aucune exception — Spark et Vision inclus.
-- **Consolidation multi-agents** : quand plusieurs agents sont invoqués en parallèle, Aurora parse tous les blocs JSON, détecte les conflits, fusionne les findings par sévérité et produit un rapport unifié (voir `standards/agent-output.md` section "Rapport de consolidation").
+- **Format de retour structuré** : tout sous-agent sollicité via `task` doit retourner un résultat au format JSON défini dans `standards/agent-output.md`. Un retour sans JSON est un échec partiel (voir `delegation-failure.md`). Aucune exception — Spark et Vision inclus.
 - **En cas d'échec de sous-agent** : appliquer obligatoirement `standards/delegation-failure.md`. Ne JAMAIS constater un échec sans agir. Ne JAMAIS dire "je reprends la main" sans exécuter l'action.
 
 ## Standards obligatoires
