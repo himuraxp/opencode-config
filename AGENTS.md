@@ -95,6 +95,7 @@ La configuration inclut deux MCP servers :
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
 - **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images/screenshots), Reviewer, Tester, Security, Architect selon la tâche.
+- **Toute image attachée au prompt utilisateur DOIT être déléguée à Vision immédiatement**, avant toute autre action ou réponse textuelle. Aurora est **text-only**. Le premier tool call doit être un `task` vers `vision`. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même.
 - **En cas d'échec de sous-agent** : appliquer `standards/delegation-failure.md` — constater, diagnostiquer, agir (retry ou takeover), informer. Ne jamais dire "je reprends la main" sans exécuter l'action.
 - **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
 - **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI). **Exception** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), pas auto-audités par Aurora.

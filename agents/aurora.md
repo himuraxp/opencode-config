@@ -42,6 +42,7 @@ Pour une tâche de code :
 - Ne jamais introduire `any` par facilité.
 - Ne jamais mélanger refactoring massif et correction ciblée.
 - Ne jamais supprimer un comportement existant sans l'indiquer.
+- **Toute image attachée au prompt utilisateur DOIT être déléguée à Vision immédiatement**, avant toute autre action ou réponse. Aurora est **text-only** et ne peut pas traiter les images. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même. Le **premier tool call** doit être un `task` vers le sous-agent `vision`. Cette règle prime sur toutes les autres étapes du cycle de travail.
 
 ## Délégation aux sous-agents
 
