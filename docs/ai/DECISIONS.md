@@ -1,5 +1,56 @@
 # DECISIONS
 
+## 2026-08-12 — Durcissement `cat *` sur les sous-agents
+
+### Contexte
+
+Les sous-agents Search & Growth (atlas, crawler, scribe, pulse, echo, sage, beacon) et aurora-heavy (mode primary) avaient `cat *: allow` dans leurs permissions bash. `cat *` permet la lecture de fichiers sensibles (`.env`, `~/.ssh/id_rsa`). Les sous-agents n'ont pas de canal interactif pour confirmer un `ask` — un `ask` sur un sous-agent = hang silencieux.
+
+### Décision
+
+- **Sous-agents** (mode subagent, pas d'interaction) : `cat *` → `deny`. Les sous-agents ont le tool `read` natif pour lire des fichiers. `cat` est redondant et crée une brèche sécurité.
+- **aurora-heavy** (mode primary, interactif) : `cat *` → `ask`. L'utilisateur peut confirmer interactivement.
+- **Spark** (mode all) : `cat` restreint à `cat ./mr-*.md` + `cat ./*.md` (fichiers de travail MR uniquement).
+
+### Impact
+
+- 7 sous-agents Search & Growth : `cat *: deny` effectif.
+- `aurora-heavy.md` : `cat *: ask` (confirmation interactive).
+- `spark.md` : `cat` limité aux fichiers de travail.
+- Aucun impact fonctionnel : le tool `read` reste disponible pour tous les agents.
+
+## 2026-08-12 — Suppression du preset `opencode-go`
+
+### Contexte
+
+Le preset `opencode-go` dans `oh-my-opencode-slim.json` référençait un provider `opencode-go` non défini dans `opencode.json`. Si sélectionné, tous les agents échouaient au démarrage. Le preset n'était pas utilisé.
+
+### Décision
+
+Supprimer le preset `opencode-go` du fichier `oh-my-opencode-slim.json`. Le provider correspondant n'est pas disponible et le preset n'est pas utilisé. Si un futur provider `opencode-go` est configuré, le preset pourra être recréé.
+
+### Impact
+
+- `oh-my-opencode-slim.json` ne contient qu'un seul preset : `euria-code`.
+- Aucun impact runtime (le preset n'était jamais sélectionné).
+- Warning dans `WARNINGS.md` archivé.
+
+## 2026-08-12 — Modèle Spark → Ministral-3
+
+### Contexte
+
+`STATUS.md` et `CHANGELOG.md` documentaient depuis le 2026-08-09 un changement de modèle Spark de Nemotron Nano 30B vers Ministral-3 (qualité commit/MR). Mais le fichier `agents/spark.md` utilisait encore `NVIDIA-Nemotron-3-Nano-30B-A3B-FP8`. Inconsistance entre la mémoire et le code.
+
+### Décision
+
+Appliquer le changement documenté : `model: infomaniak/mistralai/Ministral-3-14B-Instruct-2512` dans `spark.md` et mettre à jour la référence dans `aurora.md`.
+
+### Impact
+
+- `spark.md` : modèle aligné avec la documentation.
+- `aurora.md` : référence "Spark (Ministral-3, léger)" au lieu de "Nemotron Nano 30B".
+- Coût : Ministral-3 (0,30/0,40 $) vs Nemotron (0,05/0,20 $) — légère augmentation pour meilleure qualité de commit/MR.
+
 ## 2026-08-11 — Format de retour JSON structuré pour les sous-agents (agent-output.md)
 
 ### Contexte

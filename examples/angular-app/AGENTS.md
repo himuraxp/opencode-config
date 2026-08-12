@@ -4,7 +4,15 @@ Ce fichier est la source de vérité pour les agents travaillant sur ce projet.
 
 ## Rôle de ce fichier
 
-Ce fichier fournit le contexte métier, les règles spécifiques, les conventions locales et les exceptions projet. L'agent le lit à chaque session et l'applique par défaut. Les standards globaux (`~/.config/opencode/standards/`) et frameworks (`~/.config/opencode/frameworks/`) sont chargés automatiquement — ce fichier ne répète pas ce qui est déjà couvert globalement, sauf pour préciser ou déroger.
+Aurora charge automatiquement les standards globaux et découvre `docs/ai/` sans configuration supplémentaire.
+Ce fichier n'a **pas** besoin de dupliquer la logique mémoire (ordre de lecture, rôles des documents...).
+
+Concentrez-vous ici sur :
+
+- **Contexte métier** : produit, utilisateurs, contraintes.
+- **Règles spécifiques** : conventions non couvertes par les standards globaux.
+- **Conventions locales** : architecture, nommage, patterns préférés.
+- **Exceptions projet** : dérogations temporaires ou zones à risque propres à ce projet.
 
 ## Objectif du projet
 
@@ -59,7 +67,7 @@ Règles :
 - Stopper immédiatement si contradiction avec `DECISIONS.md` ou `WARNINGS.md`.
 - Consulter `INDEX.md` avant de toucher un fichier inconnu du projet.
 - **Exécuter un examen contradictoire (review adversarial) avant de considérer terminé** via subagent ou skill `code-review`.
-- **Stopper et reset après 2 corrections échouées** sur le même problème.
+- **Stopper et reset après 2 corrections échouées** sur le même problème (voir standards globaux `error-correction.md`).
 
 ### Mode BRAINSTORM
 
@@ -80,11 +88,12 @@ Règles :
 - Choisir les axes pertinents : qualité, architecture, sécurité, dépendances, performance, tests, UI/accessibilité.
 - Produire un rapport priorisé avec preuves.
 - Ne pas corriger pendant l'audit ; proposer un plan d'action séparé.
-- *Exception* : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, Pulse, Beacon).
+- **Exception** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, Pulse, Beacon) — voir `AGENTS.md` global section "Search & Growth Agents".
 
 ## Documentation IA
 
 Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini dans les standards globaux (`~/.config/opencode/standards/memory-session-flow.md`). L'ordre de mise à jour (persistance) est défini dans `memory-auto-update.md` et la vérification dans `memory-checklist.md`.
+L'AGENTS.md local n'a **pas** besoin de répéter ces règles.
 
 ## Angular 20 — Conventions
 
@@ -126,6 +135,12 @@ Aurora détecte `docs/ai/` au démarrage et applique l'ordre de lecture défini 
 - Ne pas ajouter de style global sans nécessité.
 - Respecter la structure SCSS existante.
 - Préserver le responsive.
+
+### Accessibilité
+
+- Libellé ou `aria-label` sur tous les boutons.
+- Actions critiques explicites.
+- Préserver les états loading, empty, error.
 
 ## Workflow attendu
 

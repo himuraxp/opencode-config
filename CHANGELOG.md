@@ -15,6 +15,10 @@
 - `examples/node-api/AGENTS.md` : créé (template + référence `frameworks/nodejs.md`)
 - `examples/monorepo/AGENTS.md` : créé (template + références multi-frameworks)
 - `docs/testing.md` : mis à jour (Angular-only → multi-stack avec sections Node.js/NestJS)
+- `docs/ai/INDEX.md` : mis à jour (15 agents, 16 standards, config, conventions, commande recherche)
+- `docs/ai/DECISIONS.md` : 3 décisions ajoutées (cat * durcissement, opencode-go suppression, Spark Ministral-3)
+- `docs/workflow.md` : référence à `agent-output.md` ajoutée (section délégation)
+- `examples/angular-app/AGENTS.md` : synchronisé avec `templates/AGENTS.md` (rôle, standards, modes, doc IA)
 - `README.md` : clarification stubs examples + suppression mention opencode-go
 - Config active synchronisée (`install.sh --prune` : memory.md orphelin supprimé, 12 agents mis à jour)
 

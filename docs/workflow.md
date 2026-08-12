@@ -36,6 +36,10 @@ Aurora met à jour systématiquement les 7 fichiers de `docs/ai/` (selon `standa
 7. DECISIONS.md  → documenter les décisions architecturales prises
 ```
 
+### Délégation et format de retour
+
+Quand Aurora délègue à un sous-agent via `task`, le sous-agent DOIT retourner un résultat au format JSON structuré défini dans `standards/agent-output.md`. Aurora parse, consolide et affiche les résultats de manière déterministe. Un retour sans JSON est un échec partiel (voir `standards/delegation-failure.md`).
+
 ### Utiliser INDEX.md pour éviter le scan global
 
 - Avant de chercher dans le projet, vérifier si `INDEX.md` contient déjà le module/fichier visé.
