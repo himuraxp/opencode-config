@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## 2026-08-12 — Création agents designer + mobile (17 agents)
+
+### Contexte
+
+Le repo couvrait 15 agents mais n'avait pas de spécialiste design (UX/UI/DA/DS/accessibilité) ni de spécialiste mobile (iOS/Android/RN/Flutter). Aurora ne pouvait pas déléguer ces tâches à un agent dédié.
+
+### Changements
+
+- **`agents/designer.md`** créé : UX, UI, direction artistique, design system, accessibilité (WCAG 2.1 AA), analyse de mockups/screenshots. Modèle Mistral-Small-4 (multimodal). Permissions : edit:allow, bash:deny, webfetch:allow.
+- **`agents/mobile.md`** créé : iOS (Swift/SwiftUI), Android (Kotlin/Compose), React Native, Flutter. Performance device, offline-first, accessibilité native. Modèle euria-code. Permissions : edit:allow, bash:deny, webfetch:allow.
+- **`config/oh-my-opencode-slim.json`** : 2 agents déclarés (designer, mobile) — total 9 agents dans le preset.
+- **`agents/aurora.md`** : règles de délégation ajoutées (Designer pour UX/UI/DS/a11y, Mobile pour code mobile).
+- **`AGENTS.md`** : section délégation mise à jour (designer, mobile ajoutés).
+- **`README.md`** : 4 références mises à jour (15→17 agents).
+- **`docs/customization.md`** : table des agents mise à jour.
+- **`scripts/setup.sh`** : vérification 17 agents (15+2).
+- **`docs/ai/INDEX.md`** : 17 agents, table complète mise à jour.
+
+### Impact
+
+- Aurora peut désormais déléguer les tâches de design et mobile à des spécialistes dédiés.
+- Les 2 nouveaux agents retournent un JSON au format agent-output.v1 comme tous les autres.
+- `health-check.sh` validera automatiquement les nouveaux agents.
+
 ## 2026-08-11 — Standard agent-output.md (format de retour JSON des sous-agents)
 
 ### Contexte

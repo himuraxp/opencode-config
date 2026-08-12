@@ -4,6 +4,16 @@
 
 ## Fait
 
+### 2026-08-12 — Création agents designer + mobile (17 agents)
+
+- `agents/designer.md` créé (UX, UI, DA, DS, accessibilité, mockups — Mistral-Small-4 multimodal)
+- `agents/mobile.md` créé (iOS, Android, React Native, Flutter — euria-code)
+- `oh-my-opencode-slim.json` mis à jour (9 agents déclarés : 7 S&G + designer + mobile)
+- `aurora.md` mis à jour (règles de délégation designer + mobile)
+- `AGENTS.md`, `README.md`, `docs/customization.md` mis à jour (tables agents)
+- `setup.sh` mis à jour (vérification 17 agents)
+- `docs/ai/INDEX.md` mis à jour (17 agents)
+
 ### 2026-08-12 — Audit + corrections + durcissement + synchro + 5 scripts utilitaires
 
 - Audit read-only : 11 findings identifiés (3 high, 5 medium, 2 low, 1 info)
@@ -41,7 +51,9 @@
 
 ## Prochaine action
 
-- [ ] Redémarrer OpenCode pour activer les nouveaux modèles et agents
+- [ ] Redémarrer OpenCode pour activer les 17 agents
 - [ ] Tester : Aurora délègue un commit à Spark via `task`
 - [ ] Tester : Aurora délègue une analyse d'image à Vision
 - [ ] Tester : Aurora délègue une stratégie SEO à Atlas via `task`
+- [ ] Tester : Aurora délègue un design UI à Designer via `task`
+- [ ] Tester : Aurora délègue du code mobile à Mobile via `task`

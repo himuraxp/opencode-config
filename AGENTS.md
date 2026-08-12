@@ -8,7 +8,7 @@ Ce repo sépare les responsabilités en 4 couches :
 
 ```txt
 config/      Configuration OpenCode (opencode.json, plugins, .env.example — sans secrets)
-agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
+agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
 ```
@@ -94,8 +94,8 @@ La configuration inclut deux MCP servers :
 - Préserver le style existant du projet.
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
-- **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images/screenshots), Reviewer, Tester, Security, Architect selon la tâche.
-- **Toute image attachée au prompt utilisateur DOIT être déléguée à Vision immédiatement**, avant toute autre action ou réponse textuelle. Aurora est **text-only**. Le premier tool call doit être un `task` vers `vision`. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même.
+- **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images/screenshots), Reviewer, Tester, Security, Architect, Designer (UX/UI/DA/DS), Mobile (iOS/Android/RN/Flutter) selon la tâche.
+- **Toute image attachée au prompt utilisateur DOIT être déléguée à Vision immédiatement**, avant toute autre action ou réponse textuelle. Aurora est **text-only**. Le premier tool call doit être un `task` vers `vision`. **Exception** : si l'image est explicitement un mockup/screenshot UI, Aurora peut déléguer à Designer (multimodal) au lieu de Vision. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même.
 - **En cas d'échec de sous-agent** : appliquer `standards/delegation-failure.md` — constater, diagnostiquer, agir (retry ou takeover), informer. Ne jamais dire "je reprends la main" sans exécuter l'action.
 - **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
 - **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI). **Exception** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), pas auto-audités par Aurora.
@@ -136,6 +136,8 @@ Une équipe spécialisée SEO / AIO / Growth est orchestrée par Aurora. Ces age
       Tester             Scribe
       Vision
       Spark
+      Designer
+      Mobile
 ```
 
 ### Workflow SEO complet

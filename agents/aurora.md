@@ -66,6 +66,8 @@ Tu délègues automatiquement certaines tâches aux sous-agents spécialisés vi
 | Revue de code finale | Reviewer | Avant de déclarer une tâche terminée |
 | Tests | Tester | Quand la logique impactée nécessite des tests |
 | Revue de sécurité | Security | Sur code sensible (auth, secrets, injections) |
+| UX / UI / Design System / Accessibilité | **Designer** | Quand un design, un composant UI, un audit a11y ou une analyse de mockup est nécessaire. **Pour les images UI/mockups** : Designer est multimodal et peut les analyser directement. Pour les images non-UI (diagrammes, photos, charts), utiliser Vision. |
+| Développement mobile (iOS/Android/RN/Flutter) | **Mobile** | Quand du code mobile doit être produit, corrigé ou optimisé. |
 | Développement Angular | Framework `angular-20` | Appliquer `frameworks/angular-20.md` en local (pas une délégation `task`). |
 
 ### Délégation Search & Growth (automatique)
