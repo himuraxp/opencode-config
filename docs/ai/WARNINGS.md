@@ -11,7 +11,7 @@
 - La memoire locale de ce repo doit rester alignee avec les templates injectes dans les projets utilisateurs.
 - Les futures ameliorations inspirees d'AIDD doivent eviter de creer une deuxieme taxonomie concurrente avec `standards/`, `agents/`, `frameworks/`.
 - `install.sh --prune` supprime les `.md` orphelins dans les dossiers installes ; a utiliser seulement quand `~/.config/opencode/{agents,standards,frameworks}` est gere par ce repo.
-- Le dossier `~/.config/opencode/agent/` (singulier) est maintenant vide apres suppression du doublon `vision.md`. Supprimable.
+- Le dossier `~/.config/opencode/agent/` (singulier) a été supprimé (2026-08-12, était vide).
 
 ## Zones sensibles du projet
 

@@ -6,33 +6,31 @@ status: reviewed
 
 ## Objectif
 
-Corriger les 7 findings issus de l'audit read-only de `opencode-config`.
+Maintenance continue du repo `opencode-config` — configuration globale de référence pour OpenCode.
 
-## Etapes
+## Étapes
 
-- [x] Ajouter `install.sh --prune` et nettoyer `~/.config/opencode/standards/memory.md`
-- [x] Proteger les `.new` existants dans `sync-project.sh`
-- [x] Rendre `templates/AGENTS.md` generique et sortir Angular du template commun
-- [x] Corriger la hierarchie de priorite du README
-- [x] Clarifier la regle `docs/ai/` absent entre memory-session-flow et memory-checklist
-- [x] Synchroniser les exemples avec les templates actuels ou clarifier leur statut
-- [x] Corriger les typos et formulations degradees dans Astro et standards/docs
-- [x] Verifier scripts, dry-runs, prune, `.new` horodate et config installee
+- [x] Audit read-only complet (11 findings, 4 zones)
+- [x] Correction des 10 findings actionnables
+- [x] Suppression preset `opencode-go` (provider non disponible)
+- [x] Alignement modèle Spark → Ministral-3 (doc ↔ code)
+- [x] Durcissement `cat *` sur 8 agents (deny/ask)
+- [x] Nettoyage mémoire (BUFFER, STATUS allégés)
+- [x] Complétion examples (node-api, monorepo AGENTS.md)
+- [x] Synchro docs (testing.md multi-stack, workflow.md agent-output)
+- [x] Mise à jour INDEX.md et DECISIONS.md
+- [x] 5 nouveaux scripts utilitaires (health-check, permissions-matrix, validate-memory, pre-commit secrets, auto-détection stack)
 
 ## Risques
 
-- `install.sh --prune` supprime les `.md` orphelins des dossiers installes ; a utiliser quand ces dossiers sont geres par ce repo.
-- Le template generique impose de documenter explicitement la stack dans le `AGENTS.md` local du projet.
+- `install.sh --prune` supprime les `.md` orphelins des dossiers installés ; à utiliser quand ces dossiers sont gérés par ce repo.
+- Le template générique impose de documenter explicitement la stack dans le `AGENTS.md` local du projet.
+- Permissions bash permissives (curl, kill, sed, find en `allow`) par choix utilisateur documenté.
 
 ## Tests
 
-- `bash -n scripts/install.sh`
-- `bash -n scripts/init-project.sh`
-- `bash -n scripts/sync-project.sh`
-- `scripts/init-project.sh --dry-run` depuis `/private/tmp`
-- `scripts/sync-project.sh --dry-run` depuis `/private/tmp`
-- `scripts/install.sh --dry-run --prune`
-- `scripts/install.sh --prune`
-- test temporaire : `sync-project.sh` preserve `AGENTS.md.new` et cree `AGENTS.md.new.YYYYMMDD-HHMMSS`
-- verification : `~/.config/opencode/standards/memory.md` absent
-- `git diff --check`
+- `bash scripts/health-check.sh --installed` — vérifie JSON, frontmatter, modèles, orphelins, références
+- `bash scripts/validate-memory.sh .` — valide la structure `docs/ai/`
+- `bash scripts/permissions-matrix.sh` — génère la matrice des permissions
+- `bash -n scripts/*.sh` — syntaxe des scripts
+- `scripts/init-project.sh --dry-run` — prévisualisation initialisation projet
