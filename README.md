@@ -452,8 +452,13 @@ opencode-config/
 ├── scripts/                   Automatisation
 │   ├── setup.sh                Installation complète (première fois, interactive)
 │   ├── install.sh              Installer/mettre à jour la config globale
-│   ├── init-project.sh         Initialiser un nouveau projet
-│   └── sync-project.sh         Synchroniser les templates
+│   ├── init-project.sh         Initialiser un nouveau projet (auto-détection stack)
+│   ├── sync-project.sh         Synchroniser les templates
+│   ├── health-check.sh         Vérifier la cohérence de la config (JSON, agents, modèles)
+│   ├── permissions-matrix.sh   Générer un tableau des permissions agents
+│   ├── validate-memory.sh     Valider la structure docs/ai/ d'un projet
+│   └── hooks/
+│       └── pre-commit-secrets.sh  Hook git anti-fuite de secrets
 │
 └── docs/                      Guides utilisateur
     ├── workflow.md            Comment fonctionne le cycle de travail

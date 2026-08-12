@@ -19,7 +19,12 @@
 - `docs/ai/DECISIONS.md` : 3 décisions ajoutées (cat * durcissement, opencode-go suppression, Spark Ministral-3)
 - `docs/workflow.md` : référence à `agent-output.md` ajoutée (section délégation)
 - `examples/angular-app/AGENTS.md` : synchronisé avec `templates/AGENTS.md` (rôle, standards, modes, doc IA)
-- `README.md` : clarification stubs examples + suppression mention opencode-go
+- `scripts/health-check.sh` : nouveau script de vérification de cohérence (JSON, frontmatter, modèles, orphelins, références)
+- `scripts/permissions-matrix.sh` : nouveau script générant un tableau markdown des permissions agents
+- `scripts/validate-memory.sh` : nouveau script validant la structure `docs/ai/` d'un projet
+- `scripts/hooks/pre-commit-secrets.sh` : nouveau hook git anti-fuite de secrets (API keys, private keys, passwords, connection strings)
+- `scripts/init-project.sh` : auto-détection de stack (angular.json, nest-cli.json, astro.config.*, package.json)
+- `README.md` : clarification stubs examples + suppression mention opencode-go + section scripts étendue
 - Config active synchronisée (`install.sh --prune` : memory.md orphelin supprimé, 12 agents mis à jour)
 
 ## 2026-08-11

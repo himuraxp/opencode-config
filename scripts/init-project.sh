@@ -32,6 +32,39 @@ copy_if_missing() {
 # Copier AGENTS.md racine du projet
 copy_if_missing "$ROOT_DIR/templates/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
 
+# Auto-détection de la stack et ajout de la référence framework dans AGENTS.md
+detect_stack() {
+  local agents_file="$PROJECT_DIR/AGENTS.md"
+  local framework_ref=""
+
+  if [[ -f "$PROJECT_DIR/angular.json" ]] || [[ -f "$PROJECT_DIR/.angular-cli.json" ]]; then
+    framework_ref="frameworks/angular-20.md"
+  elif [[ -f "$PROJECT_DIR/nest-cli.json" ]]; then
+    framework_ref="frameworks/nestjs.md"
+  elif [[ -f "$PROJECT_DIR/astro.config.mjs" ]] || [[ -f "$PROJECT_DIR/astro.config.ts" ]] || [[ -f "$PROJECT_DIR/astro.config.js" ]]; then
+    framework_ref="frameworks/astro.md"
+  elif [[ -f "$PROJECT_DIR/package.json" ]]; then
+    framework_ref="frameworks/nodejs.md"
+  fi
+
+  if [[ -n "$framework_ref" && -f "$agents_file" ]]; then
+    if ! grep -q "$framework_ref" "$agents_file" 2>/dev/null; then
+      if [[ "$DRY_RUN" == true ]]; then
+        echo "would add framework reference: $framework_ref"
+      else
+        # Replace the placeholder section in AGENTS.md
+        if grep -q "Décrire ici les conventions techniques" "$agents_file" 2>/dev/null; then
+          sed -i.bak "s|Décrire ici les conventions techniques spécifiques au projet, ou référencer un standard global dans \`~/.config/opencode/frameworks/\`.|Appliquer \`$framework_ref\`.|" "$agents_file"
+          rm -f "$agents_file.bak" 2>/dev/null || true
+          echo "framework reference added: $framework_ref"
+        fi
+      fi
+    fi
+  fi
+}
+
+detect_stack
+
 # Créer docs/ai/ et copier tous les templates de documentation IA
 if [[ "$DRY_RUN" == true ]]; then
   echo "would create dir: $PROJECT_DIR/docs/ai"
