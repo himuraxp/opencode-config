@@ -4,6 +4,23 @@
 
 ## Fait
 
+### 2026-08-12 — Audit + correction de 10 findings
+
+- **Problème** : audit contradictoire read-only a identifié 11 findings (3 high, 5 medium, 2 low, 1 info)
+- **Corrections** (10 sur 10 actionnables, F-11 info = maintien) :
+  - F-01 (high) : preset `opencode-go` supprimé de `oh-my-opencode-slim.json` (provider non disponible, non utilisé)
+  - F-02 (high) : warning stale `aurora-heavy.md` archivé dans "Historique des warnings clôturés" (WARNINGS.md)
+  - F-03 (high) : modèle Spark aligné — Ministral-3 appliqué dans `spark.md` + `aurora.md` (doc ↔ code)
+  - F-04 (medium) : `cat *` restreint à `cat ./mr-*.md` + `cat ./*.md` sur Spark (sécurité sous-agent)
+  - F-05 (medium) : risques permissions permissives documentés dans WARNINGS.md (curl/kill/sed/find)
+  - F-06 (medium) : `infomaniak-b300` sans Authorization header documenté dans `.env.example` (endpoint interne)
+  - F-07 (medium) : `websearch`/`gh_grep` confirmés fournis par le plugin (tools disponibles en runtime)
+  - F-08 (medium) : BUFFER.md nettoyé (5 snapshots → 1 snapshot récent, 304 → ~30 lignes)
+  - F-09 (low) : différences paramètres euria-code entre providers documentées dans `.env.example`
+  - F-10 (low) : README.md clarifie que `node-api` et `monorepo` sont des schémas (README uniquement)
+- **Fichiers modifiés** : `oh-my-opencode-slim.json`, `.env.example`, `agents/spark.md`, `agents/aurora.md`, `docs/ai/WARNINGS.md`, `docs/ai/BUFFER.md`, `README.md`, `docs/ai/STATUS.md`, `docs/ai/CHANGELOG.md`
+- **Vérifications** : bash -n OK, jq OK, JSON valide
+
 ### 2026-08-11 — Standard agent-output.md (format de retour JSON des sous-agents)
 
 - **Problème** : les sous-agents retournaient du texte libre, rendant la consolidation multi-agents manuelle et non déterministe

@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-08-12
+
+- Audit read-only + correction de 10 findings (3 high, 4 medium, 2 low, 1 info)
+- `config/oh-my-opencode-slim.json` : preset `opencode-go` supprimé (provider non disponible, non utilisé)
+- `config/.env.example` : documentation B300 sans Authorization (endpoint interne) + différences euria-code entre providers
+- `agents/spark.md` : modèle → Ministral-3 (alignement doc), `cat *` restreint à `./mr-*.md` + `./*.md`
+- `agents/aurora.md` : référence Spark mise à jour (Ministral-3)
+- `docs/ai/WARNINGS.md` : warning stale `aurora-heavy.md` archivé, risques permissions documentés, opencode-go mis à jour
+- `docs/ai/BUFFER.md` : nettoyage (5 snapshots → 1 récent)
+- `README.md` : clarification que `node-api` et `monorepo` sont des schémas (README uniquement)
+
 ## 2026-08-11
 
 - Nouveau standard `agent-output.md` : format de retour JSON structuré pour les sous-agents (schéma v1, 12 catégories, 5 sévérités, consolidation multi-agents)

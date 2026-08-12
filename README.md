@@ -386,7 +386,7 @@ opencode-config/
 │
 ├── config/                     Config OpenCode (versionnée, sans secrets)
 │   ├── opencode.json             Providers, models, permissions, MCP servers
-│   ├── oh-my-opencode-slim.json  Presets sous-agents (euria-code, opencode-go)
+│   ├── oh-my-opencode-slim.json  Presets sous-agents (euria-code)
 │   ├── package.json              Dépendance @opencode-ai/plugin
 │   ├── .env.example              Template des variables d'environnement
 │   └── plugins/
@@ -445,9 +445,9 @@ opencode-config/
 │       └── WARNINGS.md        Alertes et dettes techniques
 │
 ├── examples/                  Exemples prêts à l'emploi
-│   ├── angular-app/           Projet Angular 20+ complet
-│   ├── node-api/              Projet API Node.js
-│   └── monorepo/              Monorepo exemple
+│   ├── angular-app/           Projet Angular 20+ complet (AGENTS.md + docs/ai/)
+│   ├── node-api/              Schéma de structure (README uniquement)
+│   └── monorepo/              Schéma de structure (README uniquement)
 │
 ├── scripts/                   Automatisation
 │   ├── setup.sh                Installation complète (première fois, interactive)

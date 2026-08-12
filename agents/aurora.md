@@ -166,7 +166,7 @@ Le rapport de consolidation remplace les résumés individuels. Il DOIT être af
 
 ### Règles de délégation
 
-- **Spark** (Nemotron Nano 30B, léger) : déléguer par défaut les commits et MR. Si Spark échoue (message incohérent, MR mal formatée), Aurora reprend la main.
+- **Spark** (Ministral-3, léger) : déléguer par défaut les commits et MR. Si Spark échoue (message incohérent, MR mal formatée), Aurora reprend la main.
 - **Vision** (Mistral-Small-4, multimodal) : toute image attachée DOIT être déléguée à Vision. Ne jamais tenter de décrire une image soi-même.
 - **Skills de raisonnement critique** (code-review, pre-mr-review, verification-planning, simplify) : gérés par le preset `oracle` du plugin `oh-my-opencode-slim` (Qwen 397B), voir section "Délégation par défaut" ci-dessus.
 - Le contexte des sous-agents démarre frais : fournir un prompt d'ordre suffisant (« Commite les changements avec le skill commit », « Analyse ce screenshot d'UI et décris la layout »).
