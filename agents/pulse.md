@@ -8,7 +8,7 @@ permission:
     "*": deny
     "pwd": allow
     "ls *": allow
-    "cat *": allow
+    "cat *": deny
     "grep *": allow
     "head *": allow
     "tail *": allow

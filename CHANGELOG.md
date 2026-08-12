@@ -3,13 +3,20 @@
 ## 2026-08-12
 
 - Audit read-only + correction de 10 findings (3 high, 4 medium, 2 low, 1 info)
-- `config/oh-my-opencode-slim.json` : preset `opencode-go` supprimé (provider non disponible, non utilisé)
+- `config/oh-my-opencode-slim.json` : preset `opencode-go` supprimé (provider non disponible)
 - `config/.env.example` : documentation B300 sans Authorization (endpoint interne) + différences euria-code entre providers
 - `agents/spark.md` : modèle → Ministral-3 (alignement doc), `cat *` restreint à `./mr-*.md` + `./*.md`
 - `agents/aurora.md` : référence Spark mise à jour (Ministral-3)
-- `docs/ai/WARNINGS.md` : warning stale `aurora-heavy.md` archivé, risques permissions documentés, opencode-go mis à jour
+- `agents/{atlas,crawler,scribe,pulse,echo,sage,beacon}.md` : `cat *` → `deny` (sécurité sous-agents, tool `read` suffit)
+- `agents/aurora-heavy.md` : `cat *` → `ask` (agent primary interactif)
+- `docs/ai/WARNINGS.md` : warnings stale archivés (aurora-heavy, cat *, opencode-go), risques permissions documentés
 - `docs/ai/BUFFER.md` : nettoyage (5 snapshots → 1 récent)
-- `README.md` : clarification que `node-api` et `monorepo` sont des schémas (README uniquement)
+- `docs/ai/STATUS.md` : allégement (263 → 30 lignes, historique archivé dans CHANGELOG)
+- `examples/node-api/AGENTS.md` : créé (template + référence `frameworks/nodejs.md`)
+- `examples/monorepo/AGENTS.md` : créé (template + références multi-frameworks)
+- `docs/testing.md` : mis à jour (Angular-only → multi-stack avec sections Node.js/NestJS)
+- `README.md` : clarification stubs examples + suppression mention opencode-go
+- Config active synchronisée (`install.sh --prune` : memory.md orphelin supprimé, 12 agents mis à jour)
 
 ## 2026-08-11
 

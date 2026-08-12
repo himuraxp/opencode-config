@@ -446,8 +446,8 @@ opencode-config/
 │
 ├── examples/                  Exemples prêts à l'emploi
 │   ├── angular-app/           Projet Angular 20+ complet (AGENTS.md + docs/ai/)
-│   ├── node-api/              Schéma de structure (README uniquement)
-│   └── monorepo/              Schéma de structure (README uniquement)
+│   ├── node-api/              Projet API Node.js (AGENTS.md + README)
+│   └── monorepo/              Monorepo multi-packages (AGENTS.md + README)
 │
 ├── scripts/                   Automatisation
 │   ├── setup.sh                Installation complète (première fois, interactive)

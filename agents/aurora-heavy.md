@@ -8,7 +8,7 @@ permission:
     "*": ask
     "echo *": allow
     "jq *": allow
-    "cat *": allow
+    "cat *": ask
     "date*": allow
     "date *": allow
     "tr *": allow

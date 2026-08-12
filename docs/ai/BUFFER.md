@@ -1,33 +1,38 @@
 # BUFFER
 
-## Snapshot reprise — 2026-08-12 (audit + corrections findings)
+## Snapshot reprise — 2026-08-12 (audit + corrections + durcissement)
 
 ### Sujet
 
-Audit read-only du repo + correction de 10 findings (3 high, 4 medium, 2 low, 1 info).
+Audit read-only du repo + correction de 10 findings + durcissement sécurité (cat *) + nettoyage mémoire + complétion examples + synchro docs.
 
 ### Fichiers impactés
 
 - `config/oh-my-opencode-slim.json` (modifié — preset opencode-go supprimé)
-- `config/.env.example` (modifié — documentation B300 sans auth + différences euria-code)
-- `agents/spark.md` (modifié — modèle → Ministral-3, cat restreint)
-- `agents/aurora.md` (modifié — référence Spark Ministral-3)
-- `docs/ai/WARNINGS.md` (modifié — warning aurora-heavy archivé, risques permissions documentés, opencode-go mis à jour)
-- `docs/ai/BUFFER.md` (modifié — nettoyage snapshots anciens)
-- `README.md` (modifié — clarification stubs examples)
+- `config/.env.example` (modifié — documentation B300 + différences euria-code)
+- `agents/spark.md` (modifié — modèle Ministral-3, cat restreint)
+- `agents/aurora.md` (modifié — référence Spark)
+- `agents/{atlas,crawler,scribe,pulse,echo,sage,beacon}.md` (modifié — cat * → deny)
+- `agents/aurora-heavy.md` (modifié — cat * → ask)
+- `docs/ai/WARNINGS.md` (modifié — 3 warnings archivés, risques documentés)
+- `docs/ai/BUFFER.md` (modifié — nettoyage)
+- `docs/ai/STATUS.md` (modifié — allégement)
+- `docs/testing.md` (modifié — multi-stack)
+- `examples/node-api/AGENTS.md` (créé)
+- `examples/monorepo/AGENTS.md` (créé)
+- `README.md` (modifié)
 - `docs/ai/STATUS.md` (modifié)
 - `docs/ai/CHANGELOG.md` (modifié)
 
 ### Décisions clés
 
-- F-01 : preset `opencode-go` supprimé (provider non disponible, non utilisé — choix utilisateur).
-- F-03 : Ministral-3 appliqué comme modèle Spark (alignement doc ↔ code).
-- F-04 : `cat *` restreint à `cat ./mr-*.md` et `cat ./*.md` sur Spark.
-- F-05 : risques permissions documentés dans WARNINGS.md au lieu de modifier le choix utilisateur.
-- F-07 : `websearch` et `gh_grep` confirmés fournis par le plugin (tools disponibles en runtime). Pas d'action.
+- `cat *` sur sous-agents → `deny` (tool `read` natif suffit, `cat` est redondant et crée une brèche sécurité)
+- `cat *` sur aurora-heavy → `ask` (agent primary interactif, utilisateur peut confirmer)
+- Examples complétés avec AGENTS.md au lieu d'être supprimés (valeur pédagogique)
+- STATUS.md allégé : historique archivé dans CHANGELOG, ne garder que récent + en cours + bloqué
 
 ### État
 
 - Tous les fichiers modifiés et cohérents.
 - Review contradictoire en attente.
-- Vérifications : bash -n OK, jq OK, JSON valide.
+- Vérifications : jq OK, bash -n OK, install.sh --prune OK.
