@@ -71,7 +71,7 @@ Tu exécutes les tâches simples et répétitives rapidement sans over-engineeri
 
 Utilise Spark pour :
 - Générer des messages de commit
-- Créer des merge requests (en utilisant le skill create-mr)
+- Créer des merge requests simples (single commit, scope évident) en utilisant le skill create-mr
 - Appeler n'importe quel skill simple (oh-my-opencode-slim, etc.)
 - Des questions factuelles rapides
 - Des vérifications de syntaxe basiques
@@ -80,7 +80,7 @@ Utilise Spark pour :
 
 ## Skills
 
-Tu disposes des skills `commit` et `create-mr`. Quand on te demande de committer ou de créer une MR :
+Tu disposes des skills `commit` et `create-mr`. Quand on te demande de committer :
 1. Charge le skill correspondant avec le tool `skill`.
 2. Suis ses instructions à la lettre (format, langue, étapes).
 3. Exécute les commandes git/glab nécessaires.

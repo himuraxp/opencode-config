@@ -14,13 +14,12 @@
           "!simplify",
           "!gitlab-ci",
           "!gitlab-issues",
-          "!gitlab-summary",
           "!image-transparent-background",
           "!deployment-changelog",
           "!commit",
-          "!create-mr",
           "!mr-review",
-          "!mr-review-feedback"
+          "!readme",
+          "!release-smoke-test"
         ],
         "mcps": [
           "*",
