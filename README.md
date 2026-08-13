@@ -42,6 +42,7 @@ Ce repo apporte :
 - **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security, architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
+- **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
 - **Audit read-only** : health-check multi-axes sans modification de code
@@ -51,6 +52,7 @@ Ce repo apporte :
 - **Création homogène d'artefacts** : règles pour ajouter standards, agents, frameworks et templates sans doublons
 - **Gestion des échecs de sous-agents** : procédure obligatoire constater → diagnostiquer → agir → informer (voir `delegation-failure.md`)
 - **Format de retour structuré** : tous les sous-agents retournent un JSON parsable pour consolidation déterministe, aucune exception (voir `agent-output.md`)
+- **Exemples prêts à l'emploi** : projets Angular, Node.js API et monorepo (dans `examples/`)
 - **Structure reproductible** : même comportement sur toutes les machines et tous les projets
 
 ---
@@ -453,6 +455,23 @@ opencode-config/
 │   ├── node-api/              Projet API Node.js (AGENTS.md + README)
 │   └── monorepo/              Monorepo multi-packages (AGENTS.md + README)
 │
+├── skills/                    Skills réutilisables
+│   ├── code-review/           Review adversariale de code
+│   ├── commit/                Messages de commit (conventions Infomaniak)
+│   ├── create-mr/             Création de merge requests (scripts + tests)
+│   ├── deployment-changelog/  Changelog de déploiement
+│   ├── gitlab-ci/             Interaction GitLab CI/CD (glab)
+│   ├── gitlab-issues/         Gestion des issues GitLab (glab)
+│   ├── gitlab-summary/        Résumé d'activité GitLab
+│   ├── image-transparent-background/  Suppression de fond blanc (ImageMagick)
+│   ├── mr-review/             Review de MR avec commentaires inline
+│   ├── mr-review-feedback/    Application des retours de review MR
+│   ├── pre-mr-review/         Revue qualité pré-MR
+│   ├── readme/                 Génération de README
+│   ├── release-smoke-test/    Validation de release oh-my-opencode-slim
+│   ├── translate-doc/         Traduction de documentation
+│   └── user-stories/          Rédaction de user stories
+│
 ├── scripts/                   Automatisation
 │   ├── setup.sh                Installation complète (première fois, interactive)
 │   ├── install.sh              Installer/mettre à jour la config globale
@@ -461,10 +480,12 @@ opencode-config/
 │   ├── health-check.sh         Vérifier la cohérence de la config (JSON, agents, modèles)
 │   ├── permissions-matrix.sh   Générer un tableau des permissions agents
 │   ├── validate-memory.sh     Valider la structure docs/ai/ d'un projet
+│   ├── create-mr/              Scripts de création de MR (build_body, check_workspace, detect_target_branch, detect_template, push_branch, tests, upload_media, validate_title)
 │   └── hooks/
 │       └── pre-commit-secrets.sh  Hook git anti-fuite de secrets
 │
 └── docs/                      Guides utilisateur
+    ├── ai/                   Mémoire projet du repo (PLAN, STATUS, DECISIONS, CHANGELOG, BUFFER, INDEX, WARNINGS)
     ├── workflow.md            Comment fonctionne le cycle de travail
     ├── customization.md        Comment personnaliser et étendre
     ├── angular-20.md          Règles Angular 20+ détaillées
@@ -479,7 +500,7 @@ opencode-config/
 
 L'agent reçoit et applique dans cet ordre (du plus général au plus spécifique, le plus spécifique l'emporte) :
 
-1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output).
+1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output).
 2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs, astro).
 4. Standards entreprise (si configurés).
