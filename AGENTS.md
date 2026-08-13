@@ -8,7 +8,7 @@ Ce repo sépare les responsabilités en 4 couches :
 
 ```txt
 config/      Configuration OpenCode (opencode.json, plugins, .env.example — sans secrets)
-agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon)
+agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
 ```
@@ -94,16 +94,81 @@ La configuration inclut deux MCP servers :
 - Préserver le style existant du projet.
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
-- **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images/screenshots), Reviewer, Tester, Security, Architect selon la tâche.
-- **Toute image attachée au prompt utilisateur DOIT être déléguée à Vision immédiatement**, avant toute autre action ou réponse textuelle. Aurora est **text-only**. Le premier tool call doit être un `task` vers `vision`. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même.
+- **Déléguer aux sous-agents** : Spark (commit/MR), Vision (images non-UI), Designer (UX/UI/DA/DS + images UI), Mobile (iOS/Android/RN/Flutter), Reviewer, Tester, Security, Architect selon la tâche. La délégation est **automatique** : Aurora détecte le domaine via les mots-clés déclencheurs et délègue systématiquement aux spécialistes (voir `agents/aurora.md` pour les tables complètes).
+- **Toute image attachée au prompt utilisateur DOIT être déléguée immédiatement**, avant toute autre action ou réponse textuelle. Aurora est **text-only**. Le routage dépend du type d'image : **screenshot UI / mockup / wireframe** → **Designer** (multimodal, spécialisé UX/UI) ; **diagramme / photo / chart / capture non-UI** → **Vision** (multimodal, généraliste). En cas de doute sur un audit UX/UI ou mobile, c'est Designer. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même.
 - **En cas d'échec de sous-agent** : appliquer `standards/delegation-failure.md` — constater, diagnostiquer, agir (retry ou takeover), informer. Ne jamais dire "je reprends la main" sans exécuter l'action.
-- **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`.
-- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, sécurité, dépendances, performance, tests, UI). **Exception** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), pas auto-audités par Aurora.
+- **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`. Pour les reviews de MR GitLab avec commentaires inline, utiliser le skill `mr-review` (délègue l'analyse à Oracle en interne).
+- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, dépendances, performance). **Exceptions** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), les audits UX/UI/a11y sont délégués à Designer, les audits mobile à Mobile, les audits sécurité à Security. Aurora ne réalise **jamais** lui-même un audit spécialisé — il délègue systématiquement.
 - **Respecter les limites d'exploration** : investigation lourde = subagent, pas de scan global sans objectif précis (voir `exploration-limits.md`).
 - **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
 - **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
 - **Créer les nouveaux standards/agents/frameworks via une structure homogène** et seulement s'ils ne dupliquent pas un artefact existant (voir `artifact-authoring.md`).
 - **Format de retour des sous-agents** : tout sous-agent sollicité via `task` doit retourner un résultat au format JSON structuré (voir `standards/agent-output.md`). Aurora parse, consolide et affiche les résultats de manière déterministe. Aucune exception.
+
+## Engineering & Design Agents
+
+Une équipe spécialisée UX/UI, Mobile, Sécurité, Architecture, Tests, Exécution, Conseil technique, Recherche codebase et Recherche docs est orchestrée par Aurora. Ces agents sont invoqués **automatiquement** quand Aurora détecte un besoin correspondant dans la demande utilisateur. Aurora ne réalise **jamais** lui-même un audit UX/UI, mobile ou sécurité — il délègue systématiquement aux spécialistes.
+
+### Agents
+
+| Agent | Rôle | Quand l'invoquer |
+|-------|------|-----------------|
+| **Designer** | UX/UI/DA/DS/Accessibilité | Audit UX/UI, design system, accessibilité, analyse de mockups/screenshots UI, hiérarchie visuelle, responsive design |
+| **Mobile** | Mobile Engineer | Audit mobile (rendu, touch targets, viewport, perf device), code iOS/Android/RN/Flutter, patterns responsive mobile |
+| **Security** | Sécurité | Audit sécurité, revue de code sensible (auth, secrets, injections, XSS, OWASP) |
+| **Architect** | Architecture | Découpage technique, structure, couplage, dette technique, migration |
+| **Tester** | Tests | Tests unitaires, intégration, couverture, Jest/Cypress/Playwright/Vitest |
+| **Reviewer** | Revue de code | Revue de code finale avant merge |
+| **Fixer** | Exécution rapide | Implémentation rapide de spec complète, corrections mécaniques, refactoring ciblé |
+| **Oracle** | Conseil technique stratégique | Conseils architecture, debug complexe, review adversariale, simplification, second avis |
+| **Explorer** | Recherche codebase | Recherche fichiers, localisation de patterns, "où est X", scan codebase |
+| **Librarian** | Recherche docs externe | Docs librairies/SDK, GitHub examples, library internals, API syntax |
+| **Vision** | Analyse visuelle non-UI | Diagrammes, photos, charts, schémas techniques |
+
+### Architecture de collaboration
+
+```txt
+                         Aurora
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+     Engineering          Search           Growth
+          │                 │                 │
+      Architect           Atlas             Pulse
+      Reviewer           Crawler             Echo
+      Security           Sage             Beacon
+      Tester             Scribe
+      Fixer
+      Oracle
+      Explorer
+      Librarian
+      Vision
+      Spark
+      Designer
+      Mobile
+```
+
+### Routing rapide
+
+| Demande | Agent |
+|---------|-------|
+| "Audit le rendu sur mobile" | Designer + Mobile |
+| "Audit l'UX de cette page" | Designer |
+| "Vérifie que c'est accessible" | Designer |
+| "Vérifie la sécurité de l'auth" | Security |
+| "Découpe cette feature en étapes" | Architect |
+| "Implémente et teste" | Aurora implémente + Tester |
+| "Vérifie ce code avant merge" | Reviewer |
+| "Applique cette spec détaillée" | Fixer |
+| "Conseille-moi sur l'approche" | Oracle |
+| "Où est défini le service X ?" | Explorer |
+| "Comment utiliser l'API de X ?" | Librarian |
+
+### Mots-clés déclencheurs (détection automatique)
+
+Aurora analyse la demande utilisateur et matching contre les mots-clés déclencheurs. Si au moins un match, délégation automatique.
+
+> La table complète des mots-clés, le routing multi-agents et les règles de délégation Engineering & Design sont définis dans `agents/aurora.md` (source de vérité). Ce fichier ne les duplique pas.
 
 ## Search & Growth Agents
 
@@ -134,8 +199,14 @@ Une équipe spécialisée SEO / AIO / Growth est orchestrée par Aurora. Ces age
       Reviewer           Crawler             Echo
       Security           Sage             Beacon
       Tester             Scribe
+      Fixer
+      Oracle
+      Explorer
+      Librarian
       Vision
       Spark
+      Designer
+      Mobile
 ```
 
 ### Workflow SEO complet

@@ -1,49 +1,34 @@
 # BUFFER
 
-## Snapshot reprise — 2026-08-12 (audit + corrections + durcissement)
+## Snapshot reprise — 2026-08-12 (création agents designer + mobile)
 
 ### Sujet
 
-Audit read-only du repo + correction de 10 findings + durcissement sécurité (cat *) + nettoyage mémoire + complétion examples + synchro docs.
+Création de 2 nouveaux agents spécialisés (designer, mobile) et mise à jour de toutes les références.
 
 ### Fichiers impactés
 
-- `config/oh-my-opencode-slim.json` (modifié — preset opencode-go supprimé)
-- `config/.env.example` (modifié — documentation B300 + différences euria-code)
-- `agents/spark.md` (modifié — modèle Ministral-3, cat restreint)
-- `agents/aurora.md` (modifié — référence Spark)
-- `agents/{atlas,crawler,scribe,pulse,echo,sage,beacon}.md` (modifié — cat * → deny)
-- `agents/aurora-heavy.md` (modifié — cat * → ask)
-- `docs/ai/WARNINGS.md` (modifié — 3 warnings archivés, risques documentés)
-- `docs/ai/BUFFER.md` (modifié — nettoyage)
-- `docs/ai/STATUS.md` (modifié — allégement)
-- `docs/ai/INDEX.md` (modifié — mise à jour complète)
-- `docs/ai/DECISIONS.md` (modifié — 3 décisions ajoutées)
-- `docs/workflow.md` (modifié — référence agent-output.md)
-- `examples/angular-app/AGENTS.md` (modifié — synchronisé template)
-- `docs/testing.md` (modifié — multi-stack)
-- `docs/workflow.md` (modifié — référence agent-output.md)
-- `examples/angular-app/AGENTS.md` (modifié — synchronisé template)
-- `examples/node-api/AGENTS.md` (créé)
-- `examples/monorepo/AGENTS.md` (créé)
-- `scripts/health-check.sh` (créé)
-- `scripts/permissions-matrix.sh` (créé)
-- `scripts/validate-memory.sh` (créé)
-- `scripts/hooks/pre-commit-secrets.sh` (créé)
-- `scripts/init-project.sh` (modifié — auto-détection stack)
-- `README.md` (modifié)
+- `agents/designer.md` (créé — UX/UI/DA/DS/accessibilité, Mistral-Small-4 multimodal)
+- `agents/mobile.md` (créé — iOS/Android/RN/Flutter, euria-code)
+- `config/oh-my-opencode-slim.json` (modifié — 2 agents déclarés)
+- `agents/aurora.md` (modifié — règles de délégation designer + mobile)
+- `AGENTS.md` (modifié — 17 agents, délégation mise à jour)
+- `README.md` (modifié — 4 références 15→17 agents, table agents)
+- `docs/customization.md` (modifié — table agents)
+- `scripts/setup.sh` (modifié — vérification 17 agents)
+- `docs/ai/INDEX.md` (modifié — 17 agents)
 - `docs/ai/STATUS.md` (modifié)
 - `docs/ai/CHANGELOG.md` (modifié)
 
 ### Décisions clés
 
-- `cat *` sur sous-agents → `deny` (tool `read` natif suffit, `cat` est redondant et crée une brèche sécurité)
-- `cat *` sur aurora-heavy → `ask` (agent primary interactif, utilisateur peut confirmer)
-- Examples complétés avec AGENTS.md au lieu d'être supprimés (valeur pédagogique)
-- STATUS.md allégé : historique archivé dans CHANGELOG, ne garder que récent + en cours + bloqué
+- Designer utilise Mistral-Small-4 (multimodal) pour analyser mockups et screenshots
+- Mobile utilise euria-code (code generation performant)
+- Permissions identiques aux autres sous-agents : edit:allow, bash:deny, webfetch:allow
+- Format de retour JSON agent-output.v1 comme tous les autres agents
 
 ### État
 
-- Tous les fichiers modifiés et cohérents.
+- Tous les fichiers créés et modifiés.
+- health-check.sh à lancer.
 - Review contradictoire en attente.
-- Vérifications : jq OK, bash -n OK, install.sh --prune OK.

@@ -5,7 +5,7 @@
 ```txt
 racine/
 ├── config/      Config OpenCode (opencode.json, plugins, .env.example — sans secrets)
-├── agents/      Personnalités spécialisées (15 agents)
+├── agents/      Personnalités spécialisées (17 agents)
 ├── standards/   Comportements universels (16 standards)
 ├── frameworks/  Règles par stack technique (4 frameworks)
 ├── templates/   Fichiers injectés dans les projets (AGENTS.md, docs/ai/*)
@@ -20,7 +20,7 @@ racine/
 |--------|--------|----------------|
 | Config | `config/` | Providers, models, permissions, MCP servers, presets oh-my-opencode-slim |
 | Standards | `standards/` | Workflow, verification, communication, memoire, review, audit, creation d'artefacts, limites d'exploration, format de retour JSON des sous-agents, delegation-failure |
-| Agents | `agents/` | 15 agents : aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon |
+| Agents | `agents/` | 17 agents : aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile |
 | Frameworks | `frameworks/` | Conventions Angular 20, Node.js, NestJS, Astro |
 | Templates | `templates/` | AGENTS.md et documents `docs/ai/` pour projets utilisateurs |
 | Scripts | `scripts/` | setup.sh (install), install.sh (sync), init-project.sh (auto-détection stack), sync-project.sh, health-check.sh, permissions-matrix.sh, validate-memory.sh, hooks/pre-commit-secrets.sh |
@@ -33,7 +33,7 @@ racine/
 | `AGENTS.md` | Instructions racine du repo |
 | `README.md` | Documentation principale |
 | `config/opencode.json` | Providers (infomaniak, infomaniak-b300), models, permissions bash, MCP (context7, chrome-devtools, ios-simulator) |
-| `config/oh-my-opencode-slim.json` | Presets sous-agents (euria-code), 7 agents Search & Growth déclarés |
+| `config/oh-my-opencode-slim.json` | Presets sous-agents (euria-code), 9 agents déclarés (7 Search & Growth + designer + mobile) |
 | `standards/workflow.md` | Cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer |
 | `standards/agent-output.md` | Format de retour JSON structuré pour les sous-agents |
 | `standards/memory-checklist.md` | Checklist obligatoire de persistance memoire |
@@ -46,7 +46,7 @@ racine/
 | `scripts/init-project.sh` | Initialisation d'un projet avec AGENTS.md et docs/ai |
 | `scripts/sync-project.sh` | Synchronisation non destructive des templates |
 
-## Agents (15)
+## Agents (17)
 
 | Agent | Rôle | Modèle |
 |-------|------|--------|
@@ -65,6 +65,8 @@ racine/
 | `pulse.md` | Growth Marketing | euria-code |
 | `echo.md` | Social Distribution | Mistral-Small-4 |
 | `beacon.md` | Analytics | euria-code |
+| `designer.md` | UX/UI Designer, DA, DS, accessibilité | Mistral-Small-4 |
+| `mobile.md` | Mobile Engineer (iOS/Android/RN/Flutter) | euria-code |
 
 ## Standards (16)
 

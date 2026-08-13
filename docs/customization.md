@@ -21,6 +21,8 @@ Les agents spécialisés sont dans `agents/` du repo forké. Chacun a un rôle p
 | `pulse.md` | Growth Marketing — acquisition, conversion, funnel |
 | `echo.md` | Social Distribution — distribution multi-canal |
 | `beacon.md` | Analytics — mesure SEO et marketing |
+| `designer.md` | UX/UI Designer — conception d'interfaces, DA, design system, accessibilité |
+| `mobile.md` | Mobile Engineer — iOS, Android, React Native, Flutter |
 
 Pour personnaliser :
 

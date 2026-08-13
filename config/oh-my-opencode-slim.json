@@ -105,6 +105,18 @@
       "description": "Mesure SEO et marketing (GSC, GA4, PageSpeed, rank tracking, conversion, engagement)",
       "model": "infomaniak/euria-code",
       "orchestratorPrompt": "Delegate to @beacon for analytics and measurement: GSC, GA4, PageSpeed, rank tracking, conversion, engagement. Transforms data into recommendations. Read-only, no code modification."
+    },
+    "designer": {
+      "displayName": "designer-ux-ui",
+      "description": "UX, UI, direction artistique, design system, accessibilité, analyse de mockups et screenshots",
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "orchestratorPrompt": "Delegate to @designer for UX/UI design, art direction, design system, accessibility audits, mockup/screenshot analysis. Can edit frontend files (CSS, SCSS, HTML, components). Multimodal — can analyze images."
+    },
+    "mobile": {
+      "displayName": "mobile-engineer",
+      "description": "iOS, Android, React Native, Flutter — patterns mobile, performance device, accès natif",
+      "model": "infomaniak/euria-code",
+      "orchestratorPrompt": "Delegate to @mobile for mobile development: iOS (Swift/SwiftUI), Android (Kotlin/Compose), React Native, Flutter. Can edit mobile code. Not for web frontend."
     }
   }
 }

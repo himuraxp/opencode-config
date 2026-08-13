@@ -232,3 +232,5 @@ Les agents qui ont déjà une section `## Output expectations` conservent leurs 
 | Tester : Tests créés / Fichiers / Comportement / Statut | `findings[]` (category=tests) / `findings[].files` / `findings[].title` / `findings[].tags` |
 | Spark : Commit / MR / Skill CLI | `summary` (résultat de l'action) + `status` + `metadata.scope` (commande exécutée) |
 | Vision : Description d'image / UI / diagramme | `summary` (synthèse visuelle) + `findings[]` (category=code pour UI, tags=["visual"]) + `metadata.sources` (référence image) |
+| Designer : Composant / États / Accessibilité / Tokens | `findings[]` (category=accessibility) / `findings[].recommendation` / `metadata.scope` (UX/UI/DA/DS) |
+| Mobile : Performance / Code mobile | `findings[]` (category=performance, files[]) / `findings[].recommendation` / `metadata.scope` (iOS/Android/RN/Flutter) |
