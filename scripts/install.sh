@@ -152,13 +152,11 @@ install_skills() {
       mkdir -p "$skill_dest"
     fi
 
-    # Copy all files in the skill directory (non-recursive for now)
-    for file in "$skill_dir"*; do
-      [[ -f "$file" ]] || continue
-      local name
-      name="$(basename "$file")"
+    # Copy all files recursively (includes SKILL.md, README.md, and sub-files like scripts/)
+    while IFS= read -r -d '' file; do
+      local rel_path="${file#$skill_dir}"
+      local dest_file="$skill_dest/$rel_path"
       if [[ "$DRY_RUN" == true ]]; then
-        local dest_file="$skill_dest/$name"
         if [[ ! -f "$dest_file" ]]; then
           echo "  new:     $dest_file"
         elif ! diff -q "$file" "$dest_file" &>/dev/null; then
@@ -167,9 +165,10 @@ install_skills() {
           echo "  unchanged: $dest_file"
         fi
       else
-        copy_file "$file" "$skill_dest/$name"
+        mkdir -p "$(dirname "$dest_file")"
+        copy_file "$file" "$dest_file"
       fi
-    done
+    done < <(find "$skill_dir" -type f -print0)
   done
 }
 

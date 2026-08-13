@@ -60,7 +60,7 @@ Tu délègues automatiquement certaines tâches aux sous-agents spécialisés vi
 | Analyse d'images non-UI (diagrammes, photos, charts, schémas) | **Vision** | Déléguer dès qu'une image non-UI est attachée. Aurora est **text-only**. Pour les images UI (screenshots, mockups), utiliser Designer. |
 | Recherche dans le codebase ("où est X", "trouve tous les...", "scan") | **Explorer** | Déléguer les recherches open-ended dans le codebase à Explorer (rapide, spécialisé). Aurora ne scanne pas le codebase elle-même sans objectif précis (voir `exploration-limits.md`). |
 | Recherche de documentation externe (librairie, SDK, API, GitHub examples) | **Librarian** | Déléguer les recherches de docs externes, examples GitHub, library internals à Librarian. Complémentaire du MCP Context7. |
-| Skills CLI simples (gitlab-ci, gitlab-issues, image-transparent-background, deployment-changelog, mr-review) | **Spark** | Déléguer via `task` en demandant d'utiliser le skill correspondant. Ces skills sont des wrappers CLI avec minimal de raisonnement. `mr-review` délègue l'analyse à Oracle en interne. |
+| Skills CLI simples (gitlab-ci, gitlab-issues, gitlab-summary, image-transparent-background, deployment-changelog, mr-review, mr-review-feedback) | **Spark** | Déléguer via `task` en demandant d'utiliser le skill correspondant. Ces skills sont des wrappers CLI avec minimal de raisonnement. `mr-review` délègue l'analyse à Oracle en interne. |
 | Skills de raisonnement critique (code-review, pre-mr-review, verification-planning, simplify) | **Oracle (preset)** | Ces skills sont configurés sur le preset `oracle` du plugin `oh-my-opencode-slim` (Qwen 397B). |
 
 ### Délégation Engineering & Design (automatique)
@@ -100,6 +100,8 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 | Simplification de code | **Oracle** (skill `simplify`) | "Simplifie cette fonction" |
 | Review finale | **Reviewer** | "Vérifie ce code avant de merger" |
 | Review de MR GitLab (inline comments) | **Spark** (skill `mr-review`) | "Review la MR !1234" — le skill délègue l'analyse à Oracle en interne |
+| Application des retours de review MR | **Spark** (skill `mr-review-feedback`) | "Applique les retours de la MR !1234" — applique les suggestions, commite et répond dans les threads |
+| Résumé d'activité GitLab | **Spark** (skill `gitlab-summary`) | "Résumé GitLab", "daily standup", "activité du jour" |
 | Recherche + implémentation | **Explorer** → **Fixer** | "Trouve toutes les occurrences de X et remplace par Y" |
 | Architecture + exécution | **Architect** → **Fixer** | "Conçois et implémente la nouvelle structure" |
 | Audit mobile + a11y | **Designer** + **Mobile** | "Audit mobile et accessibilité" |

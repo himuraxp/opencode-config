@@ -14,8 +14,13 @@
           "!simplify",
           "!gitlab-ci",
           "!gitlab-issues",
+          "!gitlab-summary",
           "!image-transparent-background",
-          "!deployment-changelog"
+          "!deployment-changelog",
+          "!commit",
+          "!create-mr",
+          "!mr-review",
+          "!mr-review-feedback"
         ],
         "mcps": [
           "*",
