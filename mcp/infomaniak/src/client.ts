@@ -70,14 +70,48 @@ function waitForRateLimit(): void {
 
 // ─── Core request function ────────────────────────────────────────────────────
 
+// ─── Token resolution ─────────────────────────────────────────────────────────
+
+/**
+ * Resolve the Infomaniak API token.
+ *
+ * Resolution order:
+ * 1. process.env.INFOMANIAK_API_TOKEN (injected by OpenCode via `env` config)
+ * 2. ~/.config/opencode/.env file (fallback — robust across installations)
+ *
+ * This fallback ensures the MCP server works even when the host process does not
+ * receive the environment variable from OpenCode's `{env:...}` substitution.
+ */
 function getToken(): string {
-  const token = process.env.INFOMANIAK_API_TOKEN;
-  if (!token) {
-    throw new Error(
-      "INFOMANIAK_API_TOKEN environment variable is not set. Get a token at https://manager.infomaniak.com/v3/ng/accounts/token/list",
-    );
+  // 1. Direct environment variable
+  const envToken = process.env.INFOMANIAK_API_TOKEN;
+  if (envToken) {
+    return envToken;
   }
-  return token;
+
+  // 2. Fallback: read from ~/.config/opencode/.env
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const os = require("os");
+
+    const envPath = path.join(os.homedir(), ".config", "opencode", ".env");
+    const envContent = fs.readFileSync(envPath, "utf-8");
+
+    const match = envContent.match(/^INFOMANIAK_API_TOKEN\s*=\s*(.+)$/m);
+    if (match) {
+      const token = match[1].trim().replace(/^["']|["']$/g, "");
+      if (token) {
+        return token;
+      }
+    }
+  } catch {
+    // File not found or unreadable — fall through to error
+  }
+
+  throw new Error(
+    "INFOMANIAK_API_TOKEN environment variable is not set. Get a token at https://manager.infomaniak.com/v3/ng/accounts/token/list",
+  );
 }
 
 function buildUrl(
