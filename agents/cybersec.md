@@ -431,7 +431,24 @@ Scripts : lisibles, reproductibles, adaptés au contexte. Préférer un script d
 
 ## Format de retour JSON
 
-Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`.
+Retourner le résultat au format JSON structuré défini dans `standards/agent-output.md`. Mapping des champs Cybersec :
+
+```txt
+Vecteur/vulnérabilité    → findings[] (category: security)
+Sévérité                  → findings[].severity (critical / high / medium / low / info)
+Exploit/constat           → findings[].description
+Preuve (commande, output)  → findings[].evidence
+Action défensive           → findings[].recommendation
+Résultat d'exploitation    → findings[].expected_outcome
+Fichiers concernés         → findings[].files
+Confiance                  → findings[].confidence (established / reasonable / experimental)
+Effort                     → findings[].effort (low / medium / high)
+Phase d'attaque            → findings[].tags (ex: ["initial-access", "rce", "web"])
+Profondeur d'accès         → metrics[]
+Verdict global             → summary + status
+```
+
+Catégorie attendue : `security`.
 
 ```json
 {
