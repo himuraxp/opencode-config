@@ -101,7 +101,7 @@ Le format est **obligatoire** pour toute délégation via `task`. Les agents qui
 | `social` | Distribution sociale, multi-canal | Echo |
 | `analytics` | Mesure, GA4, GSC, rank tracking | Beacon |
 | `code` | Qualité code, architecture, breaking changes | Reviewer, Architect |
-| `security` | Vulnérabilités, secrets, injections | Security |
+| `security` | Vulnérabilités, secrets, injections, exploits, pentest | Security, Cybersec |
 | `performance` | Perf applicative, bundle, latence | Tester, Crawler |
 | `accessibility` | A11y, ARIA, contrast, keyboard | Reviewer |
 | `tests` | Couverture, edge cases, qualité des tests | Tester |
@@ -227,7 +227,8 @@ Les agents qui ont déjà une section `## Output expectations` conservent leurs 
 | Scribe : Livrable / Title / Meta / H1-H3 / Structured data | `summary` + `findings[]` (category=content) / contenu en texte libre avant le JSON |
 | Echo : Déclinaison par canal / Hook / Body / CTA | `findings[]` (category=social, tags=[canal]) / `findings[].title` / `findings[].description` / `findings[].recommendation` |
 | Beacon : Observation / Evidence / Interpretation / Action / KPI / Before-After-Delta | `findings[].title` / `findings[].evidence` / `findings[].description` / `findings[].recommendation` / `findings[].kpi` + `metrics[]` |
-| Security : Risque / Sévérité / Remédiation / Fichier | `findings[]` (category=security) / `findings[].severity` / `findings[].recommendation` / `findings[].files` |
+| Security : Vulnérabilité / Sévérité / Cause racine / Remédiation / Retest / Fichier | `findings[]` (category=security) / `findings[].severity` / `findings[].evidence` / `findings[].recommendation` / `findings[].expected_outcome` / `findings[].files` + `metrics[]` (risk-score) |
+| Cybersec : Vecteur / Exploit / Preuve / Impact / Action défensive | `findings[]` (category=security, tags=["initial-access"...]) / `findings[].description` / `findings[].evidence` / `findings[].expected_outcome` / `findings[].recommendation` + `metrics[]` (access-depth) |
 | Architect : Objectif / Fichiers / Plan / Risques / Tests | `summary` / `findings[].files` / `next_steps` / `findings[]` (category=code) / `findings[]` (category=tests) |
 | Tester : Tests créés / Fichiers / Comportement / Statut | `findings[]` (category=tests) / `findings[].files` / `findings[].title` / `findings[].tags` |
 | Spark : Commit / MR / Skill CLI | `summary` (résultat de l'action) + `status` + `metadata.scope` (commande exécutée) |
