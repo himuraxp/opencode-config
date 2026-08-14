@@ -39,7 +39,7 @@ Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser
 
 Ce repo apporte :
 
-- **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security, architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter)
+- **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security (défensif), cybersec (offensif/pentest), architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
 - **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback
@@ -268,7 +268,7 @@ Global Configuration
         ↓
      Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output)
         ↓
-        Agents       (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
+         Agents       (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
         ↓
     Frameworks     (angular-20, nodejs, nestjs, astro...)
         ↓
@@ -305,7 +305,7 @@ Après installation, l'agent Aurora (principal) charge automatiquement :
 
 ```txt
 1. Standards globaux (workflow, communication, verification...)
-2. Agents globaux (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
+2. Agents globaux (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 3. Framework ciblé (Angular 20+, Node.js, etc.)
 4. Standards entreprise (si configurés)
 5. AGENTS.md local + docs/ai/
@@ -329,7 +329,8 @@ Les agents disponibles sont dans `agents/` :
 | `aurora-heavy.md` | Agent pour tâches complexes (Qwen 397B) |
 | `reviewer.md` | Code review stricte |
 | `tester.md` | Tests qualité |
-| `security.md` | Risques sécurité |
+| `security.md` | Cybersécurité défensive — AppSec, threat modeling, secure code review, DevSecOps, hardening |
+| `cybersec.md` | Cybersécurité offensive — pentest, Red Team, exploitation, recon, bypass, privesc |
 | `architect.md` | Découpage technique |
 | `spark.md` | Sous-agent léger (commit, MR) |
 | `vision.md` | Sous-agent multimodal (images, screenshots) |
@@ -419,7 +420,8 @@ opencode-config/
 │   ├── aurora-heavy.md        Agent pour tâches complexes (Qwen 397B)
 │   ├── reviewer.md            Code review stricte
 │   ├── tester.md              Tests Jest + Angular
-│   ├── security.md            Risques et remédiations
+│   ├── security.md            Cybersécurité défensive (AppSec, threat modeling, DevSecOps)
+│   ├── cybersec.md             Cybersécurité offensive (pentest, Red Team, exploitation)
 │   ├── architect.md           Découpage technique
 │   ├── spark.md               Sous-agent léger (commit, MR)
 │   ├── vision.md              Sous-agent multimodal (images, screenshots)
@@ -501,7 +503,7 @@ opencode-config/
 L'agent reçoit et applique dans cet ordre (du plus général au plus spécifique, le plus spécifique l'emporte) :
 
 1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output).
-2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile).
+2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs, astro).
 4. Standards entreprise (si configurés).
 5. **`AGENTS.md`** local du projet.
