@@ -72,6 +72,10 @@ The Oracle prompt must:
 - NOT rubber-stamp. Find real problems.
 - Justify every comment (explain the "why").
 - Propose concrete solutions or alternatives.
+- Tous les commentaires DOIVENT être rédigés en français. Les préfixes Conventional Comments
+  (`issue:`, `suggestion:`, `nitpick:`, `question:`, `thought:`, `praise:`) restent en anglais,
+  mais tout le texte descriptif, les explications, les justifications et les solutions proposées
+  doivent être en français.
 
 ### Step 5: Map findings to exact line numbers
 
@@ -96,7 +100,7 @@ to the code line in the diff view.
 ```bash
 cat > /tmp/comment_payload.json << 'ENDJSON'
 {
-  "body": "issue: description of the problem.\n\nExplanation...\n\n```typescript\n// code example\n```",
+  "body": "issue: description du problème en français.\n\nExplanation...\n\n```typescript\n// code example\n```",
   "position": {
     "base_sha": "${BASE_SHA}",
     "head_sha": "${HEAD_SHA}",
@@ -153,11 +157,11 @@ All comments MUST use one of these prefixes:
 ### Comment structure
 
 ```
-{prefix}: {concise description of the problem}.
+{prefix}: {description concise du problème en français}.
 
-{explanation of why it's a problem, with context}
+{explication du pourquoi c'est un problème, avec le contexte, en français}
 
-{concrete solution or alternative, with code example if relevant}
+{solution concrète ou alternative, avec exemple de code si pertinent, en français}
 ```
 
 ### Rules
@@ -169,6 +173,9 @@ All comments MUST use one of these prefixes:
 - Proposer des solutions alternatives concrètes.
 - Every comment must be an inline comment anchored to a code line, not a
   general note on the MR.
+- Langue : Les préfixes restent en anglais (convention Conventional Comments).
+  Tout le reste du commentaire (description, explication, solution, référence
+  à la règle) doit être rédigé en français.
 
 ## Error handling
 
