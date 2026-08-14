@@ -548,6 +548,18 @@
         "PATH": "{env:IDB_PATH}",
         "IDB_UDID": "{env:IDB_UDID}"
       }
+    },
+    "infomaniak": {
+      "type": "local",
+      "command": [
+        "node",
+        "{env:OPENCODE_CONFIG_DIR}/mcp/infomaniak/dist/index.js"
+      ],
+      "enabled": true,
+      "timeout": 30000,
+      "env": {
+        "INFOMANIAK_API_TOKEN": "{env:INFOMANIAK_API_TOKEN}"
+      }
     }
   },
   "lsp": true,

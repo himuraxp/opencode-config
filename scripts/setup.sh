@@ -252,6 +252,27 @@ else
   warn "No package.json found in ${TARGET_BASE} — skipping npm install"
 fi
 
+# ─── Step 4.5: Build Infomaniak MCP server ──────────────────────────────────
+
+echo -e "\n${BOLD}--- Infomaniak MCP Server ---${NC}\n"
+
+MCP_DIR="${ROOT_DIR}/mcp/infomaniak"
+if [[ -d "$MCP_DIR" ]] && [[ -f "$MCP_DIR/package.json" ]]; then
+  if [[ -f "$MCP_DIR/dist/index.js" ]]; then
+    ok "Infomaniak MCP already built"
+  else
+    info "Building Infomaniak MCP server..."
+    if (cd "$MCP_DIR" && npm install --silent && npm run build); then
+      ok "Infomaniak MCP server built successfully"
+    else
+      warn "Infomaniak MCP build failed — the MCP will not be available"
+      warn "You can retry manually: cd $MCP_DIR && npm install && npm run build"
+    fi
+  fi
+else
+  warn "Infomaniak MCP source not found at $MCP_DIR — skipping"
+fi
+
 # ─── Step 5: Environment variables ───────────────────────────────────────────
 
 # Check if .env already exists and is complete
@@ -327,6 +348,7 @@ else
   OPENAI_B300_BASE_URL=""
   IDB_UDID=""
   IDB_PATH=""
+  INFOMANIAK_API_TOKEN=""
 
   # Migration: if an old installation used OPENAI_API_KEY for Infomaniak,
   # carry its value over to OPENAI_API_KEY_INFOMANIAK (without displaying the secret).
@@ -372,6 +394,10 @@ else
     "Enter the B300 endpoint (Kimi K2.6, optional)" \
     "https://kimi-k26-nvfp4.ia2-kub.infomaniak.ch/v1" false
 
+  prompt_var INFOMANIAK_API_TOKEN \
+    "Enter your Infomaniak API token (for Infomaniak MCP, get it at https://manager.infomaniak.com/v3/ng/accounts/token/list)" \
+    "" true
+
   # iOS Simulator — only ask if MCP dependencies are installed
   if [[ "$IOS_MCP_READY" == true ]]; then
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -415,6 +441,7 @@ OPENAI_BASE_URL=${OPENAI_BASE_URL}
 OPENAI_B300_BASE_URL=${OPENAI_B300_BASE_URL}
 IDB_UDID=${IDB_UDID}
 IDB_PATH=${IDB_PATH_EXPANDED}
+INFOMANIAK_API_TOKEN=${INFOMANIAK_API_TOKEN}
 EOF
 
   chmod 600 "${ENV_FILE}"
@@ -481,6 +508,14 @@ if [[ "$IOS_MCP_READY" == true ]]; then
   fi
 else
   info "ios-simulator-mcp: not installed (skipped by user or non-macOS)"
+fi
+
+# Check Infomaniak MCP
+if [[ -f "${ROOT_DIR}/mcp/infomaniak/dist/index.js" ]]; then
+  ok "infomaniak-mcp: built and ready"
+else
+  warn "infomaniak-mcp: not built — run: cd $ROOT_DIR/mcp/infomaniak && npm install && npm run build"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Summary

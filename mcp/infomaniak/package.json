@@ -1,0 +1,22 @@
+{
+  "name": "@opencode/mcp-infomaniak",
+  "version": "1.0.0",
+  "description": "MCP server for the Infomaniak API — exposes 577 endpoints across 15 categories (core, AI, VOD, newsletter, DNS, utils) with dedicated tools + a generic API call tool.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-infomaniak": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
+  }
+}
