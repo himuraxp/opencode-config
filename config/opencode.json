@@ -553,7 +553,7 @@
       "type": "local",
       "command": [
         "node",
-        "{env:OPENCODE_CONFIG_DIR}/mcp/infomaniak/dist/index.js"
+        "{env:HOME}/.config/opencode-config/mcp/infomaniak/dist/index.js"
       ],
       "enabled": true,
       "timeout": 30000,
