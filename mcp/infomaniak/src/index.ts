@@ -14,6 +14,7 @@ import { dnsTools } from "./modules/dns.js";
 import { utilsTools } from "./modules/utils.js";
 import { newsletterTools } from "./modules/newsletter.js";
 import { vodTools } from "./modules/vod.js";
+import { radioTools } from "./modules/radio.js";
 import { genericTool } from "./modules/generic.js";
 
 const allTools = [
@@ -23,6 +24,7 @@ const allTools = [
   ...utilsTools,
   ...newsletterTools,
   ...vodTools,
+  ...radioTools,
   genericTool,
 ];
 
