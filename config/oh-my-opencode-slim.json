@@ -121,6 +121,18 @@
       "description": "iOS, Android, React Native, Flutter — patterns mobile, performance device, accès natif",
       "model": "infomaniak/euria-code",
       "orchestratorPrompt": "Delegate to @mobile for mobile development: iOS (Swift/SwiftUI), Android (Kotlin/Compose), React Native, Flutter. Can edit mobile code. Not for web frontend."
+    },
+    "security": {
+      "displayName": "security-audit",
+      "description": "Cybersécurité défensive — AppSec, threat modeling, secure code review, DevSecOps, hardening",
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "orchestratorPrompt": "Delegate to @security for defensive cybersecurity: AppSec, secure code review, threat modeling, attack surface mapping, DevSecOps, supply chain, hardening, vulnerability assessment. Read-only — identifies and analyzes, does not modify code. Not for offensive operations (use cybersec)."
+    },
+    "cybersec": {
+      "displayName": "cybersec-red-team",
+      "description": "Sécurité offensive — pentest, exploitation, Red Team, recon, bypass, privesc, C2",
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "orchestratorPrompt": "Delegate to @cybersec for offensive security operations: penetration testing, exploit development, Red Team operations, reconnaissance, initial access, privilege escalation, lateral movement, defense evasion, exfiltration. Can run security tools and scripts. Not for defensive audits (use security)."
     }
   }
 }

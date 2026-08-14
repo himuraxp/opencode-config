@@ -8,7 +8,7 @@ Ce repo sépare les responsabilités en 5 couches :
 
 ```txt
 config/      Configuration OpenCode (opencode.json, plugins, .env.example — sans secrets)
-agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
+agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
 skills/      Skills réutilisables (commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback)
@@ -96,11 +96,11 @@ La configuration inclut deux MCP servers :
 - Préserver le style existant du projet.
 - Ajouter ou adapter les tests quand le changement impacte la logique.
 - Signaler les risques de régression.
-- **Déléguer aux sous-agents** : Spark (commit, skills CLI), Vision (images non-UI), Designer (UX/UI/DA/DS + images UI), Mobile (iOS/Android/RN/Flutter), Reviewer, Tester, Security, Architect selon la tâche. La délégation est **automatique** : Aurora détecte le domaine via les mots-clés déclencheurs et délègue systématiquement aux spécialistes (voir `agents/aurora.md` pour les tables complètes).
+- **Déléguer aux sous-agents** : Spark (commit, skills CLI), Vision (images non-UI), Designer (UX/UI/DA/DS + images UI), Mobile (iOS/Android/RN/Flutter), Reviewer, Tester, Security (défensif), Cybersec (offensif), Architect selon la tâche. La délégation est **automatique** : Aurora détecte le domaine via les mots-clés déclencheurs et délègue systématiquement aux spécialistes (voir `agents/aurora.md` pour les tables complètes).
 - **Toute image attachée au prompt utilisateur DOIT être déléguée immédiatement**, avant toute autre action ou réponse textuelle. Aurora est **text-only**. Le routage dépend du type d'image : **screenshot UI / mockup / wireframe** → **Designer** (multimodal, spécialisé UX/UI) ; **diagramme / photo / chart / capture non-UI** → **Vision** (multimodal, généraliste). En cas de doute sur un audit UX/UI ou mobile, c'est Designer. Ne jamais tenter de décrire, analyser ou répondre à une image soi-même.
 - **En cas d'échec de sous-agent** : appliquer `standards/delegation-failure.md` — constater, diagnostiquer, agir (retry ou takeover), informer. Ne jamais dire "je reprends la main" sans exécuter l'action.
 - **Exécuter un examen contradictoire (review adversarial) avant de déclarer une tâche terminée** via subagent ou skill `code-review`. Pour les reviews de MR GitLab avec commentaires inline, utiliser le skill `mr-review` (délègue l'analyse à Oracle en interne). Pour appliquer les retours de review (suggestions, fixes), utiliser le skill `mr-review-feedback`.
-- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, dépendances, performance). **Exceptions** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), les audits UX/UI/a11y sont délégués à Designer, les audits mobile à Mobile, les audits sécurité à Security. Aurora ne réalise **jamais** lui-même un audit spécialisé — il délègue systématiquement.
+- **Pour les audits/health-checks, diagnostiquer en read-only sur axes explicites** (qualité, architecture, dépendances, performance). **Exceptions** : les audits SEO/AIO/Growth sont délégués aux agents spécialistes (Atlas, Crawler, Sage, etc.), les audits UX/UI/a11y sont délégués à Designer, les audits mobile à Mobile, les audits sécurité défensifs à Security, les opérations de pentest/exploitation à Cybersec. Aurora ne réalise **jamais** lui-même un audit spécialisé — il délègue systématiquement.
 - **Respecter les limites d'exploration** : investigation lourde = subagent, pas de scan global sans objectif précis (voir `exploration-limits.md`).
 - **Stopper et reset après 2 corrections échouées** sur le même problème (voir `error-correction.md`).
 - **Reconnaître les anti-patterns** (session fourre-tout, over-specified config, exploration infinie, etc.) et appliquer la correction immédiatement (voir `anti-patterns.md`).
@@ -117,7 +117,8 @@ Une équipe spécialisée UX/UI, Mobile, Sécurité, Architecture, Tests, Exécu
 |-------|------|-----------------|
 | **Designer** | UX/UI/DA/DS/Accessibilité | Audit UX/UI, design system, accessibilité, analyse de mockups/screenshots UI, hiérarchie visuelle, responsive design |
 | **Mobile** | Mobile Engineer | Audit mobile (rendu, touch targets, viewport, perf device), code iOS/Android/RN/Flutter, patterns responsive mobile |
-| **Security** | Sécurité | Audit sécurité, revue de code sensible (auth, secrets, injections, XSS, OWASP) |
+| **Security** | Sécurité défensive | Audit sécurité, AppSec, threat modeling, secure code review, DevSecOps, hardening, revue de code sensible (auth, secrets, injections, XSS, OWASP) |
+| **Cybersec** | Sécurité offensive | Pentest, exploitation, Red Team, recon offensif, bypass, privilege escalation, lateral movement, C2, exfiltration |
 | **Architect** | Architecture | Découpage technique, structure, couplage, dette technique, migration |
 | **Tester** | Tests | Tests unitaires, intégration, couverture, Jest/Cypress/Playwright/Vitest |
 | **Reviewer** | Revue de code | Revue de code finale avant merge |
@@ -139,7 +140,8 @@ Une équipe spécialisée UX/UI, Mobile, Sécurité, Architecture, Tests, Exécu
       Architect           Atlas             Pulse
       Reviewer           Crawler             Echo
       Security           Sage             Beacon
-      Tester             Scribe
+      Cybersec           Scribe
+      Tester
       Fixer
       Oracle
       Explorer
@@ -158,6 +160,9 @@ Une équipe spécialisée UX/UI, Mobile, Sécurité, Architecture, Tests, Exécu
 | "Audit l'UX de cette page" | Designer |
 | "Vérifie que c'est accessible" | Designer |
 | "Vérifie la sécurité de l'auth" | Security |
+| "Pénètre cette application" | Cybersec |
+| "Exploite cette vulnérabilité" | Cybersec |
+| "Audit et pénètre ce système" | Security + Cybersec |
 | "Découpe cette feature en étapes" | Architect |
 | "Implémente et teste" | Aurora implémente + Tester |
 | "Vérifie ce code avant merge" | Reviewer |
@@ -200,7 +205,8 @@ Une équipe spécialisée SEO / AIO / Growth est orchestrée par Aurora. Ces age
       Architect           Atlas             Pulse
       Reviewer           Crawler             Echo
       Security           Sage             Beacon
-      Tester             Scribe
+      Cybersec           Scribe
+      Tester
       Fixer
       Oracle
       Explorer
