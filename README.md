@@ -221,6 +221,49 @@ Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichie
 
 Opérationnel en moins de 2 minutes.
 
+## Modèles et Fallback
+
+### 18 modèles configurés
+
+La configuration utilise **18 modèles** répartis en 4 catégories :
+
+| Catégorie | Modèles | Context max | Coût (input/output) | Usage |
+|-----------|---------|-------------|---------------------|-------|
+| **Expert** | Qwen3.5-397B | 204k | $0.80 / $3.60 | Architecture, sécurité, review, SEO stratégique |
+| **Intermédiaire** | Mistral-Small-4 (119B) | 256k | $0.20 / $0.75 | UX/UI, content, analytics, SEO technique |
+| | Kimi-K2.6 | 256k | $0.60 / $3.00 | Fallback gros contextes |
+| | euria-code | 250k | $0.60 / $3.00 | Génération de code, tests |
+| **Léger** | Ministral-3 (14B) | 80k | $0.30 / $0.40 | Commits, skills CLI |
+| | Gemma-4-31B | 100k | $0.20 / $0.40 | Tâches générales |
+| | Apertus-70B | 100k | $0.70 / $2.50 | Tâches générales |
+| **Ultra-léger** | **Nemotron-3-Nano (30B)** | **1M** | **$0.05 / $0.20** | **Fallback ultime, gros contextes** |
+| **Embedding** | Qwen3-Embedding-8B | 32k | $0.01 / $0 | Vectorisation (recommandé) |
+| | bge_multilingual_gemma2 | 8k | $0.01 / $0 | Multilingue FR/EN |
+| | mini_lm_l12_v2 | 512 | $0.005 / $0 | Petits textes |
+| **Transcription** | whisper | 448k | $0.006 / $0 | Audio → texte |
+
+### Fallback automatique
+
+Quand un prompt dépasse la limite de contexte d'un modèle, OpenCode bascule **automatiquement** vers un modèle avec plus de contexte :
+
+```
+Ministral-3 (80k)      → Mistral-Small-4 (256k) → Kimi-K2.6 → Nemotron-3-Nano (1M)
+euria-code (250k)      → Kimi-K2.6 (256k)       → Nemotron-3-Nano (1M)
+Gemma-4 (100k)         → Mistral-Small-4 (256k) → Kimi-K2.6 → Nemotron-3-Nano (1M)
+Qwen3.5-397B (204k)    → Kimi-K2.6 (256k)       → Nemotron-3-Nano (1M)
+```
+
+> **Avantage** : Le fallback ultime (Nemotron-3-Nano) est le modèle **le moins cher** ($0.05/1M tokens). Les très gros contextes coûtent en fait *moins* cher.
+
+### Assignation des agents
+
+| Agent | Modèle | Pourquoi |
+|-------|--------|----------|
+| `spark` | Ministral-3 (14B) | Léger, rapide, parfait pour commits et skills CLI |
+| `aurora`, `aurora-heavy`, `architect`, `security`, `cybersec`, `reviewer`, `atlas`, `sage` | Qwen3.5-397B | Meilleur raisonnement pour tâches critiques |
+| `designer`, `vision`, `echo`, `scribe`, `pulse`, `beacon`, `crawler` | Mistral-Small-4 (119B) | Bon équilibre coût/performance/créativité |
+| `mobile`, `tester`, `build`, `plan` | euria-code | Spécialisé code, bon contexte |
+
 ---
 
 ## Automatic Project Memory Discovery

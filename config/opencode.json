@@ -68,8 +68,12 @@
           "name": "euria-code",
           "limit": {
             "context": 250000,
-            "output": 100000
-          }
+            "output": 32000
+          },
+          "fallback": [
+            "moonshotai/Kimi-K2.6",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8"
+          ]
         },
         "euria-code-tiny": {
           "modalities": {
@@ -104,9 +108,14 @@
             ]
           },
           "limit": {
-            "context": 100000,
-            "output": 100000
-          }
+            "context": 80000,
+            "output": 16000
+          },
+          "fallback": [
+            "mistralai/Mistral-Small-4-119B-2603",
+            "moonshotai/Kimi-K2.6",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8"
+          ]
         },
         "mistralai/Mistral-Small-4-119B-2603": {
           "name": "mistralai/Mistral-Small-4-119B-2603",
@@ -126,8 +135,12 @@
           },
           "limit": {
             "context": 256000,
-            "output": 100000
-          }
+            "output": 32000
+          },
+          "fallback": [
+            "moonshotai/Kimi-K2.6",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8"
+          ]
         },
         "Qwen/Qwen3.5-122B-A10B-FP8": {
           "name": "Qwen/Qwen3.5-122B-A10B-FP8",
@@ -167,9 +180,13 @@
             ]
           },
           "limit": {
-            "context": 200000,
-            "output": 100000
-          }
+            "context": 204800,
+            "output": 16000
+          },
+          "fallback": [
+            "moonshotai/Kimi-K2.6",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8"
+          ]
         },
         "google/gemma-4-31B-it": {
           "name": "google/gemma-4-31B-it",
@@ -188,8 +205,13 @@
           },
           "limit": {
             "context": 100000,
-            "output": 100000
-          }
+            "output": 16000
+          },
+          "fallback": [
+            "mistralai/Mistral-Small-4-119B-2603",
+            "moonshotai/Kimi-K2.6",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8"
+          ]
         },
         "moonshotai/Kimi-K2.6": {
           "name": "moonshotai/Kimi-K2.6",
@@ -251,7 +273,175 @@
           },
           "limit": {
             "context": 100000,
-            "output": 100000
+            "output": 16000
+          },
+          "fallback": [
+            "mistralai/Mistral-Small-4-119B-2603",
+            "moonshotai/Kimi-K2.6",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8"
+          ]
+        },
+        "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8": {
+          "name": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8",
+          "tool_call": true,
+          "cost": {
+            "input": 0.05,
+            "output": 0.20
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 32000
+          }
+        },
+        "Qwen/Qwen3-Embedding-8B": {
+          "name": "Qwen/Qwen3-Embedding-8B",
+          "tool_call": false,
+          "cost": {
+            "input": 0.01,
+            "output": 0
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 32000,
+            "output": 4096
+          }
+        },
+        "bge_multilingual_gemma2": {
+          "name": "bge_multilingual_gemma2",
+          "tool_call": false,
+          "cost": {
+            "input": 0.01,
+            "output": 0
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 8000,
+            "output": 1024
+          }
+        },
+        "mini_lm_l12_v2": {
+          "name": "mini_lm_l12_v2",
+          "tool_call": false,
+          "cost": {
+            "input": 0.005,
+            "output": 0
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 512,
+            "output": 384
+          }
+        },
+        "whisper": {
+          "name": "whisper",
+          "tool_call": false,
+          "cost": {
+            "input": 0.006,
+            "output": 0
+          },
+          "modalities": {
+            "input": [
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 448000,
+            "output": 4096
+          }
+        },
+        "mistral3": {
+          "name": "mistralai/Ministral-3-14B-Instruct-2512",
+          "tool_call": true,
+          "cost": {
+            "input": 0.30,
+            "output": 0.40
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 80000,
+            "output": 16000
+          }
+        },
+        "qwen3": {
+          "name": "Qwen/Qwen3.5-397B-A17B-FP8",
+          "tool_call": true,
+          "cost": {
+            "input": 0.80,
+            "output": 3.60
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 32000
+          }
+        },
+        "mistral24b": {
+          "name": "mistralai/Mistral-Small-4-119B-2603",
+          "tool_call": true,
+          "cost": {
+            "input": 0.20,
+            "output": 0.75
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 256000,
+            "output": 32000
           }
         }
       }
@@ -506,6 +696,150 @@
           "dd *of=/dev/*": "deny"
         },
         "webfetch": "allow"
+      }
+    },
+    "architect": {
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "aurora": {
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "aurora-heavy": {
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "atlas": {
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask",
+        "webfetch": "allow"
+      }
+    },
+    "beacon": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask",
+        "webfetch": "allow"
+      }
+    },
+    "crawler": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask",
+        "webfetch": "allow"
+      }
+    },
+    "designer": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "echo": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "mobile": {
+      "model": "infomaniak/euria-code",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "pulse": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "reviewer": {
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "git diff*": "allow",
+          "git log *": "allow",
+          "git show *": "allow",
+          "git status *": "allow",
+          "rg *": "allow",
+          "grep *": "allow"
+        },
+        "webfetch": "ask"
+      }
+    },
+    "sage": {
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask",
+        "webfetch": "allow"
+      }
+    },
+    "scribe": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "spark": {
+      "model": "infomaniak/mistralai/Ministral-3-14B-Instruct-2512",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "ask",
+          "git add *": "allow",
+          "git commit *": "allow",
+          "git status *": "allow",
+          "git diff*": "allow",
+          "git log *": "allow",
+          "echo *": "allow",
+          "cat *": "allow",
+          "ls *": "allow",
+          "pwd": "allow"
+        }
+      }
+    },
+    "tester": {
+      "model": "infomaniak/euria-code",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*test*": "allow",
+          "yarn test *": "allow",
+          "npm test *": "allow",
+          "jest *": "allow",
+          "vitest *": "allow",
+          "pytest *": "allow",
+          "git diff*": "allow",
+          "git status *": "allow"
+        }
+      }
+    },
+    "vision": {
+      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "permission": {
+        "edit": "deny",
+        "bash": "ask"
       }
     }
   },
