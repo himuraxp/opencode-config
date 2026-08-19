@@ -894,6 +894,18 @@
       "env": {
         "INFOMANIAK_API_TOKEN": "{env:INFOMANIAK_API_TOKEN}"
       }
+    },
+    "angular-elements": {
+      "type": "local",
+      "command": [
+        "node",
+        "{env:HOME}/.config/opencode-config/mcp/angular-elements/dist/index.js"
+      ],
+      "enabled": true,
+      "timeout": 30000,
+      "env": {
+        "GITLAB_TOKEN": "{env:GITLAB_TOKEN}"
+      }
     }
   },
   "lsp": true,

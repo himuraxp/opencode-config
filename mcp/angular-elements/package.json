@@ -1,0 +1,22 @@
+{
+  "name": "@opencode/mcp-angular-elements",
+  "version": "1.0.0",
+  "description": "MCP server for the Infomaniak Angular Elements design system — exposes component docs, API, stories, and install info from the GitLab repository.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-angular-elements": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
+  }
+}
