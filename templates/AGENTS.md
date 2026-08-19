@@ -40,10 +40,10 @@ Les standards suivants sont chargés automatiquement par l'agent principal (Auro
 
 - **workflow** : cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer
 - **verification** : vérifications build/lint/test obligatoires avant de considérer une tâche terminée
-- **communication** : directivité, ownership, pushback constructif
+- **communication** : directivité, ownership, pushback constructif, format de sortie markdown
 - **escalation** : gestion des blocages et arrêt propre
 - **commits** : format et règles de commit
-- **review-before-done** : examen contradictoire obligatoire avant déclaration de fin
+- **review-before-done** : examen contradictoire obligatoire avant déclaration de fin (4 axes : code, fonctionnel, pertinence, markdown)
 - **audit** : audit read-only multi-axes pour health-checks et dette technique
 - **exploration-limits** : délimiter les investigations, utiliser subagents pour exploration lourde
 - **error-correction** : reset après 2 corrections échouées, ne jamais corriger sans cause profonde

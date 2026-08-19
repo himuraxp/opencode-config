@@ -45,13 +45,14 @@ Ignore style preferences and formatting choices.
 
 ### Axes obligatoires
 
-Le review doit couvrir trois axes, même si le rapport final reste concis :
+Le review doit couvrir quatre axes, même si le rapport final reste concis :
 
 | Axe | Question centrale | Exemples de gaps |
 |-----|-------------------|------------------|
 | Code | La diff est-elle correcte et maintenable ? | bug, sécurité, complexité inutile, convention cassée |
 | Fonctionnel | Le résultat respecte-t-il le plan et les critères d'acceptation ? | exigence manquante, edge case non traité, test absent |
 | Pertinence | La solution répond-elle au besoin réel sans hors-scope ? | sur-ingénierie, fichier modifié inutilement, comportement non demandé |
+| Markdown | Le format de sortie est-il valide et lisible ? | code block collé, tableau incomplet, heading sans hiérarchie, liste mal indentée, lien brisé, setext heading, HTML brut non justifié |
 
 Verdict global :
 
