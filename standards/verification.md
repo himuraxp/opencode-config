@@ -1,5 +1,16 @@
 # Standard — Verification
 
+## Parallel Gate
+
+La Vérification s'exécute **en parallèle** du Review (examen contradictoire) dans le cadre du Parallel Gate du workflow (voir `workflow.md` étape 4). Les deux branches sont lancées dans un seul message de tool calls :
+
+```
+Implémenter terminé
+    ├── Review (review-before-done.md)   ─┐
+    └── Vérifier (ce standard)            ─┤── Aurora consolide
+                                           └── Corriger si nécessaire → Committer
+```
+
 ## Qualité avant déclaration de fin
 
 Une tâche n'est **jamais** considérée comme terminée tant que les vérifications suivantes ne passent pas :

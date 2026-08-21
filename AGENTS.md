@@ -29,8 +29,8 @@ Aurora DOIT maintenir automatiquement la mémoire du projet. Avant de rendre la 
 
 ### Processus obligatoire
 
-1. **Lire** `docs/ai/` au démarrage de chaque session (STATUS, PLAN, INDEX, BUFFER, WARNINGS, DECISIONS)
-2. **Mettre à jour** `docs/ai/` à la fin de chaque session :
+1. **Lire** `docs/ai/` au démarrage de chaque session — les 4 fichiers de session **en parallèle** (STATUS, PLAN, WARNINGS, INDEX) dans un seul message de tool calls. BUFFER est lu uniquement si reprise interrompue ou blocage. DECISIONS et CHANGELOG sont consultés en JIT (voir `memory-session-flow.md`).
+2. **Mettre à jour** `docs/ai/` à la fin de chaque session — les 7 fichiers **en parallèle** dans un seul message de tool calls :
    - `STATUS.md` — tâches en cours / fait / bloqué / prochaine action
    - `PLAN.md` — avancement des étapes
    - `CHANGELOG.md` — entrée datée des modifications

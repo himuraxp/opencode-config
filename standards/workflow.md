@@ -5,7 +5,9 @@
 Toute tâche suit impérativement ce cycle :
 
 ```txt
-Explorer → Planifier → Implémenter → [REVIEW] → Vérifier → Committer
+Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer
+                                      ├── Review (adversarial)
+                                      └── Vérifier (build + lint + test)
 ```
 
 ### 0. Visibilité de l'avancement
@@ -23,12 +25,12 @@ Toute tâche à étapes multiples (3+ actions distinctes) DOIT utiliser `todowri
 - Toujours lire le code existant avant toute modification.
 - Identifier les fichiers concernés, les conventions en vigueur, les patterns existants.
 - Ne jamais implémenter directement sans comprendre le contexte.
-- Si `docs/ai/` existe dans le projet courant, charger automatiquement la mémoire projet dans cet ordre :
+- Si `docs/ai/` existe dans le projet courant, charger automatiquement la mémoire projet **en parallèle** (4 Read dans un seul message) :
   1. `STATUS.md` — état, bloqueurs, prochaine étape
   2. `PLAN.md` — plan en cours
   3. `WARNINGS.md` — alertes actives et zones à risque
   4. `INDEX.md` — cartographie du projet
-  5. `BUFFER.md` — uniquement si reprise interrompue ou blocage signalé
+  5. `BUFFER.md` — uniquement si reprise interrompue ou blocage signalé (5e Read séparé)
 - **Si l'exploration touche > 15 fichiers potentiels** : utiliser un subagent `explore` pour l'investigation (voir `exploration-limits.md`).
 
 ### 2. Planifier
@@ -47,26 +49,23 @@ Toute tâche à étapes multiples (3+ actions distinctes) DOIT utiliser `todowri
 - Ne jamais casser le build volontairement.
 - Préserver les comportements existants.
 
-### 4. Review (Examen contradictoire)
+### 4. Parallel Gate (Review + Vérifier)
 
-Avant de considérer le code comme terminé, exécuter un **examen adversarial** dans un subagent frais.
+Le Review (examen contradictoire) et la Vérification (build + lint + test) sont **indépendants** et DOIVENT être lancés en parallèle dans un seul message de tool calls.
 
-- L'agent qui code ne peut pas être celui qui valide.
-- Utiliser le skill `code-review` ou un subagent `reviewer`.
-- Le reviewer examine la diff contre `PLAN.md` et signale les gaps critiques uniquement.
-- Le reviewer couvre trois axes : code, fonctionnel, pertinence.
-- Voir `review-before-done.md` pour la procédure complète.
-- Corriger les gaps, puis passer à Vérifier (1 itération max si gaps identifiés).
+- Lancer le subagent `reviewer` (ou skill `code-review`) ET la commande de build/lint/test dans le même tool call message.
+- Si les deux réussissent → passer à Committer.
+- Si l'un échoue → corriger en 1 seule itération, puis relancer uniquement celui qui a échoué.
+- Si les deux échouent → corriger les deux en 1 seule itération, puis relancer les deux en parallèle.
+- **Max 1 itération de correction** après le Parallel Gate. Cette règle est **plus stricte** que `error-correction.md` (2-strikes) : après échec de l'unique itération, reset direct.
 
-### 5. Vérifier
-
-Appliquer `verification.md` : build + lint + test doivent passer avant de déclarer la tâche terminée.
+Voir `review-before-done.md` et `verification.md` pour les procédures détaillées de chaque branche.
 
 ### Audit read-only
 
 Si l'utilisateur demande un audit, un health-check ou une analyse de dette technique, appliquer `audit.md` au lieu du cycle d'implémentation. L'audit est diagnostique : il ne modifie pas le code et produit un rapport priorisé.
 
-### 6. Committer
+### 5. Committer
 
 - Un changement logique par commit.
 - Jamais de commit avec build cassé.

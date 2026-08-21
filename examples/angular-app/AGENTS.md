@@ -38,7 +38,7 @@ Décrire ici le produit, le contexte métier et les contraintes principales.
 
 Les standards suivants sont chargés automatiquement par l'agent principal (Aurora) :
 
-- **workflow** : cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer
+- **workflow** : cycle Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer (Review + Vérifier en parallèle)
 - **verification** : vérifications build/lint/test obligatoires avant de considérer une tâche terminée
 - **communication** : directivité, ownership, pushback constructif
 - **escalation** : gestion des blocages et arrêt propre

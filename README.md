@@ -338,7 +338,7 @@ Global Configuration
 | **Traçabilité** | Chaque agent documente son plan, ses décisions et son avancement |
 | **Sécurité** | Checklist sécurité automatique à chaque review |
 | **Mémoire de session** | BUFFER, INDEX et WARNINGS pour les projets longs et complexes |
-| **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → Review → Vérifier → Committer |
+| **Travailler en équipe** | Workflow universel : Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer |
 
 ---
 
@@ -441,7 +441,7 @@ opencode-config/
 │       └── rtk.ts                Plugin RTK (token savings via rtk rewrite)
 │
 ├── standards/               Comportements universels
-│   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→Review→Vérifier→Committer
+│   ├── workflow.md            Cycle Explorer→Planifier→Implémenter→[PARALLEL GATE]→Committer
 │   ├── error-correction.md    Arrêt après 2 échecs pour éviter la spirale
 │   ├── anti-patterns.md       Stopper les 5 patterns de session types
 │   ├── artifact-authoring.md  Créer standards/agents/frameworks sans doublons

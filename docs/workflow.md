@@ -5,7 +5,9 @@
 Toute session IA suit impérativement le cycle défini dans `standards/workflow.md` :
 
 ```txt
-Explorer → Planifier → Implémenter → Review → Vérifier → Committer
+Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer
+                                      ├── Review (adversarial)
+                                      └── Vérifier (build + lint + test)
 ```
 
 ### Lecture en début de session

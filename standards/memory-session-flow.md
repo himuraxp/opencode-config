@@ -27,14 +27,16 @@ Aurora doit **impérativement vérifier** à chaque session si le projet courant
 
 Aucune modification du `AGENTS.md` local n'est requise pour activer cette découverte. C'est un comportement global d'Aurora, non une configuration projet.
 
-## Début de session — Ordre de lecture de session
+## Début de session — Lecture parallèle de la mémoire
 
-L'agent doit systématiquement :
+L'agent doit systématiquement vérifier si `docs/ai/` existe, puis lire les 4 fichiers de session **en parallèle** dans un seul message de tool calls :
 
-1. Lire `docs/ai/STATUS.md` pour comprendre l'état actuel, les bloqueurs, la prochaine étape.
-2. Lire `docs/ai/PLAN.md` pour connaître le plan en cours.
-3. Lire `docs/ai/WARNINGS.md` pour identifier les zones à risque et les alertes actives.
-4. Lire `docs/ai/INDEX.md` pour cartographier le projet sans scan global.
+1. `docs/ai/STATUS.md` pour comprendre l'état actuel, les bloqueurs, la prochaine étape.
+2. `docs/ai/PLAN.md` pour connaître le plan en cours.
+3. `docs/ai/WARNINGS.md` pour identifier les zones à risque et les alertes actives.
+4. `docs/ai/INDEX.md` pour cartographier le projet sans scan global.
+
+Les 4 `Read` sont lancés dans un **seul message** (tool calls parallèles). Les résultats sont ensuite analysés dans l'ordre logique (STATUS → PLAN → WARNINGS → INDEX), mais sans attendre séquentiellement chaque lecture.
 
 Puis lire `docs/ai/BUFFER.md` **uniquement si** :
 

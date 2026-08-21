@@ -34,7 +34,7 @@ racine/
 | `README.md` | Documentation principale |
 | `config/opencode.json` | Providers (infomaniak, infomaniak-b300), models, permissions bash, MCP (context7, chrome-devtools, ios-simulator) |
 | `config/oh-my-opencode-slim.json` | Presets sous-agents (euria-code), 9 agents déclarés (7 Search & Growth + designer + mobile) |
-| `standards/workflow.md` | Cycle Explorer → Planifier → Implémenter → Review → Vérifier → Committer |
+| `standards/workflow.md` | Cycle Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer |
 | `standards/agent-output.md` | Format de retour JSON structuré pour les sous-agents |
 | `standards/memory-checklist.md` | Checklist obligatoire de persistance memoire |
 | `standards/review-before-done.md` | Review adversarial avant fin de tache |

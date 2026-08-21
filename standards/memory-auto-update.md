@@ -10,6 +10,8 @@ La mémoire projet (`docs/ai/`) DOIT être maintenue automatiquement par Aurora 
 
 ## Procédure de persistance (obligatoire)
 
+Les 7 étapes ci-dessous décrivent le **contenu** de chaque fichier à mettre à jour. Les écritures DOIVENT être effectuées **en parallèle** dans un seul message de tool calls (Edit/Write), car les 7 fichiers sont indépendants en écriture.
+
 ### Étape 1 : Mettre à jour STATUS.md
 
 - Section **En cours** : liste des tâches non terminées avec leur contexte
@@ -115,6 +117,10 @@ Valeurs autorisées : `pending`, `in-progress`, `implemented`, `reviewed`, `bloc
 ## Règle d'or
 
 > Si `docs/ai/` existe, il DOIT être à jour avant de rendre la main. Vider le BUFFER des notes temporaires tout en préservant le snapshot.
+
+## Parallélisation des écritures
+
+Les 7 fichiers de mémoire sont **indépendants en écriture**. Aurora DOIT lancer les 7 Edit/Write dans un **seul message de tool calls** plutôt que séquentiellement. Seul le calcul du contenu de chaque fichier peut nécessiter une réflexion préalable — l'écriture elle-même est parallèle.
 
 ## Anti-patterns
 

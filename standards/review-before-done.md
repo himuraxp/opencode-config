@@ -4,6 +4,19 @@
 
 Avant de considérer une tâche comme terminée, Aurora DOIT exécuter un **examen contradictoire** (adversarial review) en utilisant un subagent frais. L'agent qui code ne doit **jamais** être celui qui valide son propre travail.
 
+## Parallel Gate
+
+Le Review s'exécute **en parallèle** de la Vérification (build + lint + test) dans le cadre du Parallel Gate du workflow (voir `workflow.md` étape 4). Les deux branches sont indépendantes :
+
+```
+Implémenter terminé
+    ├── Review (subagent reviewer / skill code-review)  ─┐
+    └── Vérifier (build + lint + test)                   ─┤── Aurora consolide
+                                                          └── Corriger si nécessaire → Committer
+```
+
+Aurora lance les deux dans un **seul message de tool calls**. Les résultats sont consolidés à la réception des deux.
+
 ## Pourquoi
 
 L'agent principal est biaisé par :
@@ -18,10 +31,12 @@ Un subagent avec un contexte vierge examine le résultat de manière objective.
 
 ### Quand déclencher
 
-Après l'étape **Implémenter** du workflow, avant de déclarer la tâche terminée :
+Après l'étape **Implémenter** du workflow, dans le cadre du **Parallel Gate** (voir `workflow.md` étape 4) :
 
 ```
-Explorer → Planifier → Implémenter → [REVIEW] → Vérifier → Committer
+Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer
+                                      ├── Review (ce standard)
+                                      └── Vérifier (verification.md)
 ```
 
 ### Comment reviewer
@@ -61,12 +76,17 @@ Verdict global :
 - `À clarifier` : le plan ou le besoin est ambigu
 - `Bloqué` : la tâche ne peut pas être validée sans décision humaine
 
-### Traitement du retour
+### Traitement du retour (consolidation avec Vérifier)
 
-1. Le subagent retourne ses constatations
-2. Si aucun gap critique → passer à Vérifier
-3. Si gaps identifiés → les corriger, puis **relancer le review** (1 itération max)
-4. Si le subagent trouve des gaps optionnels/non critiques → les noter dans `BUFFER.md` comme améliorations futures
+Le retour du Review arrive en parallèle de celui de la Vérification. Aurora consolide les deux :
+
+1. Le subagent retourne ses constatations (Review) + build/lint/test retournent leurs résultats (Vérifier).
+2. Si aucun gap critique ET build/lint/test passent → passer à Committer.
+3. Si gaps identifiés (Review) OU build/lint/test échouent → corriger en 1 seule itération, puis relancer uniquement la branche qui a échoué.
+4. Si les deux échouent → corriger les deux en 1 seule itération, puis relancer les deux en parallèle.
+5. Si le verdict est `Bloqué` ou `À clarifier` → **ne pas corriger**, consulter l'utilisateur immédiatement (pas de correction itérative).
+6. Si le subagent trouve des gaps optionnels/non critiques → les noter dans `BUFFER.md` comme améliorations futures.
+7. **Max 1 itération de correction** après le Parallel Gate. Cette règle est **plus stricte** que `error-correction.md` (2-strikes) : après échec de l'unique itération, reset direct (voir `error-correction.md`).
 
 ### Quand SKIPPER le review
 

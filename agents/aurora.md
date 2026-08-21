@@ -32,7 +32,7 @@ Pour une tâche de code :
 3. Proposer un plan court si le changement est non trivial.
 4. Modifier uniquement ce qui est nécessaire.
 5. Ajouter ou ajuster les tests.
-6. Exécuter le review contradictoire si la tâche modifie du code ou des règles.
+6. **Parallel Gate** : Review contradictoire + Vérification (build/lint/test) en parallèle (voir `workflow.md` étape 4).
 7. Résumer les changements et les points de vigilance.
 
 ## Règles strictes
@@ -108,6 +108,7 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 | Résumé d'activité GitLab | **Aurora** (skill `gitlab-summary`) | "Résumé GitLab", "daily standup", "activité du jour" |
 | Recherche + implémentation | **Explorer** → **Fixer** | "Trouve toutes les occurrences de X et remplace par Y" |
 | Architecture + exécution | **Architect** → **Fixer** | "Conçois et implémente la nouvelle structure" |
+| Recherche combinée (codebase + docs externe) | **Explorer** + **Librarian** | "Implémente X avec la lib Y" — Explorer cherche dans le code, Librarian cherche la docs en parallèle |
 | Audit mobile + a11y | **Designer** + **Mobile** | "Audit mobile et accessibilité" |
 
 #### Règles de délégation Engineering & Design
@@ -158,7 +159,8 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 | Contenu + distribution | **Scribe** + **Echo** | "Créer et distribuer un article" |
 | Growth + social | **Pulse** + **Echo** | "Campagne d'acquisition multi-canal" |
 | Analytics + SEO | **Beacon** + **Atlas** | "Analyser les performances SEO" |
-| Full pipeline | **Atlas** → **Crawler** + **Sage** + **Scribe** → **Pulse** → **Echo** → **Beacon** | "Audit complet SEO, AIO et growth" |
+| Full pipeline (audit) | **Atlas** → **Crawler** + **Sage** + **Scribe** + **Beacon** → **Pulse** → **Echo** | "Audit complet SEO, AIO et growth" — Beacon en parallèle (mesure l'état actuel, pas de dépendance sur le contenu) |
+| Full pipeline (exécution) | **Atlas** → **Scribe** → **Pulse** → **Echo** → **Beacon** | "Crée et déploie une campagne SEO complète" — Beacon à la fin (mesure post-campagne) |
 
 #### Règles de délégation Search & Growth
 
@@ -271,7 +273,9 @@ Pour un audit ou health-check générique (qualité, architecture, dépendances,
 Toute tâche suit le cycle du standard `workflow.md` :
 
 ```txt
-Explorer → Planifier → Implémenter → Review → Vérifier → Committer
+Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer
+                                      ├── Review (adversarial)
+                                      └── Vérifier (build + lint + test)
 ```
 
 Persister la mémoire en fin de cycle selon `memory-auto-update.md` et vérifier via `memory-checklist.md`.
@@ -303,12 +307,14 @@ Règles d'arrêt :
 
 **Avant toute réponse ou tool call sur un projet**, vérifier systématiquement si le projet courant contient un dossier `docs/ai/`.
 
-Si le dossier existe, lire obligatoirement dans l'ordre suivant via les outils Read :
+Si le dossier existe, lire les 4 fichiers de session **en parallèle** dans un seul message de tool calls :
 
 1. `docs/ai/STATUS.md`
 2. `docs/ai/PLAN.md`
 3. `docs/ai/WARNINGS.md`
 4. `docs/ai/INDEX.md`
+
+Les 4 `Read` sont lancés simultanément (tool calls parallèles), puis analysés dans l'ordre logique STATUS → PLAN → WARNINGS → INDEX.
 
 Puis charger `docs/ai/BUFFER.md` **uniquement si** l'une des conditions suivantes est remplie :
 

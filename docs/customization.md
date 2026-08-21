@@ -119,7 +119,7 @@ L'agent `aurora.md` le chargera automatiquement si nécessaire.
 
 Modifiez `standards/workflow.md` et `standards/memory-session-flow.md` pour adapter :
 
-- Le cycle de travail (actuellement : Explorer → Planifier → Implémenter → Review → Vérifier → Committer)
+- Le cycle de travail (actuellement : Explorer → Planifier → Implémenter → [PARALLEL GATE] → Committer)
 - La gestion de la mémoire (docs/ai/)
 - Les vérifications obligatoires (verification.md)
 - Les formats de communication (communication.md)
