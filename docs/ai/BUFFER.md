@@ -1,34 +1,39 @@
 # BUFFER
 
-## Snapshot reprise — 2026-08-12 (création agents designer + mobile)
+## Snapshot reprise — 2026-08-21 (scripts animés Aurora UI)
 
 ### Sujet
 
-Création de 2 nouveaux agents spécialisés (designer, mobile) et mise à jour de toutes les références.
+Donner du style aux scripts d'installation console avec logo ASCII art "Aurora", animations, et palette 256 couleurs — tout en gardant le mode console pur (100% bash, zéro dépendance).
 
 ### Fichiers impactés
 
-- `agents/designer.md` (créé — UX/UI/DA/DS/accessibilité, Mistral-Small-4 multimodal)
-- `agents/mobile.md` (créé — iOS/Android/RN/Flutter, euria-code)
-- `config/oh-my-opencode-slim.json` (modifié — 2 agents déclarés)
-- `agents/aurora.md` (modifié — règles de délégation designer + mobile)
-- `AGENTS.md` (modifié — 17 agents, délégation mise à jour)
-- `README.md` (modifié — 4 références 15→17 agents, table agents)
-- `docs/customization.md` (modifié — table agents)
-- `scripts/setup.sh` (modifié — vérification 17 agents)
-- `docs/ai/INDEX.md` (modifié — 17 agents)
+- `scripts/ui.sh` (créé — bibliothèque d'animations : logo, sections, spinner, progress bar, typewriter, messages)
+- `scripts/setup.sh` (modifié — source ui.sh, logo, sections animées, --no-animation)
+- `scripts/install.sh` (modifié — source ui.sh, logo, sections, progress bar, --no-animation)
 - `docs/ai/STATUS.md` (modifié)
 - `docs/ai/CHANGELOG.md` (modifié)
+- `docs/ai/INDEX.md` (modifié)
+- `docs/ai/BUFFER.md` (modifié)
 
 ### Décisions clés
 
-- Designer utilise Mistral-Small-4 (multimodal) pour analyser mockups et screenshots
-- Mobile utilise euria-code (code generation performant)
-- Permissions identiques aux autres sous-agents : edit:allow, bash:deny, webfetch:allow
-- Format de retour JSON agent-output.v1 comme tous les autres agents
+- Logo variante A (block/impactant) — turquoise bright (code 51)
+- Palette 256 ANSI (12 couleurs : primary 51, header 220, ok 46, fail 196, warn 226, etc.)
+- Box-drawing Unicode (╭─╮ │ ╰─╯) pour sections
+- Spinner braille (⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏)
+- Progress bar (█░) avec pre-count des fichiers
+- Typewriter pour résumé final
+- Désactivation auto si non-TTY + flag --no-animation
+- Compatible macOS bash 3.2+ et Linux bash 4+
+- Designer consulté pour direction visuelle (agent-output.v1)
 
 ### État
 
 - Tous les fichiers créés et modifiés.
-- health-check.sh à lancer.
-- Review contradictoire en attente.
+- `bash -n` OK sur les 3 fichiers.
+- `install.sh --dry-run` testé OK.
+- `install.sh --no-animation --no-config` testé OK (1 new, 70 unchanged).
+- Config active synchronisée (`~/.config/opencode/scripts/ui.sh`).
+- Logo final validé par l'utilisateur (police `roman`).
+- Commit en attente.

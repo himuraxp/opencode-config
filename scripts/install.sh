@@ -7,20 +7,73 @@ PRUNE=false
 DRY_RUN=false
 NO_CONFIG=false
 
+# Source the Aurora UI library
+# shellcheck disable=SC1091
+source "${ROOT_DIR}/scripts/ui.sh"
+
 # Counters
 NEW_COUNT=0
 UPDATED_COUNT=0
 UNCHANGED_COUNT=0
 PRUNED_COUNT=0
 
+# Progress tracking
+_UI_FILE_DONE=0
+_UI_FILE_TOTAL=0
+_UI_NPM_NEEDED=false
+
+# Pre-count all files to be installed
+_ui_count_files() {
+  local count=0
+  local f
+
+  # agents, standards, frameworks (.md files)
+  for dir in agents standards frameworks; do
+    [[ -d "$ROOT_DIR/$dir" ]] || continue
+    for f in "$ROOT_DIR/$dir"/*.md; do
+      [[ -e "$f" ]] && count=$((count + 1))
+    done
+  done
+
+  # skills (recursive)
+  if [[ -d "$ROOT_DIR/skills" ]]; then
+    while IFS= read -r -d '' f; do
+      count=$((count + 1))
+    done < <(find "$ROOT_DIR/skills" -type f -print0)
+  fi
+
+  # scripts (recursive, excluding self)
+  if [[ -d "$ROOT_DIR/scripts" ]]; then
+    while IFS= read -r -d '' f; do
+      count=$((count + 1))
+    done < <(find "$ROOT_DIR/scripts" -type f \
+      -not -name "install.sh" -not -name "setup.sh" \
+      -not -name "init-project.sh" -not -name "sync-project.sh" \
+      -print0)
+  fi
+
+  # config files
+  for f in opencode.json oh-my-opencode-slim.json package.json .env.example; do
+    [[ -f "$ROOT_DIR/config/$f" ]] && count=$((count + 1))
+  done
+  if [[ -d "$ROOT_DIR/config/plugins" ]]; then
+    for f in "$ROOT_DIR/config/plugins"/*; do
+      [[ -e "$f" ]] && count=$((count + 1))
+    done
+  fi
+
+  _UI_FILE_TOTAL=$count
+}
+
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [--prune] [--dry-run] [--no-config]
+Usage: $(basename "$0") [--prune] [--dry-run] [--no-config] [--no-animation]
 
 Options:
-  --prune      Remove installed .md files that no longer exist in this repo.
-  --dry-run    Show what would be installed or removed.
-  --no-config  Skip copying config/ files (opencode.json, plugins, etc.)
+  --prune          Remove installed .md files that no longer exist in this repo.
+  --dry-run        Show what would be installed or removed.
+  --no-config      Skip copying config/ files (opencode.json, plugins, etc.)
+  --no-animation   Disable animations (for CI/SSH non-interactive sessions).
 EOF
 }
 
@@ -34,6 +87,10 @@ for arg in "$@"; do
       ;;
     --no-config)
       NO_CONFIG=true
+      ;;
+    --no-animation)
+      UI_NO_ANIMATION=true
+      UI_ANIMATE=false
       ;;
     -h|--help)
       usage
@@ -66,15 +123,17 @@ copy_file() {
   if [[ ! -f "$dest" ]]; then
     mkdir -p "$(dirname "$dest")"
     cp "$src" "$dest"
-    echo "  new:     $dest"
     NEW_COUNT=$((NEW_COUNT + 1))
   elif ! diff -q "$src" "$dest" &>/dev/null; then
     cp "$src" "$dest"
-    echo "  updated: $dest"
     UPDATED_COUNT=$((UPDATED_COUNT + 1))
   else
-    echo "  unchanged: $dest"
     UNCHANGED_COUNT=$((UNCHANGED_COUNT + 1))
+  fi
+
+  _UI_FILE_DONE=$((_UI_FILE_DONE + 1))
+  if [[ "$UI_ANIMATE" == true && $_UI_FILE_TOTAL -gt 0 ]]; then
+    ui_progress "$_UI_FILE_DONE" "$_UI_FILE_TOTAL" "Installing files"
   fi
 }
 
@@ -122,8 +181,21 @@ install_dir() {
   fi
 }
 
+# Show logo
+if [[ "$DRY_RUN" == false ]]; then
+  ui_logo "OpenCode Config"
+fi
+
+# Pre-count files for progress bar
+_ui_count_files
+
+ui_section "Installing Agents"
 install_dir "$ROOT_DIR/agents"     "$TARGET_BASE/agents"
+
+ui_section "Installing Standards"
 install_dir "$ROOT_DIR/standards"  "$TARGET_BASE/standards"
+
+ui_section "Installing Frameworks"
 install_dir "$ROOT_DIR/frameworks" "$TARGET_BASE/frameworks"
 
 # ─── Skills (recursive: includes SKILL.md, README.md, and any sub-files) ────
@@ -172,6 +244,8 @@ install_skills() {
   done
 }
 
+ui_section "Installing Skills"
+
 install_skills
 
 # ─── Scripts (recursive: includes .sh files and tests) ────────────────────────
@@ -214,9 +288,9 @@ install_scripts() {
   done < <(find "$src" -type f -not -name "install.sh" -not -name "setup.sh" -not -name "init-project.sh" -not -name "sync-project.sh" -print0)
 }
 
-install_scripts
+ui_section "Installing Scripts"
 
-# ─── Config files (opencode.json, plugins, etc.) ────────────────────────────
+install_scripts
 
 install_config() {
   local src="$ROOT_DIR/config"
@@ -259,11 +333,12 @@ install_config() {
 
   # npm install is handled by setup.sh to avoid double-install and give better error output
   if [[ "$DRY_RUN" == false && -f "$dest/package.json" ]]; then
-    echo "  note: run 'npm install' in $dest or use setup.sh for full installation"
+    _UI_NPM_NEEDED=true
   fi
 }
 
 if [[ "$NO_CONFIG" == false ]]; then
+  ui_section "Installing Configuration"
   install_config
 fi
 
@@ -272,12 +347,22 @@ if [[ "$DRY_RUN" == true ]]; then
   echo "Dry run complete. No files were modified."
 else
   echo ""
-  echo "Summary: ${NEW_COUNT} new, ${UPDATED_COUNT} updated, ${UNCHANGED_COUNT} unchanged"
+  ui_section "Installation Summary"
+  ok "${NEW_COUNT} new, ${UPDATED_COUNT} updated, ${UNCHANGED_COUNT} unchanged"
   if [[ ${PRUNED_COUNT} -gt 0 ]]; then
-    echo "         ${PRUNED_COUNT} pruned"
+    warn "${PRUNED_COUNT} pruned"
   fi
-  echo "OpenCode configuration installed in $TARGET_BASE."
-  if [[ "$NO_CONFIG" == false ]]; then
-    echo "Config files installed. Run scripts/setup.sh for first-time setup with secrets."
+  ok "OpenCode configuration installed in $TARGET_BASE"
+  echo ""
+  echo "  Next steps:"
+  if [[ "${_UI_NPM_NEEDED:-false}" == true ]]; then
+    echo "    1. Run: cd $TARGET_BASE && npm install"
+    echo "    2. Run: $ROOT_DIR/scripts/setup.sh  (for first-time setup with secrets)"
+  else
+    echo "    1. Run: $ROOT_DIR/scripts/setup.sh  (for first-time setup with secrets)"
+  fi
+  echo ""
+  if [[ "$UI_ANIMATE" == true ]]; then
+    ui_typewriter "Aurora is ready." 0.04
   fi
 fi

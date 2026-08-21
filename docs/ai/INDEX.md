@@ -23,7 +23,7 @@ racine/
 | Agents | `agents/` | 17 agents : aurora, aurora-heavy, reviewer, tester, security, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile |
 | Frameworks | `frameworks/` | Conventions Angular 20, Node.js, NestJS, Astro |
 | Templates | `templates/` | AGENTS.md et documents `docs/ai/` pour projets utilisateurs |
-| Scripts | `scripts/` | setup.sh (install), install.sh (sync), init-project.sh (auto-détection stack), sync-project.sh, health-check.sh, permissions-matrix.sh, validate-memory.sh, hooks/pre-commit-secrets.sh |
+| Scripts | `scripts/` | setup.sh (install), install.sh (sync), init-project.sh (auto-détection stack), sync-project.sh, health-check.sh, permissions-matrix.sh, validate-memory.sh, hooks/pre-commit-secrets.sh, ui.sh (bibliothèque d'animations console) |
 | Examples | `examples/` | angular-app (complet), node-api (AGENTS.md + README), monorepo (AGENTS.md + README) |
 
 ## Fichiers clés
@@ -41,8 +41,9 @@ racine/
 | `standards/audit.md` | Audit read-only multi-axes |
 | `standards/artifact-authoring.md` | Creation homogene de standards, agents, frameworks et templates |
 | `standards/delegation-failure.md` | Procedure obligatoire après echec de sous-agent |
-| `scripts/setup.sh` | Installation complète interactive (première fois) |
-| `scripts/install.sh` | Synchronisation config globale (mise à jour) |
+| `scripts/setup.sh` | Installation complète interactive (première fois) — logo Aurora, sections animées |
+| `scripts/install.sh` | Synchronisation config globale (mise à jour) — logo, progress bar, sections |
+| `scripts/ui.sh` | Bibliothèque d'animations console (logo, spinner, progress bar, typewriter) |
 | `scripts/init-project.sh` | Initialisation d'un projet avec AGENTS.md et docs/ai |
 | `scripts/sync-project.sh` | Synchronisation non destructive des templates |
 
@@ -91,8 +92,9 @@ racine/
 
 ## Points d'entrée applicatifs
 
-- `scripts/setup.sh` — Première installation
-- `scripts/install.sh` — Mise à jour config globale
+- `scripts/setup.sh` — Première installation (avec logo Aurora animé)
+- `scripts/install.sh` — Mise à jour config globale (avec progress bar)
+- `scripts/ui.sh` — Bibliothèque d'animations (sourcée par setup.sh et install.sh)
 - `scripts/init-project.sh` — Initialisation projet
 - `scripts/sync-project.sh` — Sync templates projet
 

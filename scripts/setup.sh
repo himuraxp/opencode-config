@@ -19,26 +19,18 @@ ENV_FILE="${TARGET_BASE}/.env"
 FORCE_ENV=false
 IDB_VENV="${HOME}/.local/idb-venv"
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-BOLD='\033[1m'
-NC='\033[0m' # No Color
-
-info()  { echo -e "${CYAN}[INFO]${NC} $*"; }
-ok()    { echo -e "${GREEN}[OK]${NC} $*"; }
-warn()  { echo -e "${YELLOW}[WARN]${NC} $*"; }
-fail()  { echo -e "${RED}[FAIL]${NC} $*"; exit 1; }
+# Source the Aurora UI library
+# shellcheck disable=SC1091
+source "${ROOT_DIR}/scripts/ui.sh"
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [--force]
+Usage: $(basename "$0") [--force] [--no-animation]
 
 Options:
-  --force    Re-collect environment variables even if .env is complete.
-  --help     Show this help.
+  --force         Re-collect environment variables even if .env is complete.
+  --no-animation   Disable animations (for CI/SSH non-interactive sessions).
+  --help          Show this help.
 EOF
 }
 
@@ -46,6 +38,10 @@ for arg in "$@"; do
   case "$arg" in
     --force)
       FORCE_ENV=true
+      ;;
+    --no-animation)
+      UI_NO_ANIMATION=true
+      UI_ANIMATE=false
       ;;
     -h|--help)
       usage
@@ -61,9 +57,11 @@ done
 
 # ─── Step 1: Prerequisites ───────────────────────────────────────────────────
 
-echo -e "\n${BOLD}=== OpenCode Config Setup ===${NC}\n"
+ui_logo "OpenCode Config"
 
-info "Checking prerequisites..."
+ui_section "System Check"
+
+ui_info "Checking prerequisites..."
 
 if ! command -v node &>/dev/null; then
   fail "Node.js not found. Install it first: https://nodejs.org/ (or use nvm)"
@@ -84,7 +82,7 @@ fi
 
 # ─── Step 2: External dependencies ───────────────────────────────────────────
 
-echo -e "\n${BOLD}--- External Dependencies ---${NC}\n"
+ui_section "External Dependencies"
 
 # opencode-ai (global npm)
 if command -v opencode &>/dev/null; then
@@ -146,7 +144,7 @@ fi
 
 # ─── Step 2.5: MCP Servers ──────────────────────────────────────────────────
 
-echo -e "\n${BOLD}--- MCP Servers ---${NC}\n"
+ui_section "MCP Servers"
 
 # chrome-devtools-mcp: auto-installed by npx, no manual setup needed
 if npm list -g chrome-devtools-mcp &>/dev/null; then
@@ -231,14 +229,14 @@ if [[ "$IOS_MCP_READY" == false ]]; then
   fi
 fi
 
-echo -e "\n${BOLD}--- Installing configuration files ---${NC}\n"
+ui_section "Installing configuration files"
 
 info "Running install.sh..."
 bash "${ROOT_DIR}/scripts/install.sh" || fail "install.sh failed"
 
 # ─── Step 4: npm dependencies for plugins ────────────────────────────────────
 
-echo -e "\n${BOLD}--- Plugin dependencies ---${NC}\n"
+ui_section "Plugin Dependencies"
 
 if [[ -f "${TARGET_BASE}/package.json" ]]; then
   info "Installing npm dependencies in ${TARGET_BASE}..."
@@ -254,7 +252,7 @@ fi
 
 # ─── Step 4.5: Build Infomaniak MCP server ──────────────────────────────────
 
-echo -e "\n${BOLD}--- Infomaniak MCP Server ---${NC}\n"
+ui_section "Infomaniak MCP Server"
 
 MCP_DIR="${ROOT_DIR}/mcp/infomaniak"
 if [[ -d "$MCP_DIR" ]] && [[ -f "$MCP_DIR/package.json" ]]; then
@@ -284,12 +282,12 @@ env_is_complete() {
 }
 
 if [[ "$FORCE_ENV" == false ]] && env_is_complete; then
-  echo -e "\n${BOLD}--- Environment Configuration ---${NC}\n"
+  ui_section "Environment Configuration"
   ok ".env already exists and contains required variables."
   ok "Use --force to reconfigure environment variables."
   info "Skipping environment configuration."
 else
-  echo -e "\n${BOLD}--- Environment Configuration ---${NC}\n"
+  ui_section "Environment Configuration"
   if [[ "$FORCE_ENV" == true && -f "$ENV_FILE" ]]; then
     warn "Reconfiguring environment (--force)"
   fi
@@ -424,7 +422,7 @@ else
 
   # ─── Step 6: Write .env file ─────────────────────────────────────────────────
 
-  echo -e "\n${BOLD}--- Writing environment file ---${NC}\n"
+  ui_section "Writing environment file"
 
   # Expand $HOME in IDB_PATH (safe: only $HOME is expanded, no arbitrary eval)
   IDB_PATH_EXPANDED="${IDB_PATH/\$HOME/${HOME}}"
@@ -450,7 +448,7 @@ fi
 
 # ─── Step 7: Verification ────────────────────────────────────────────────────
 
-echo -e "\n${BOLD}--- Verification ---${NC}\n"
+ui_section "Verification"
 
 ERRORS=0
 
@@ -519,18 +517,22 @@ else
 fi
 
 # Summary
-echo -e "\n${BOLD}=== Summary ===${NC}\n"
+ui_section "Summary"
 
 if [[ ${ERRORS} -eq 0 ]]; then
   ok "Setup complete! Run 'opencode' to start."
   echo ""
-  echo "Next steps:"
-  echo "  1. Restart your terminal (to pick up PATH changes)"
-  echo "  2. Run: opencode"
-  echo "  3. The oh-my-opencode-slim plugin will auto-install on first run"
+  echo "  Next steps:"
+  echo "    1. Restart your terminal (to pick up PATH changes)"
+  echo "    2. Run: opencode"
+  echo "    3. The oh-my-opencode-slim plugin will auto-install on first run"
   echo ""
-  echo "To reconfigure environment variables later:"
-  echo "  ~/.config/opencode-config/scripts/setup.sh --force"
+  echo "  To reconfigure environment variables later:"
+  echo "    ~/.config/opencode-config/scripts/setup.sh --force"
+  if [[ "$UI_ANIMATE" == true ]]; then
+    echo ""
+    ui_typewriter "Aurora is ready to deploy." 0.04
+  fi
 else
   warn "Setup completed with ${ERRORS} warning(s). Check the output above."
 fi

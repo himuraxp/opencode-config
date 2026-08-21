@@ -1,5 +1,64 @@
 # CHANGELOG
 
+## 2026-08-21 — Scripts d'installation animés (Aurora UI)
+
+### Contexte
+
+Les scripts `setup.sh` et `install.sh` étaient fonctionnels mais visuellement plats — juste des `echo` avec des couleurs basiques. L'utilisateur voulait donner du style tout en restant en mode console pur, avec "Aurora" comme logo principal et "(OpenCode Config)" comme sous-titre.
+
+### Changements
+
+- **`scripts/ui.sh`** créé — bibliothèque d'animations console partagée :
+  - Logo ASCII art "Aurora" (6 lignes, style block, turquoise bright)
+  - Sous-titre "(OpenCode Config)" centré, dim gray
+  - Fade-in animé du logo (6 frames, gradient dim → full color)
+  - Sections avec box-drawing Unicode (╭─╮ │ ╰─╯), titre centré gold
+  - Messages : ui_info (ℹ cyan), ui_ok (✓ green), ui_warn (⚠ yellow), ui_fail (✗ red)
+  - Spinner braille (⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏) avec ui_run pour exécuter des commandes
+  - Progress bar (█░) avec pourcentage et label
+  - Typewriter effect (caractère par caractère, vitesse configurable)
+  - Détection TTY automatique (couleurs et animations désactivées si non-interactif)
+  - `--no-animation` flag pour CI/SSH
+  - trap EXIT pour cleanup des spinners orphelins
+  - Backward-compatible : aliases info/ok/warn/fail pour les scripts existants
+- **`scripts/setup.sh`** refactorisé :
+  - Source `ui.sh` au lieu des couleurs basiques
+  - Logo Aurora + sous-titre au démarrage
+  - Toutes les sections utilisent `ui_section` (System Check, External Dependencies, MCP Servers, etc.)
+  - Flag `--no-animation` ajouté
+  - Résumé final avec typewriter "Aurora is ready to deploy."
+- **`scripts/install.sh`** refactorisé :
+  - Source `ui.sh`
+  - Logo Aurora + sous-titre (sauf en --dry-run)
+  - Sections par catégorie (Agents, Standards, Frameworks, Skills, Scripts, Configuration)
+  - Progress bar globale pendant la copie de fichiers (pre-count des fichiers)
+  - Flag `--no-animation` ajouté
+  - Résumé final avec typewriter "Aurora is ready."
+
+### Décisions
+
+- Logo variante A (block/impactant) choisie par défaut — turquoise bright (256 color code 51)
+- Logo final : police `roman` de figlet (7 lignes, 61 chars, style serif élégant)
+- Palette 256 ANSI pour un rendu riche sans dépendance externe
+- Box-drawing Unicode pour un rendu moderne (compatible terminaux modernes)
+- Spinner braille pour un rendu léger et performant
+- Désactivation automatique si non-TTY (CI, SSH, pipes)
+- `--no-animation` flag explicite pour forcer la désactivation
+
+### Vérifications
+
+- `bash -n` sur les 3 fichiers : OK
+- `install.sh --dry-run --no-animation` : OK (sections affichées, logo skippé)
+- `install.sh --dry-run` : OK (logo + sections + listing fichiers)
+- `install.sh --no-animation --no-config` : OK (exécution réelle, 1 new = ui.sh, 70 unchanged)
+- `setup.sh --help` : OK (affiche --force et --no-animation)
+- Test logo seul : OK (6 lignes + sous-titre centré)
+- Test sections : OK (box-drawing correct)
+- Test spinner : OK (fallback non-TTY + animation TTY)
+- Test progress bar : OK (remplissage progressif)
+- Test typewriter : OK (caractère par caractère)
+- Designer consulté pour la direction visuelle (agent-output.v1, 7 findings)
+
 ## 2026-08-12 — Création agents designer + mobile (17 agents)
 
 ### Contexte

@@ -4,6 +4,20 @@
 
 ## Fait
 
+### 2026-08-21 — Scripts d'installation animés (Aurora UI)
+
+- `scripts/ui.sh` créé — bibliothèque d'animations console (logo, sections, spinner, progress bar, typewriter)
+- `scripts/setup.sh` refactorisé — logo Aurora, sections animées, `--no-animation` flag
+- `scripts/install.sh` refactorisé — logo, sections, progress bar pour copie de fichiers, `--no-animation` flag
+- Logo ASCII art "Aurora" en police `roman` (figlet) avec sous-titre "(OpenCode Config)" — fade-in animé
+- Palette 256 couleurs ANSI (turquoise bright, gold, green, red, etc.)
+- Box-drawing Unicode pour les headers de section (╭─╮ │ ╰─╯)
+- Spinner braille (⠋⠙⠹) pendant les opérations longues
+- Typewriter effect pour le résumé final
+- Compatible macOS (bash 3.2+) et Linux (bash 4+), zéro dépendance externe
+- Désactivable via `--no-animation` pour CI/SSH non-interactif
+- Config active synchronisée (`~/.config/opencode/scripts/ui.sh`)
+
 ### 2026-08-12 — Création agents designer + mobile (17 agents)
 
 - `agents/designer.md` créé (UX, UI, DA, DS, accessibilité, mockups — Mistral-Small-4 multimodal)
@@ -51,6 +65,7 @@
 
 ## Prochaine action
 
+- [ ] Commiter les changements (scripts/ui.sh + setup.sh + install.sh)
 - [ ] Redémarrer OpenCode pour activer les 17 agents
 - [ ] Tester : Aurora délègue un commit à Spark via `task`
 - [ ] Tester : Aurora délègue une analyse d'image à Vision
