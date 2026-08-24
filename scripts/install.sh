@@ -132,7 +132,7 @@ copy_file() {
   fi
 
   _UI_FILE_DONE=$((_UI_FILE_DONE + 1))
-  if [[ "$UI_ANIMATE" == true && $_UI_FILE_TOTAL -gt 0 ]]; then
+  if [[ "$_UI_PROGRESS_ACTIVE" == true && $_UI_FILE_TOTAL -gt 0 ]]; then
     ui_progress "$_UI_FILE_DONE" "$_UI_FILE_TOTAL" "Installing files"
   fi
 }
@@ -181,23 +181,6 @@ install_dir() {
   fi
 }
 
-# Show logo
-if [[ "$DRY_RUN" == false ]]; then
-  ui_logo "OpenCode Config"
-fi
-
-# Pre-count files for progress bar
-_ui_count_files
-
-ui_section "Installing Agents"
-install_dir "$ROOT_DIR/agents"     "$TARGET_BASE/agents"
-
-ui_section "Installing Standards"
-install_dir "$ROOT_DIR/standards"  "$TARGET_BASE/standards"
-
-ui_section "Installing Frameworks"
-install_dir "$ROOT_DIR/frameworks" "$TARGET_BASE/frameworks"
-
 # ─── Skills (recursive: includes SKILL.md, README.md, and any sub-files) ────
 
 install_skills() {
@@ -206,7 +189,7 @@ install_skills() {
 
   if [[ ! -d "$src" ]]; then
     echo "skip (nonexistent): $src"
-    return
+    return 1
   fi
 
   if [[ "$DRY_RUN" == false ]]; then
@@ -244,10 +227,6 @@ install_skills() {
   done
 }
 
-ui_section "Installing Skills"
-
-install_skills
-
 # ─── Scripts (recursive: includes .sh files and tests) ────────────────────────
 
 install_scripts() {
@@ -256,7 +235,7 @@ install_scripts() {
 
   if [[ ! -d "$src" ]]; then
     echo "skip (nonexistent): $src"
-    return
+    return 1
   fi
 
   if [[ "$DRY_RUN" == false ]]; then
@@ -288,17 +267,13 @@ install_scripts() {
   done < <(find "$src" -type f -not -name "install.sh" -not -name "setup.sh" -not -name "init-project.sh" -not -name "sync-project.sh" -print0)
 }
 
-ui_section "Installing Scripts"
-
-install_scripts
-
 install_config() {
   local src="$ROOT_DIR/config"
   local dest="$TARGET_BASE"
 
   if [[ ! -d "$src" ]]; then
     echo "skip (nonexistent): $src"
-    return
+    return 1
   fi
 
   # opencode.json
@@ -337,17 +312,70 @@ install_config() {
   fi
 }
 
+# Show logo
+if [[ "$DRY_RUN" == false ]]; then
+  ui_logo "OpenCode Config"
+fi
+
+# Pre-count files for progress bar
+_ui_count_files
+
+# Initialise fixed-line progress bar (stays under the logo)
+if [[ "$DRY_RUN" == false && "$UI_ANIMATE" == true ]]; then
+  ui_progress_init "$_UI_FILE_TOTAL" "Installing files"
+fi
+
+# ─── Step wrapper ────────────────────────────────────────────────────────────
+# Runs a step: prints start icon, executes callback, prints end icon.
+
+_step_run() {
+  local label="$1"
+  local fn="$2"
+  local rc=0
+
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "  $label:"
+    "$fn" || true
+    return
+  fi
+
+  ui_step_start "$label"
+  "$fn" || rc=$?
+  if [[ $rc -eq 0 ]]; then
+    ui_step_done "$label"
+  else
+    ui_step_fail "$label"
+  fi
+}
+
+# ─── Step callbacks ──────────────────────────────────────────────────────────
+
+_step_agents()    { install_dir "$ROOT_DIR/agents"     "$TARGET_BASE/agents"; }
+_step_standards() { install_dir "$ROOT_DIR/standards"  "$TARGET_BASE/standards"; }
+_step_frameworks(){ install_dir "$ROOT_DIR/frameworks" "$TARGET_BASE/frameworks"; }
+
+# ─── Install steps ───────────────────────────────────────────────────────────
+
+_step_run "Installing Agents"        _step_agents
+_step_run "Installing Standards"     _step_standards
+_step_run "Installing Frameworks"    _step_frameworks
+_step_run "Installing Skills"        install_skills
+_step_run "Installing Scripts"       install_scripts
+
 if [[ "$NO_CONFIG" == false ]]; then
-  ui_section "Installing Configuration"
-  install_config
+  _step_run "Installing Configuration" install_config
 fi
 
 if [[ "$DRY_RUN" == true ]]; then
   echo ""
   echo "Dry run complete. No files were modified."
 else
+  # Finalise progress bar
+  if [[ "$_UI_PROGRESS_ACTIVE" == true ]]; then
+    ui_progress "$_UI_FILE_TOTAL" "$_UI_FILE_TOTAL" "Installing files"
+    ui_progress_finish
+  fi
   echo ""
-  ui_section "Installation Summary"
   ok "${NEW_COUNT} new, ${UPDATED_COUNT} updated, ${UNCHANGED_COUNT} unchanged"
   if [[ ${PRUNED_COUNT} -gt 0 ]]; then
     warn "${PRUNED_COUNT} pruned"

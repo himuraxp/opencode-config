@@ -124,16 +124,12 @@ ui_logo() {
     done
   fi
 
-  # Subtitle centered under the logo
+  # Subtitle left-aligned under the logo
   local sub_text="($subtitle)"
-  local sub_len=${#sub_text}
-  local pad=$(( (logo_width - sub_len) / 2 ))
-  [[ $pad -lt 0 ]] && pad=0
-  local padding=$(_ui_repeat " " "$pad")
   if [[ -n "$C_DIM" ]]; then
-    printf "\033[38;5;%dm%s%s\033[0m\n\n" "$C_DIM" "$padding" "$sub_text"
+    printf "\033[38;5;%dm%s\033[0m\n\n" "$C_DIM" "$sub_text"
   else
-    printf '%s%s\n\n' "$padding" "$sub_text"
+    printf '%s\n\n' "$sub_text"
   fi
 }
 
@@ -291,41 +287,184 @@ ui_run() {
   return "$exit_code"
 }
 
-# ─── Progress bar ────────────────────────────────────────────────────────────
+# ─── Progress bar (fixed-line) ────────────────────────────────────────────────
+#
+# When ui_progress_init is called, the progress bar is placed on a fixed line
+# (typically right under the logo).  Step lines are printed below it.
+# ui_progress() redraws the bar in place using cursor save/restore, so it
+# never descends even as steps accumulate underneath.
+#
+# State variables
+_UI_PROGRESS_ACTIVE=false
+_UI_PROGRESS_OFFSET=0   # lines between the progress bar and the cursor
 
-ui_progress() {
+# Print the progress bar on the current line (no newline).
+_ui_progress_draw() {
   local current="$1"
   local total="$2"
   local label="${3:-}"
   local bar_width=30
 
+  printf '\r\033[K'           # clear current line
+
   if [[ $total -eq 0 ]]; then
-    printf '\r  %s' "$label"
+    if [[ -n "$C_TEXT" ]]; then
+      printf '  \033[38;5;%dm%s\033[0m' "$C_TEXT" "$label"
+    else
+      printf '  %s' "$label"
+    fi
     return
   fi
 
   local filled=$(( current * bar_width / total ))
   [[ $filled -gt $bar_width ]] && filled=$bar_width
   local empty=$(( bar_width - filled ))
-  local pct=$(( current * 100 / total ))
-
   local bar=$(_ui_repeat "█" "$filled")$(_ui_repeat "░" "$empty")
 
   if [[ -n "$C_PROGRESS_FILL" ]]; then
-    printf '\r  \033[38;5;%dm[%s]\033[0m %d/%d \033[38;5;%dm%s\033[0m' \
+    printf '  \033[38;5;%dm[%s]\033[0m %d/%d \033[38;5;%dm%s\033[0m' \
       "$C_PROGRESS_FILL" "$bar" "$current" "$total" "$C_TEXT" "$label"
   else
-    printf '\r  [%s] %d/%d %s' "$bar" "$current" "$total" "$label"
+    printf '  [%s] %d/%d %s' "$bar" "$current" "$total" "$label"
   fi
+}
 
-  if [[ $current -eq $total ]]; then
-    printf '\n'
+# Initialise the fixed-line progress bar.
+ui_progress_init() {
+  local total="${1:-0}"
+  local label="${2:-}"
+  _UI_PROGRESS_ACTIVE=true
+  _UI_PROGRESS_OFFSET=1        # cursor will be 1 line below the bar
+  _ui_progress_draw 0 "$total" "$label"
+  printf '\n'                  # move to next line; bar stays above
+}
+
+# Redraw the progress bar in place (fixed-line mode) or inline (legacy mode).
+ui_progress() {
+  local current="$1"
+  local total="$2"
+  local label="${3:-}"
+
+  if [[ "$_UI_PROGRESS_ACTIVE" == true && -t 1 ]]; then
+    # Save cursor → move up to bar line → redraw → restore cursor
+    printf '\0337'
+    if [[ $_UI_PROGRESS_OFFSET -gt 0 ]]; then
+      printf '\033[%dA' "$_UI_PROGRESS_OFFSET"
+    fi
+    _ui_progress_draw "$current" "$total" "$label"
+    printf '\0338'
+  else
+    _ui_progress_draw "$current" "$total" "$label"
+    if [[ $current -eq $total ]]; then
+      printf '\n'
+    fi
   fi
+}
+
+# Finalise the progress bar (add a blank line after the last step).
+ui_progress_finish() {
+  _UI_PROGRESS_ACTIVE=false
+  _UI_PROGRESS_OFFSET=0
+  printf '\n'
 }
 
 # Clear the progress bar line (call before displaying a new section)
 ui_progress_clear() {
-  printf '\r\033[K'  # Clear current line
+  printf '\r\033[K'
+}
+
+# ─── Step status (one line per step) ──────────────────────────────────────────
+#
+# Each step prints on its own line below the progress bar.  When the step
+# finishes, the line is updated in place with the appropriate icon.
+#
+# Icons:
+#   →  in progress   (dim)
+#   ✓  done          (green)
+#   ⚠  warning       (yellow)
+#   ✗  failure       (red)
+#   ⊘  skipped       (dim)
+#   ℹ  info          (cyan)
+
+_ui_step_print() {
+  local icon="$1"
+  local color="$2"
+  local label="$3"
+  if [[ -n "$color" ]]; then
+    printf ' \033[38;5;%dm%s\033[0m \033[38;5;%dm%s\033[0m\n' "$color" "$icon" "$C_TEXT" "$label"
+  else
+    printf ' %s %s\n' "$icon" "$label"
+  fi
+}
+
+# Update the current step line in place (TTY + fixed progress bar only).
+_ui_step_update() {
+  local icon="$1"
+  local color="$2"
+  local label="$3"
+  if [[ -t 1 ]]; then
+    printf '\033[1A\033[K'   # up 1, clear line
+  else
+    printf '\r\033[K'        # clear current line
+  fi
+  _ui_step_print "$icon" "$color" "$label"
+}
+
+ui_step_start() {
+  local label="$1"
+  if [[ -t 1 ]]; then
+    # TTY — print start line, will update in place
+    _ui_step_print "→" "$C_DIM" "$label"
+    _UI_PROGRESS_OFFSET=$((_UI_PROGRESS_OFFSET + 1))
+  else
+    # Non-TTY — compact format
+    printf '%s... ' "$label"
+  fi
+}
+
+ui_step_done() {
+  local label="$1"
+  if [[ -t 1 ]]; then
+    _ui_step_update "✓" "$C_OK" "$label"
+  else
+    printf 'OK\n'
+  fi
+}
+
+ui_step_warn() {
+  local label="$1"
+  if [[ -t 1 ]]; then
+    _ui_step_update "⚠" "$C_WARN" "$label"
+  else
+    printf 'WARN\n'
+  fi
+}
+
+ui_step_fail() {
+  local label="$1"
+  if [[ -t 1 ]]; then
+    _ui_step_update "✗" "$C_FAIL" "$label"
+  else
+    printf 'FAIL\n'
+  fi
+}
+
+ui_step_skip() {
+  local label="$1"
+  if [[ -t 1 ]]; then
+    _ui_step_update "⊘" "$C_DIM" "$label"
+  else
+    printf 'SKIP\n'
+  fi
+}
+
+ui_step_info() {
+  local label="$1"
+  if [[ -t 1 ]]; then
+    _ui_step_update "ℹ" "$C_INFO" "$label"
+  else
+    printf 'INFO\n'
+  fi
 }
 
 # ─── Typewriter ──────────────────────────────────────────────────────────────
