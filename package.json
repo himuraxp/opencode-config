@@ -1,0 +1,21 @@
+{
+  "name": "opencode-config",
+  "version": "1.0.0",
+  "description": "OpenCode Config — Configuration OpenCode de référence pour les workflows IA en production",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/himuraxp/opencode-config.git"
+  },
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "update": "bash scripts/install.sh",
+    "prune": "bash scripts/install.sh --prune",
+    "dry-run": "bash scripts/install.sh --dry-run",
+    "init-project": "bash scripts/init-project.sh",
+    "sync": "bash scripts/sync-project.sh",
+    "health-check": "bash scripts/health-check.sh",
+    "permissions": "bash scripts/permissions-matrix.sh",
+    "validate-memory": "bash scripts/validate-memory.sh"
+  }
+}

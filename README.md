@@ -63,8 +63,11 @@ Ce repo apporte :
 
 ```bash
 git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-config
-~/.config/opencode-config/scripts/setup.sh
+cd ~/.config/opencode-config
+npm run setup
 ```
+
+> Équivalent bash : `~/.config/opencode-config/scripts/setup.sh`
 
 `setup.sh` est un script interactif qui :
 - Vérifie les prérequis (Node.js 18+, npm)
@@ -79,7 +82,8 @@ git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-con
 Si `.env` existe déjà et contient les variables requises, l'étape de configuration est automatiquement skipée. Utilisez `--force` pour reconfigurer :
 
 ```bash
-~/.config/opencode-config/scripts/setup.sh --force
+npm run setup -- --force
+# ou: ~/.config/opencode-config/scripts/setup.sh --force
 ```
 
 Si une mise à jour de `opencode-ai` ou `rtk` est disponible, `setup.sh` propose de la faire.
@@ -89,8 +93,10 @@ Si une mise à jour de `opencode-ai` ou `rtk` est disponible, `setup.sh` propose
 ```bash
 cd ~/.config/opencode-config
 git pull
-./scripts/install.sh
+npm run update
 ```
+
+> Équivalent bash : `./scripts/install.sh`
 
 `install.sh` affiche pour chaque fichier s'il est `new`, `updated` ou `unchanged`. Seuls les fichiers modifiés sont réécrits.
 
@@ -99,13 +105,14 @@ Pour une mise à jour complète (config + dépendances + vérification) :
 ```bash
 cd ~/.config/opencode-config
 git pull
-./scripts/setup.sh
+npm run setup
 ```
 
 Après un renommage ou une suppression de standard, nettoyer les anciens fichiers installés :
 
 ```bash
-./scripts/install.sh --prune
+npm run prune
+# ou: ./scripts/install.sh --prune
 ```
 
 Pour mettre à jour sans toucher aux fichiers de config (`opencode.json`, plugins) :
@@ -186,6 +193,7 @@ Variables d'environnement associées (dans `.env`) :
 ```bash
 cd mon-projet
 ~/.config/opencode-config/scripts/init-project.sh
+# ou depuis le repo: npm run init-project
 ```
 
 Pour prévisualiser sans rien modifier :
@@ -214,6 +222,7 @@ mon-projet/
 
 ```bash
 ~/.config/opencode-config/scripts/sync-project.sh
+# ou depuis le repo: npm run sync
 ```
 
 Pour prévisualiser sans rien modifier :

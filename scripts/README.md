@@ -28,13 +28,16 @@ Scripts d'installation, maintenance et automatisation pour opencode-config.
 
 ```bash
 git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-config
-~/.config/opencode-config/scripts/setup.sh
+cd ~/.config/opencode-config
+npm run setup
+# ou: ./scripts/setup.sh
 ```
 
 ### Mise à jour
 
 ```bash
-cd ~/.config/opencode-config && git pull && ./scripts/install.sh
+cd ~/.config/opencode-config && git pull && npm run update
+# ou: ./scripts/install.sh
 ```
 
 ### Initialiser un projet
@@ -42,7 +45,24 @@ cd ~/.config/opencode-config && git pull && ./scripts/install.sh
 ```bash
 cd /path/to/project
 ~/.config/opencode-config/scripts/init-project.sh
+# ou depuis le repo: npm run init-project
 ```
+
+### Commandes npm disponibles
+
+| Commande | Script bash équivalent | Description |
+|---------|------------------------|-------------|
+| `npm run setup` | `scripts/setup.sh` | Installation complète interactive |
+| `npm run update` | `scripts/install.sh` | Mise à jour des fichiers de config |
+| `npm run prune` | `scripts/install.sh --prune` | Mise à jour + suppression des orphelins |
+| `npm run dry-run` | `scripts/install.sh --dry-run` | Prévisualiser les changements |
+| `npm run init-project` | `scripts/init-project.sh` | Initialiser un projet |
+| `npm run sync` | `scripts/sync-project.sh` | Synchroniser les templates |
+| `npm run health-check` | `scripts/health-check.sh` | Vérifier la cohérence |
+| `npm run permissions` | `scripts/permissions-matrix.sh` | Générer la matrice de permissions |
+| `npm run validate-memory` | `scripts/validate-memory.sh` | Valider docs/ai/ d'un projet |
+
+> Les flags supplémentaires peuvent être passés via `--` : `npm run setup -- --force`
 
 ## Dépendances
 
