@@ -62,6 +62,7 @@ generate() {
   for agent_file in "$ROOT_DIR"/agents/*.md; do
     [[ -f "$agent_file" ]] || continue
     name="$(basename "$agent_file" .md)"
+    [[ "$name" == "README" ]] && continue
 
     mode=$(get_field "$agent_file" "mode")
     model=$(get_field "$agent_file" "model")

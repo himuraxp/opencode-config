@@ -4,6 +4,14 @@
 
 ## Fait
 
+### 2026-08-25 — CI/CD automation + Dependabot + Stale bot
+
+- `.github/dependabot.yml` créé — 3 écosystèmes npm (config, mcp/angular-elements, mcp/infomaniak) + github-actions, weekly, grouping patch/minor
+- `.github/workflows/ci.yml` créé — health-check (JSON, bash syntax, frontmatter, memory, permissions) + MCP build (matrix angular-elements + infomaniak, tsc --noEmit)
+- `.github/workflows/stale.yml` créé — close issues/PRs inactifs après 30+7 jours, exempt pinned/security
+- `scripts/health-check.sh` corrigé — exclusion README.md dans les 3 boucles de scan agents
+- `scripts/permissions-matrix.sh` corrigé — exclusion README.md dans la boucle de génération
+
 ### 2026-08-25 — READMEs MCP + corrections cohérence
 
 - `mcp/angular-elements/README.md` créé (architecture, 7 tools, config, dev, caching)

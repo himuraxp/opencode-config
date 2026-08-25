@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## 2026-08-25 — CI/CD automation + Dependabot + Stale bot
+
+### Contexte
+
+Le repo n'avait aucune automatisation : pas de Dependabot, pas de GitHub Actions, pas de CI. Les dépendances npm vieillissaient sans alerte, aucune vérification automatique avant merge, et les issues/PRs inactifs n'étaient jamais fermés.
+
+### Changements
+
+- **`.github/dependabot.yml`** créé — 4 écosystèmes :
+  - npm `config/` — `@opencode-ai/plugin`
+  - npm `mcp/angular-elements/` — `@modelcontextprotocol/sdk`, `typescript`
+  - npm `mcp/infomaniak/` — `@modelcontextprotocol/sdk`, `typescript`
+  - github-actions `/` — versions des actions utilisées dans les workflows
+  - Schedule : weekly (Monday), grouping patch+minor, 5 PRs max par écosystème
+- **`.github/workflows/ci.yml`** créé — 2 jobs :
+  - `health-check` — valide JSON (jq), syntaxe bash (bash -n), health-check.sh, validate-memory.sh, permissions-matrix.sh
+  - `mcp-build` — matrix [angular-elements, infomaniak], `npm ci` + `tsc --noEmit`
+  - Triggers : PR vers main + push sur main
+- **`.github/workflows/stale.yml`** créé — stale bot :
+  - Issues : 30 jours stale + 7 jours close, exempt pinned/security/enhancement
+  - PRs : 30 jours stale + 7 jours close, exempt pinned/security/dependencies
+  - Schedule : Monday 00:00 UTC
+- **`scripts/health-check.sh`** corrigé — `README.md` exclu des 3 boucles de scan `agents/*.md` (frontmatter, models, standard references)
+- **`scripts/permissions-matrix.sh`** corrigé — `README.md` exclu de la boucle de génération du tableau
+
+### Vérifications
+
+- `bash -n` sur health-check.sh et permissions-matrix.sh : OK
+- `bash scripts/health-check.sh --quiet` : All checks passed
+- `bash scripts/permissions-matrix.sh --output /dev/null` : OK
+- YAML validé avec PyYAML (dependabot.yml, ci.yml, stale.yml) : OK
+
 ## 2026-08-25 — READMEs MCP + corrections cohérence
 
 ### Contexte

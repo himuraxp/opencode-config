@@ -67,6 +67,9 @@ for agent_file in "$ROOT_DIR"/agents/*.md; do
   [[ -f "$agent_file" ]] || continue
   name="$(basename "$agent_file")"
 
+  # Skip README.md — not an agent file
+  [[ "$name" == "README.md" ]] && continue
+
   # Check frontmatter exists
   if ! head -1 "$agent_file" | grep -q "^---$"; then
     fail "$name — missing frontmatter"
@@ -113,6 +116,7 @@ else
   for agent_file in "$ROOT_DIR"/agents/*.md; do
     [[ -f "$agent_file" ]] || continue
     name="$(basename "$agent_file")"
+    [[ "$name" == "README.md" ]] && continue
 
     # Extract model from frontmatter
     model=$(grep "^model:" "$agent_file" 2>/dev/null | head -1 | sed 's/^model:[[:space:]]*//' || true)
@@ -160,6 +164,7 @@ echo "--- Standard references ---"
 for agent_file in "$ROOT_DIR"/agents/*.md; do
   [[ -f "$agent_file" ]] || continue
   agent_name=$(basename "$agent_file")
+  [[ "$agent_name" == "README.md" ]] && continue
   for ref in $(grep -oE 'standards/[a-z-]+\.md' "$agent_file" 2>/dev/null | sort -u || true); do
     ref_path="$ROOT_DIR/$ref"
     if [[ ! -f "$ref_path" ]]; then
