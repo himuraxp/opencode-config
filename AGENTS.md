@@ -97,8 +97,8 @@ La configuration utilise **18 modèles** répartis en 4 catégories :
 
 | Catégorie | Modèles | Usage | Coût (input/output) |
 |-----------|---------|-------|---------------------|
-| **Expert** | Qwen3.5-397B | Raisonnement complexe, architecture, sécurité, review | $0.80 / $3.60 |
-| **Intermédiaire** | Mistral-Small-4 (119B), Kimi-K2.6, euria-code | Créatif, code, SEO technique, analytics | $0.20-0.60 / $0.75-3.00 |
+| **Expert** | euria-code (GLM-5.2) | Raisonnement complexe, architecture, sécurité, review, code | $0.60 / $3.00 |
+| **Intermédiaire** | Mistral-Small-4 (119B), Kimi-K2.6, Qwen3.5-397B | SEO, analytics, multimodal | $0.20-0.80 / $0.75-3.60 |
 | **Léger** | Ministral-3 (14B), Gemma-4-31B, Apertus-70B | Tâches simples, commits, skills CLI | $0.20-0.70 / $0.40-2.50 |
 | **Ultra-léger** | Nemotron-3-Nano (30B) | Fallback ultime, gros contextes | **$0.05 / $0.20** |
 | **Embedding** | Qwen3-Embedding-8B, bge_multilingual_gemma2, mini_lm_l12_v2 | Vectorisation, RAG | $0.005-0.01 / $0 |
@@ -109,9 +109,9 @@ La configuration utilise **18 modèles** répartis en 4 catégories :
 Chaque modèle est configuré avec une chaîne de fallback pour gérer les dépassements de contexte :
 
 ```
+euria-code (250k) → Kimi-K2.6 (256k) → Nemotron-3-Nano (1M)
 Qwen3.5-397B (204k) → Kimi-K2.6 (256k) → Nemotron-3-Nano (1M)
 Mistral-Small-4 (256k) → Kimi-K2.6 (256k) → Nemotron-3-Nano (1M)
-euria-code (250k) → Kimi-K2.6 (256k) → Nemotron-3-Nano (1M)
 Ministral-3 (80k) → Mistral-Small-4 (256k) → Kimi-K2.6 → Nemotron-3-Nano (1M)
 ```
 
@@ -123,22 +123,22 @@ Ministral-3 (80k) → Mistral-Small-4 (256k) → Kimi-K2.6 → Nemotron-3-Nano (
 |-------|--------|------|----------------|
 | `spark` | Ministral-3 (14B) | Commits, skills CLI | ✅ Par défaut pour `commit`, `create-mr` |
 | `mobile` | euria-code | iOS, Android, RN, Flutter | Audit mobile, code natif |
-| `designer` | Mistral-Small-4 | UX/UI, design system, a11y | Screenshots UI, mockups, wireframes |
-| `vision` | Mistral-Small-4 | Images non-UI | Diagrammes, photos, charts |
-| `reviewer` | Qwen3.5-397B | Revue de code adversarial | Pre-MR, code review stricte |
+| `designer` | Qwen3.5-397B | UX/UI, design system, a11y | Screenshots UI, mockups, wireframes |
+| `vision` | Qwen3.5-397B | Images non-UI | Diagrammes, photos, charts |
+| `reviewer` | euria-code | Revue de code adversarial | Pre-MR, code review stricte |
 | `tester` | euria-code | Tests unitaires, intégration | Jest, Cypress, Vitest, coverage |
-| `architect` | Qwen3.5-397B | Architecture, découpage | Dette technique, migration, structure |
-| `security` | Qwen3.5-397B | Sécurité défensive | AppSec, threat modeling, OWASP |
-| `cybersec` | Qwen3.5-397B | Sécurité offensive | Pentest, exploitation, Red Team |
-| `atlas` | Qwen3.5-397B | Stratégie SEO | Keyword research, content gaps |
+| `architect` | euria-code | Architecture, découpage | Dette technique, migration, structure |
+| `security` | euria-code | Sécurité défensive | AppSec, threat modeling, OWASP |
+| `cybersec` | euria-code | Sécurité offensive | Pentest, exploitation, Red Team |
+| `atlas` | euria-code | Stratégie SEO | Keyword research, content gaps |
 | `crawler` | Mistral-Small-4 | SEO technique | Indexation, Core Web Vitals, SSR |
-| `sage` | Qwen3.5-397B | AIO / GEO | AI Overviews, ChatGPT Search |
+| `sage` | euria-code | AIO / GEO | AI Overviews, ChatGPT Search |
 | `scribe` | Mistral-Small-4 | Contenu SEO | Copywriting, meta, H1-H3, FAQ |
 | `pulse` | Mistral-Small-4 | Growth marketing | Funnels, A/B testing, landing pages |
 | `echo` | Mistral-Small-4 | Social distribution | LinkedIn, Instagram, X, TikTok |
 | `beacon` | Mistral-Small-4 | Analytics | GSC, GA4, PageSpeed, conversion |
-| `aurora` | Qwen3.5-397B | Orchestrator principal | Tâches complexes, coordination |
-| `aurora-heavy` | Qwen3.5-397B | Raisonnement avancé | Architecture critique, legacy complexe |
+| `aurora` | euria-code | Orchestrator principal | Tâches complexes, coordination |
+| `aurora-heavy` | euria-code | Raisonnement avancé | Architecture critique, legacy complexe |
 
 > **Règle** : Aurora délègue **automatiquement** via les mots-clés déclencheurs (voir `agents/aurora.md`). Ne jamais déléguer manuellement sauf besoin spécifique.
 

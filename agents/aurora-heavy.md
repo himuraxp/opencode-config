@@ -1,7 +1,7 @@
 ---
-description: Agent Aurora Heavy - Version améliorée d'Aurora utilisant le modèle Qwen 397B pour les tâches complexes nécessitant plus de puissance.
+description: Agent Aurora Heavy - Version améliorée d'Aurora utilisant le modèle euria-code (GLM-5.2) pour les tâches complexes nécessitant plus de puissance.
 mode: primary
-model: infomaniak/Qwen/Qwen3.5-397B-A17B-FP8
+model: infomaniak/euria-code
 permission:
   edit: allow
   bash:

@@ -27,7 +27,7 @@
         ]
       },
       "oracle": {
-        "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+        "model": "infomaniak/euria-code",
         "variant": "high",
         "skills": [
           "simplify",
@@ -54,7 +54,7 @@
         "mcps": []
       },
       "designer": {
-        "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+        "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
         "variant": "medium",
         "skills": [],
         "mcps": []
@@ -71,7 +71,7 @@
     "atlas": {
       "displayName": "atlas-seo-strategy",
       "description": "Stratégie SEO, keyword research, search intent, content gaps, roadmap",
-      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "model": "infomaniak/euria-code",
       "orchestratorPrompt": "Delegate to @atlas for SEO strategy, keyword research, search intent, content gaps, topical authority, architecture éditoriale, roadmap SEO. Not for technical SEO implementation or content production."
     },
     "crawler": {
@@ -83,7 +83,7 @@
     "sage": {
       "displayName": "sage-aio-geo",
       "description": "Optimisation pour moteurs de recherche génératifs (AI Overviews, ChatGPT Search, Perplexity, Gemini)",
-      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "model": "infomaniak/euria-code",
       "orchestratorPrompt": "Delegate to @sage for AIO/GEO optimization: entity clarity, extractability, citation potential, AI Overviews, ChatGPT Search, Perplexity. Distinguish established practice from hypothesis."
     },
     "scribe": {
@@ -113,7 +113,7 @@
     "designer": {
       "displayName": "designer-ux-ui",
       "description": "UX, UI, direction artistique, design system, accessibilité, analyse de mockups et screenshots",
-      "model": "infomaniak/mistralai/Mistral-Small-4-119B-2603",
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
       "orchestratorPrompt": "Delegate to @designer for UX/UI design, art direction, design system, accessibility audits, mockup/screenshot analysis. Can edit frontend files (CSS, SCSS, HTML, components). Multimodal — can analyze images."
     },
     "mobile": {
@@ -125,13 +125,13 @@
     "security": {
       "displayName": "security-audit",
       "description": "Cybersécurité défensive — AppSec, threat modeling, secure code review, DevSecOps, hardening",
-      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "model": "infomaniak/euria-code",
       "orchestratorPrompt": "Delegate to @security for defensive cybersecurity: AppSec, secure code review, threat modeling, attack surface mapping, DevSecOps, supply chain, hardening, vulnerability assessment. Read-only — identifies and analyzes, does not modify code. Not for offensive operations (use cybersec)."
     },
     "cybersec": {
       "displayName": "cybersec-red-team",
       "description": "Sécurité offensive — pentest, exploitation, Red Team, recon, bypass, privesc, C2",
-      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
+      "model": "infomaniak/euria-code",
       "orchestratorPrompt": "Delegate to @cybersec for offensive security operations: penetration testing, exploit development, Red Team operations, reconnaissance, initial access, privilege escalation, lateral movement, defense evasion, exfiltration. Can run security tools and scripts. Not for defensive audits (use security)."
     }
   }

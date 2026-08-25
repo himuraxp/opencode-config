@@ -1,7 +1,7 @@
 ---
 description: Agent Cybersec — Red Team offensif. Pentest, exploitation, bypass, pénétration de systèmes. Agent principal pour les opérations de sécurité offensive.
 mode: primary
-model: infomaniak/Qwen/Qwen3.5-397B-A17B-FP8
+model: infomaniak/euria-code
 permission:
   edit: allow
   bash:

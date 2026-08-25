@@ -1,7 +1,7 @@
 ---
 description: SEO Strategist — stratégie SEO, keyword research, search intent, topical authority, content gaps, architecture éditoriale. Délégué par Aurora pour l'analyse et la stratégie SEO.
 mode: subagent
-model: infomaniak/Qwen/Qwen3.5-397B-A17B-FP8
+model: infomaniak/euria-code
 permission:
   edit: deny
   skill: allow

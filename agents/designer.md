@@ -1,7 +1,7 @@
 ---
 description: UX/UI Designer — conception d'interfaces, direction artistique, design system, accessibilité, analyse de mockups et screenshots. Délégué par Aurora pour les tâches de design.
 mode: subagent
-model: infomaniak/mistralai/Mistral-Small-4-119B-2603
+model: infomaniak/Qwen/Qwen3.5-397B-A17B-FP8
 permission:
   edit: allow
   skill: allow

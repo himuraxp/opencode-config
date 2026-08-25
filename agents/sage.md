@@ -1,7 +1,7 @@
 ---
 description: AIO / GEO Specialist — optimisation pour moteurs de recherche génératifs (Google AI Overviews, ChatGPT Search, Perplexity, Gemini). Entity clarity, extractability, citation potential. Délégué par Aurora ou Atlas. Note : agent différent du preset `oracle` du plugin oh-my-opencode-slim (renommé Sage pour éviter le conflit).
 mode: subagent
-model: infomaniak/Qwen/Qwen3.5-397B-A17B-FP8
+model: infomaniak/euria-code
 permission:
   edit: ask
   skill: allow

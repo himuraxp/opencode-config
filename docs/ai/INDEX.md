@@ -58,15 +58,15 @@ racine/
 | `security.md` | Risques et remédiations | euria-code |
 | `architect.md` | Découpage technique | euria-code |
 | `spark.md` | Sous-agent léger (commit, MR) | Ministral-3 |
-| `vision.md` | Sous-agent multimodal (images) | Mistral-Small-4 |
-| `atlas.md` | SEO Strategy | Qwen 397B |
+| `vision.md` | Sous-agent multimodal (images) | Qwen3.5-397B |
+| `atlas.md` | SEO Strategy | euria-code |
 | `crawler.md` | Technical SEO | euria-code |
-| `sage.md` | AIO / GEO | Qwen 397B |
+| `sage.md` | AIO / GEO | euria-code |
 | `scribe.md` | SEO Content | euria-code |
 | `pulse.md` | Growth Marketing | euria-code |
 | `echo.md` | Social Distribution | Mistral-Small-4 |
 | `beacon.md` | Analytics | euria-code |
-| `designer.md` | UX/UI Designer, DA, DS, accessibilité | Mistral-Small-4 |
+| `designer.md` | UX/UI Designer, DA, DS, accessibilité | Qwen3.5-397B |
 | `mobile.md` | Mobile Engineer (iOS/Android/RN/Flutter) | euria-code |
 
 ## Standards (16)

@@ -1,7 +1,7 @@
 ---
 description: Agent Cybersécurité défensif — pentest, AppSec, DevSecOps, threat modeling, secure code review, vulnerability research. Délégué par Aurora pour les audits de sécurité en read-only.
 mode: subagent
-model: infomaniak/Qwen/Qwen3.5-397B-A17B-FP8
+model: infomaniak/euria-code
 permission:
   edit: deny
   bash:

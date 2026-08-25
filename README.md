@@ -229,10 +229,10 @@ La configuration utilise **18 modèles** répartis en 4 catégories :
 
 | Catégorie | Modèles | Context max | Coût (input/output) | Usage |
 |-----------|---------|-------------|---------------------|-------|
-| **Expert** | Qwen3.5-397B | 204k | $0.80 / $3.60 | Architecture, sécurité, review, SEO stratégique |
+| **Expert** | euria-code (GLM-5.2) | 250k | $0.60 / $3.00 | Raisonnement complexe, architecture, sécurité, review, code |
 | **Intermédiaire** | Mistral-Small-4 (119B) | 256k | $0.20 / $0.75 | UX/UI, content, analytics, SEO technique |
 | | Kimi-K2.6 | 256k | $0.60 / $3.00 | Fallback gros contextes |
-| | euria-code | 250k | $0.60 / $3.00 | Génération de code, tests |
+| | Qwen3.5-397B | 204k | $0.80 / $3.60 | Multimodal natif (image+video), disponible sur demande |
 | **Léger** | Ministral-3 (14B) | 80k | $0.30 / $0.40 | Commits, skills CLI |
 | | Gemma-4-31B | 100k | $0.20 / $0.40 | Tâches générales |
 | | Apertus-70B | 100k | $0.70 / $2.50 | Tâches générales |
@@ -259,10 +259,10 @@ Qwen3.5-397B (204k)    → Kimi-K2.6 (256k)       → Nemotron-3-Nano (1M)
 
 | Agent | Modèle | Pourquoi |
 |-------|--------|----------|
+| `aurora`, `aurora-heavy`, `architect`, `security`, `cybersec`, `reviewer`, `atlas`, `sage`, `mobile`, `tester`, `build`, `plan` | euria-code (GLM-5.2) | Raisonnement expert, code, sécurité, long-context 1M natif |
+| `designer`, `vision` | Qwen3.5-397B | Multimodal natif (image+video), analyse de screenshots et mockups |
+| `echo`, `scribe`, `pulse`, `beacon`, `crawler` | Mistral-Small-4 (119B) | Bon équilibre coût/performance/créativité |
 | `spark` | Ministral-3 (14B) | Léger, rapide, parfait pour commits et skills CLI |
-| `aurora`, `aurora-heavy`, `architect`, `security`, `cybersec`, `reviewer`, `atlas`, `sage` | Qwen3.5-397B | Meilleur raisonnement pour tâches critiques |
-| `designer`, `vision`, `echo`, `scribe`, `pulse`, `beacon`, `crawler` | Mistral-Small-4 (119B) | Bon équilibre coût/performance/créativité |
-| `mobile`, `tester`, `build`, `plan` | euria-code | Spécialisé code, bon contexte |
 
 ---
 
