@@ -123,7 +123,7 @@ Ministral-3 (80k) → Mistral-Small-4 (256k) → Kimi-K2.6 → Nemotron-3-Nano (
 
 | Agent | Modèle | Rôle | Quand déléguer |
 |-------|--------|------|----------------|
-| `spark` | Ministral-3 (14B) | Commits, skills CLI | ✅ Par défaut pour `commit`, `create-mr` |
+| `spark` | Mistral-Small-4 (119B) | Commits, skills CLI | ✅ Par défaut pour `commit`, `create-mr` |
 | `mobile` | euria-code | iOS, Android, RN, Flutter | Audit mobile, code natif |
 | `designer` | Qwen3.5-397B | UX/UI, design system, a11y | Screenshots UI, mockups, wireframes |
 | `vision` | Qwen3.5-397B | Images non-UI | Diagrammes, photos, charts |

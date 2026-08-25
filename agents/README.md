@@ -23,7 +23,7 @@ Personnalités spécialisées OpenCode. Chaque fichier `.md` définit un agent a
 | `mobile` | euria-code | iOS, Android, React Native, Flutter — patterns mobile, perf device |
 | `designer` | Qwen 3.5-397B | UX/UI, design system, accessibilité, analyse de mockups |
 | `vision` | Qwen 3.5-397B | Analyse visuelle non-UI — diagrammes, photos, charts, schémas |
-| `spark` | Ministral-3 | Tâches légères — commits, skills CLI simples |
+| `spark` | Mistral-Small-4 | Tâches légères — commits, skills CLI simples |
 
 ### Search & Growth
 

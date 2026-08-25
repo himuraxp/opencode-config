@@ -226,7 +226,7 @@ Le rapport de consolidation remplace les résumés individuels. Il DOIT être af
 
 ### Règles de délégation
 
-- **Spark** (Ministral-3, léger) : déléguer par défaut les commits et les skills CLI simples. Pour la création de MR, Spark peut être utilisé comme fallback pour les MR triviales (single commit, scope évident), mais Aurora gère par défaut car l'analyse de diff nécessite plus de raisonnement.
+- **Spark** (Mistral-Small-4, 256k contexte) : déléguer par défaut les commits et les skills CLI simples. Pour la création de MR, Spark peut être utilisé comme fallback pour les MR triviales (single commit, scope évident), mais Aurora gère par défaut car l'analyse de diff nécessite plus de raisonnement.
 - **Vision** (Mistral-Small-4, multimodal) : toute image non-UI (diagramme, photo, chart, schéma) DOIT être déléguée à Vision. Ne jamais tenter de décrire une image soi-même.
 - **Designer** (Mistral-Small-4, multimodal) : toute image UI (screenshot, mockup, wireframe) et tout audit UX/UI/DS/a11y DOIT être délégué à Designer. Ne jamais réaliser soi-même un audit UX/UI ou accessibilité.
 - **Mobile** (Euria-Code) : tout audit mobile (rendu, touch targets, viewport, patterns responsive, perf device) et tout code mobile DOIT être délégué à Mobile. Ne jamais réaliser soi-même un audit mobile.

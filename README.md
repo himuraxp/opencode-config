@@ -267,7 +267,7 @@ Qwen3.5-397B (204k)    → Kimi-K2.6 (256k)       → Nemotron-3-Nano (1M)
 | `aurora`, `aurora-heavy`, `architect`, `security`, `cybersec`, `reviewer`, `atlas`, `sage`, `mobile`, `tester`, `build`, `plan` | euria-code (GLM-5.2) | Raisonnement expert, code, sécurité, long-context 1M natif |
 | `designer`, `vision` | Qwen3.5-397B | Multimodal natif (image+video), analyse de screenshots et mockups |
 | `echo`, `scribe`, `pulse`, `beacon`, `crawler` | Mistral-Small-4 (119B) | Bon équilibre coût/performance/créativité |
-| `spark` | Ministral-3 (14B) | Léger, rapide, parfait pour commits et skills CLI |
+| `spark` | Mistral-Small-4 (119B) | Commits, skills CLI — 256k contexte évite la boucle de compaction |
 
 ---
 
