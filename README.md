@@ -42,7 +42,7 @@ Ce repo apporte :
 - **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security (défensif), cybersec (offensif/pentest), architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
-- **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback
+- **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
 - **Audit read-only** : health-check multi-axes sans modification de code
@@ -141,17 +141,22 @@ Les secrets sont stockés dans `~/.config/opencode/.env` et référencés via `{
 | `OPENAI_B300_BASE_URL` | Endpoint B300 (Kimi K2.6) | Non |
 | `IDB_UDID` | UDID simulateur iOS | Non |
 | `IDB_PATH` | Chemin binaires idb | Non |
+| `INFOMANIAK_API_TOKEN` | Token API Infomaniak (MCP infomaniak) | Non |
+| `GITLAB_TOKEN` | Token GitLab (MCP angular-elements) | Non |
 
 `setup.sh` demande ces valeurs interactivement. Pour les modifier ultérieurement, éditez `~/.config/opencode/.env` directement.
 
 ### 4. MCP Servers
 
-La configuration inclut deux MCP servers dans `opencode.json` :
+La configuration inclut cinq MCP servers dans `opencode.json` :
 
 | MCP Server | Rôle | Installation |
 |------------|------|-------------|
 | `chrome-devtools` | Navigation, screenshots, audit Lighthouse, debug Chrome | Auto-installé via `npx` au premier lancement |
 | `ios-simulator` | Interaction avec le simulateur iOS (tap, swipe, screenshots, UI tree) | Optionnel — nécessite `idb-companion` + `fb-idb` |
+| `context7` | Documentation à jour des librairies et frameworks | Auto-installé via `npx` |
+| `infomaniak` | API Infomaniak — radio, VOD, newsletter, DNS, events, AI | Local (voir `mcp/infomaniak/README.md`) |
+| `angular-elements` | Design system Angular Elements — composants, API, stories | Local (voir `mcp/angular-elements/README.md`) |
 
 #### chrome-devtools-mcp
 
@@ -500,7 +505,12 @@ opencode-config/
 │   ├── node-api/              Projet API Node.js (AGENTS.md + README)
 │   └── monorepo/              Monorepo multi-packages (AGENTS.md + README)
 │
+├── mcp/                       MCP servers locaux
+│   ├── infomaniak/            API Infomaniak (radio, VOD, newsletter, DNS, events, AI)
+│   └── angular-elements/      Design system Angular Elements (composants, API, stories)
+│
 ├── skills/                    Skills réutilisables
+│   ├── allow-command/         Pré-approuver des commandes shell dans opencode.json
 │   ├── code-review/           Review adversariale de code
 │   ├── commit/                Messages de commit (conventions Infomaniak)
 │   ├── create-mr/             Création de merge requests (scripts + tests)
@@ -512,6 +522,7 @@ opencode-config/
 │   ├── mr-review/             Review de MR avec commentaires inline
 │   ├── mr-review-feedback/    Application des retours de review MR
 │   ├── pre-mr-review/         Revue qualité pré-MR
+│   ├── radio-tag-genres/      Tagging de genres musicaux pour playlists radio
 │   ├── readme/                 Génération de README
 │   ├── release-smoke-test/    Validation de release oh-my-opencode-slim
 │   ├── translate-doc/         Traduction de documentation

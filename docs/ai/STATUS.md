@@ -4,6 +4,32 @@
 
 ## Fait
 
+### 2026-08-25 — READMEs MCP + corrections cohérence
+
+- `mcp/angular-elements/README.md` créé (architecture, 7 tools, config, dev, caching)
+- 12 READMEs créés pour couvrir tous les répertoires significatifs :
+  - `agents/README.md` — 18 agents, rôles, architecture de collaboration
+  - `standards/README.md` — 16 standards, catégories, ordre d'application
+  - `skills/README.md` — 17 skills, catégories, structure, ajout
+  - `scripts/README.md` — 8 scripts, usage, dépendances, ui.sh
+  - `config/README.md` — opencode.json, .env, variables, sécurité
+  - `mcp/README.md` — 5 MCP servers, config, dev, ajout
+  - `frameworks/README.md` — 4 frameworks, détection auto, application
+  - `templates/README.md` — 5 templates, workflow init/sync, structure
+  - `docs/README.md` — 6 guides, navigation, relation avec standards
+  - `scripts/hooks/README.md` — pre-commit-secrets, patterns, installation
+  - `templates/project-docs/README.md` — BUFFER/INDEX/WARNINGS, cycle de vie
+  - `config/plugins/README.md` — rtk.ts, API Plugin, ajout
+- `config/.env.example` — `GITLAB_TOKEN` ajouté (requis par MCP angular-elements)
+- `README.md` root — MCP servers (5 au lieu de 2), env vars (+2), structure repo (+mcp/), skills (17 au lieu de 15)
+- `AGENTS.md` root — agents (18 avec cybersec/explorer/fixer/librarian/oracle), skills (17 avec allow-command/radio-tag-genres), +dossier mcp/
+- `docs/customization.md` — cybersec ajouté à la table agents
+- `docs/ai/INDEX.md` — 18 agents (cybersec ajouté), mcp/ dans la structure
+
+### 2026-08-25 — Permissions bash aurora (allow-command)
+
+- `config/opencode.json` — patterns ajoutés à l'agent aurora : `cut *`, `exit *`, `git config *`, `git describe *`, `git remote *`
+
 ### 2026-08-21 — Scripts d'installation animés (Aurora UI)
 
 - `scripts/ui.sh` créé — bibliothèque d'animations console (logo, sections, spinner, progress bar, typewriter)

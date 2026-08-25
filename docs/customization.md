@@ -10,7 +10,8 @@ Les agents spécialisés sont dans `agents/` du repo forké. Chacun a un rôle p
 | `aurora-heavy.md` | Agent pour tâches complexes (Qwen 397B) |
 | `reviewer.md` | Code review stricte (checklist, verdict) |
 | `tester.md` | Tests qualité (Jest, Angular standalone) |
-| `security.md` | Risques et remédiations |
+| `security.md` | Cybersécurité défensive — AppSec, threat modeling, DevSecOps |
+| `cybersec.md` | Cybersécurité offensive — pentest, Red Team, exploitation, recon |
 | `architect.md` | Découpage technique |
 | `spark.md` | Sous-agent léger (commit, MR, skills CLI) |
 | `vision.md` | Sous-agent multimodal (images, screenshots) |

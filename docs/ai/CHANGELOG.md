@@ -1,5 +1,53 @@
 # CHANGELOG
 
+## 2026-08-25 — READMEs MCP + corrections cohérence
+
+### Contexte
+
+Création d'un README pour le MCP angular-elements, puis analyse complète du projet pour identifier tous les répertoires manquant un README. 12 READMEs créés, puis corrections de cohérence (agents, skills, MCP servers, env vars).
+
+### Changements
+
+- **`mcp/angular-elements/README.md`** créé — architecture, 7 tools, config, dev, caching
+- **12 READMEs créés** :
+  - `agents/README.md` — 18 agents, rôles, modèles, architecture de collaboration, délégation
+  - `standards/README.md` — 16 standards par catégorie, ordre d'application
+  - `skills/README.md` — 17 skills par catégorie, structure, ajout
+  - `scripts/README.md` — 8 scripts, usage, dépendances, ui.sh
+  - `config/README.md` — opencode.json, .env, variables, sécurité
+  - `mcp/README.md` — 5 MCP servers (2 locaux + 3 npx), config, dev, ajout
+  - `frameworks/README.md` — 4 frameworks, détection auto, application
+  - `templates/README.md` — 5 templates, workflow init/sync, structure générée
+  - `docs/README.md` — 6 guides, navigation, relation avec standards
+  - `scripts/hooks/README.md` — pre-commit-secrets, patterns, installation
+  - `templates/project-docs/README.md` — BUFFER/INDEX/WARNINGS, cycle de vie
+  - `config/plugins/README.md` — rtk.ts, API Plugin, ajout
+- **`config/.env.example`** — `GITLAB_TOKEN` ajouté (requis par MCP angular-elements)
+- **`README.md`** root — MCP servers (5 au lieu de 2), env vars (+INFOMANIAK_API_TOKEN, +GITLAB_TOKEN), structure repo (+mcp/), skills (17 au lieu de 15 avec allow-command + radio-tag-genres)
+- **`AGENTS.md`** root — agents (18 avec cybersec, explorer, fixer, librarian, oracle), skills (17), +dossier mcp/ dans les dossiers de support (5 au lieu de 4)
+- **`docs/customization.md`** — cybersec ajouté à la table agents (17 → 18)
+- **`docs/ai/INDEX.md`** — 18 agents (cybersec ajouté), mcp/ dans la structure
+
+### Corrections de cohérence identifiées
+
+| # | Fichier | Avant | Après |
+|---|---------|-------|-------|
+| 1 | README.md | 2 MCP servers | 5 MCP servers |
+| 2 | README.md | 5 env vars | 7 env vars |
+| 3 | README.md | pas de mcp/ dans structure | mcp/ ajouté |
+| 4 | README.md | 15 skills listés | 17 skills listés |
+| 5 | AGENTS.md | 17 agents listés | 18 agents listés |
+| 6 | AGENTS.md | 15 skills listés | 17 skills listés |
+| 7 | AGENTS.md | 4 dossiers de support | 5 dossiers (+mcp/) |
+| 8 | customization.md | 17 agents (cybersec absent) | 18 agents |
+| 9 | INDEX.md | 17 agents | 18 agents |
+| 10 | INDEX.md | mcp/ absent de la structure | mcp/ ajouté |
+| 11 | .env.example | GITLAB_TOKEN absent | GITLAB_TOKEN ajouté |
+
+### Permissions bash aurora (allow-command)
+
+- `config/opencode.json` — 5 patterns ajoutés à l'agent aurora : `cut *`, `exit *`, `git config *`, `git describe *`, `git remote *`
+
 ## 2026-08-21 — Scripts d'installation animés (Aurora UI)
 
 ### Contexte

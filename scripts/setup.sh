@@ -469,7 +469,7 @@ check_file "${TARGET_BASE}/plugins/rtk.ts" "plugins/rtk.ts"
 check_file "${TARGET_BASE}/.env" ".env (secrets)"
 
 # Check agents
-for agent in aurora aurora-heavy reviewer tester security architect spark vision atlas crawler sage scribe pulse echo beacon designer mobile; do
+for agent in aurora aurora-heavy reviewer tester security cybersec architect spark vision atlas crawler sage scribe pulse echo beacon designer mobile; do
   check_file "${TARGET_BASE}/agents/${agent}.md" "agents/${agent}.md"
 done
 
