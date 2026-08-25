@@ -153,6 +153,8 @@ install_dir() {
   for file in "$src"/*.md; do
     [[ -e "$file" ]] || continue
     name="$(basename "$file")"
+    # Skip README.md — documentation only, not an agent/standard/framework file
+    [[ "$name" == "README.md" ]] && continue
     copy_file "$file" "$dest/$name"
   done
 
@@ -160,6 +162,8 @@ install_dir() {
     for installed in "$dest"/*.md; do
       [[ -e "$installed" ]] || continue
       name="$(basename "$installed")"
+      # Don't prune README.md — it's not managed by install.sh
+      [[ "$name" == "README.md" ]] && continue
       if [[ ! -e "$src/$name" ]]; then
         if [[ "$DRY_RUN" == true ]]; then
           echo "  would prune: $installed"
