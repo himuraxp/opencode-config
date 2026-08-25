@@ -717,231 +717,216 @@
       "permission": {
         "edit": "allow",
         "bash": {
-          "*": "ask",
-          "echo *": "allow",
-          "exit *": "allow",
-          "cat *": "allow",
-          "ls *": "allow",
-          "pwd": "allow",
-          "head *": "allow",
-          "tail *": "allow",
-          "grep *": "allow",
-          "find *": "allow",
-          "wc *": "allow",
-          "sort *": "allow",
-          "uniq *": "allow",
-          "tr *": "allow",
-          "true *": "allow",
-          "timeout *": "allow",
-          "sed *": "allow",
-          "awk *": "allow",
-          "jq *": "allow",
-          "date*": "allow",
-          "date *": "allow",
-          "curl *": "allow",
-          "cd *": "allow",
-          "cp *": "allow",
-          "cut *": "allow",
-          "mkdir *": "allow",
-          "rm *": "allow",
-          "zip *": "allow",
-          "which *": "allow",
-          "rsync *": "allow",
-          "kill *": "allow",
-          "pkill *": "allow",
-          "sleep *": "allow",
-          "lsof *": "allow",
-          "git add *": "allow",
-          "git branch --show-current": "allow",
-          "git checkout *": "allow",
-          "git commit *": "allow",
-          "git config *": "allow",
-          "git describe *": "allow",
-          "git log *": "allow",
-          "git remote *": "allow",
-          "git status *": "allow",
+          // === Default: tout autorisé sauf exceptions ===
+          "*": "allow",
+
+          // --- Ask: commandes sensibles nécessitant confirmation ---
+          // Git destructif
           "git push *": "ask",
-          "git diff*": "allow",
-          "git show *": "allow",
-          "glab *": "allow",
-          "rg *": "allow",
-          "rtk *": "allow",
-          "yarn test *": "allow",
-          "yarn build *": "allow",
-          "yarn lint *": "allow",
-          "yarn lint:fix *": "allow",
-          "yarn lint:check *": "allow",
-          "yarn format:check *": "allow",
-          "npm run build *": "allow",
-          "npx *": "allow",
-          "node *": "allow",
-          "npm *": "allow",
-          "python *": "allow",
-          "python3 *": "allow",
-          "*/python *": "allow",
-          "*/python3 *": "allow",
-          "pip *": "allow",
-          "pip3 *": "allow",
-          "*/pip *": "allow",
-          "*/pip3 *": "allow",
-          "ruby *": "allow",
-          "xcodebuild *": "allow",
-          "xcrun *": "allow",
-          "plutil *": "allow",
-          "PlistBuddy *": "allow",
-          "/usr/libexec/PlistBuddy *": "allow",
-          "pod *": "allow",
-          "brew *": "allow",
-          "idb *": "allow",
-          "idb_companion *": "allow",
-          "defaults *": "allow",
-          "security *": "allow",
-          "codesign *": "allow",
-          "xcode-select *": "allow",
-          "simctl *": "allow",
-          "open *": "allow",
-          "openssl *": "allow",
-          "base64 *": "allow",
-          "xxd *": "allow",
-          "diff *": "allow",
-          "command *": "allow",
-          "pgrep *": "allow",
-          "ps *": "allow",
-          "cliclick *": "allow",
-          "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser *": "allow",
-          "for *": "allow",
-          "while *": "allow",
-          "if *": "allow",
-          "case *": "allow",
-          "done": "allow",
-          "osascript *": "allow",
-          "xargs *": "allow",
-          "*-exec*": "allow",
+          "git push --force*": "ask",
+          // Boucle infinie
           "watch *": "ask",
+          // Fuite de secrets
           "env *": "ask",
+          "printenv*": "ask",
+          // Exfiltration réseau (envoi de données vers remote)
+          "curl *-X POST*": "ask",
+          "curl *--data*": "ask",
+          "curl *-d *": "ask",
+          "curl *-F *": "ask",
+          "curl *--upload-file*": "ask",
+          "curl *-T *": "ask",
+          "scp *": "ask",
+          "rsync *": "ask",
+          "wget *--post*": "ask",
+          // Persistance / modification système macOS
+          "launchctl load*": "ask",
+          "launchctl bootstrap*": "ask",
+          "launchctl enable*": "ask",
+          "crontab *": "ask",
+          "defaults write*": "ask",
+          // Modification de permissions récursive
+          "chmod -R *": "ask",
+          "chown -R *": "ask",
+          // Process management par nom (vs PID)
+          "killall *": "ask",
+          "pkill *": "ask",
+
+          // --- Deny: commandes destructives non négociables ---
+          // Escalade de privilèges
           "sudo *": "deny",
           "su *": "deny",
-          "doas *": "deny"
+          "doas *": "deny",
+          // Suppression de masse (élargi)
+          "rm -rf /*": "deny",
+          "rm -rf /": "deny",
+          "rm -rf /Users*": "deny",
+          "rm -rf ~*": "deny",
+          "rm -rf /var*": "deny",
+          "rm -rf /etc*": "deny",
+          "rm -rf /System*": "deny",
+          "rm -rf /Library*": "deny",
+          "find * -delete": "deny",
+          "find * -exec rm*": "deny",
+          // Destruction de disque/partition macOS
+          "dd *of=/dev/*": "deny",
+          "diskutil eraseDisk*": "deny",
+          "diskutil eraseVolume*": "deny",
+          "diskutil reformat*": "deny",
+          "mkfs*": "deny",
+          "fdisk *": "deny"
         },
-        "webfetch": "ask",
+        "webfetch": "allow",
         "external_directory": {
-          "/tmp/*": "allow",
-          "/private/tmp/*": "allow",
-          "/var/folders/*": "allow",
-          "/Users/yohannlarbi/Library/Application Support/rtk/tee/*": "allow",
-          "/Users/yohannlarbi/orca/workspaces/materia-fm/*": "allow",
-          "/Users/yohannannlarbi/orca/workspaces/web-components/feat-poc-reactflow/*": "allow",
-          "/Users/yohannlarbi/dev/ciyl-content-engine/*": "allow",
-          "/Users/yohannlarbi/dev/ciyl-commercial/*": "allow",
-          "/Users/yohannlarbi/Library/Developer/Xcode/UserData/*": "allow",
-          "/Users/yohannlarbi/Library/Developer/Xcode/UserData/Provisioning Profiles/*": "allow"
+          // =============================================================
+          // Modèle inversé : tout allow sauf exceptions deny/ask
+          // Règle : 'last matching rule wins' → deny en dernier
+          // =============================================================
+
+          // --- Catch-all : tout autorisé par défaut ---
+          "*": "allow",
+
+          // --- Ask : chemins sensibles mais accès légitime possible ---
+          // Système : configs, bibliothèques, logs
+          "/Library/*": "ask",
+          "/usr/local/*": "ask",
+          "/opt/homebrew/*": "ask",
+          "/etc/*": "ask",
+          "/private/etc/*": "ask",
+          "/var/log/*": "ask",
+          "/private/var/log/*": "ask",
+          // macOS : cookies et données partagées entre apps
+          "~/Library/Cookies/*": "ask",
+          "~/Library/Group Containers/*": "ask",
+
+          // --- Deny : secrets et système critique, aucun accès ---
+          // Système macOS
+          "/System/*": "deny",
+          "/private/etc/master.passwd": "deny",
+          "/etc/master.passwd": "deny",
+          "/private/var/db/dslocal/*": "deny",
+          // Clés cryptographiques
+          "~/.ssh/*": "deny",
+          "~/.gnupg/*": "deny",
+          "~/Library/Keychains/*": "deny",
+          // Credentials cloud et services
+          "~/.aws/credentials": "deny",
+          "~/.aws/config": "deny",
+          "~/.kube/config": "deny",
+          "~/.docker/config.json": "deny",
+          "~/.netrc": "deny",
+          "~/.git-credentials": "deny",
+          // Secrets OpenCode (defense-in-depth, .env déjà deny par read par défaut)
+          "~/.config/opencode/.env*": "deny"
         }
       }
     },
     "aurora-heavy": {
-      "model": "infomaniak/euria-code",
+      "model": "infomaniak/Qwen/Qwen3.5-397B-A17B-FP8",
       "permission": {
         "edit": "allow",
         "bash": {
-          "*": "ask",
-          "echo *": "allow",
-          "cat *": "allow",
-          "ls *": "allow",
-          "pwd": "allow",
-          "head *": "allow",
-          "tail *": "allow",
-          "grep *": "allow",
-          "find *": "allow",
-          "wc *": "allow",
-          "sort *": "allow",
-          "uniq *": "allow",
-          "tr *": "allow",
-          "sed *": "allow",
-          "awk *": "allow",
-          "jq *": "allow",
-          "date*": "allow",
-          "date *": "allow",
-          "curl *": "allow",
-          "cd *": "allow",
-          "cp *": "allow",
-          "mkdir *": "allow",
-          "rm *": "allow",
-          "zip *": "allow",
-          "which *": "allow",
-          "rsync *": "allow",
-          "kill *": "allow",
-          "lsof *": "allow",
-          "git add *": "allow",
-          "git branch --show-current": "allow",
-          "git checkout *": "allow",
-          "git commit *": "allow",
-          "git log *": "allow",
-          "git status *": "allow",
+          // === Default: tout autorisé sauf exceptions ===
+          "*": "allow",
+
+          // --- Ask: commandes sensibles nécessitant confirmation ---
+          // Git destructif
           "git push *": "ask",
-          "git diff*": "allow",
-          "git show *": "allow",
-          "glab *": "allow",
-          "rg *": "allow",
-          "rtk *": "allow",
-          "yarn test *": "allow",
-          "yarn build *": "allow",
-          "yarn lint *": "allow",
-          "yarn lint:fix *": "allow",
-          "npm run build *": "allow",
-          "npx *": "allow",
-          "node *": "allow",
-          "npm *": "allow",
-          "python *": "allow",
-          "python3 *": "allow",
-          "*/python *": "allow",
-          "*/python3 *": "allow",
-          "pip *": "allow",
-          "pip3 *": "allow",
-          "*/pip *": "allow",
-          "*/pip3 *": "allow",
-          "ruby *": "allow",
-          "xcodebuild *": "allow",
-          "xcrun *": "allow",
-          "plutil *": "allow",
-          "PlistBuddy *": "allow",
-          "/usr/libexec/PlistBuddy *": "allow",
-          "pod *": "allow",
-          "brew *": "allow",
-          "idb *": "allow",
-          "idb_companion *": "allow",
-          "defaults *": "allow",
-          "security *": "allow",
-          "codesign *": "allow",
-          "xcode-select *": "allow",
-          "simctl *": "allow",
-          "open *": "allow",
-          "openssl *": "allow",
-          "base64 *": "allow",
-          "xxd *": "allow",
-          "diff *": "allow",
-          "command *": "allow",
-          "for *": "allow",
-          "while *": "allow",
-          "if *": "allow",
-          "case *": "allow",
-          "osascript *": "ask",
-          "xargs *": "ask",
-          "*-exec*": "allow",
+          "git push --force*": "ask",
+          // Boucle infinie
           "watch *": "ask",
+          // Fuite de secrets
           "env *": "ask",
+          "printenv*": "ask",
+          // Exfiltration réseau (envoi de données vers remote)
+          "curl *-X POST*": "ask",
+          "curl *--data*": "ask",
+          "curl *-d *": "ask",
+          "curl *-F *": "ask",
+          "curl *--upload-file*": "ask",
+          "curl *-T *": "ask",
+          "scp *": "ask",
+          "rsync *": "ask",
+          "wget *--post*": "ask",
+          // Persistance / modification système macOS
+          "launchctl load*": "ask",
+          "launchctl bootstrap*": "ask",
+          "launchctl enable*": "ask",
+          "crontab *": "ask",
+          "defaults write*": "ask",
+          // Modification de permissions récursive
+          "chmod -R *": "ask",
+          "chown -R *": "ask",
+          // Process management par nom (vs PID)
+          "killall *": "ask",
+          "pkill *": "ask",
+
+          // --- Deny: commandes destructives non négociables ---
+          // Escalade de privilèges
           "sudo *": "deny",
           "su *": "deny",
-          "doas *": "deny"
+          "doas *": "deny",
+          // Suppression de masse (élargi)
+          "rm -rf /*": "deny",
+          "rm -rf /": "deny",
+          "rm -rf /Users*": "deny",
+          "rm -rf ~*": "deny",
+          "rm -rf /var*": "deny",
+          "rm -rf /etc*": "deny",
+          "rm -rf /System*": "deny",
+          "rm -rf /Library*": "deny",
+          "find * -delete": "deny",
+          "find * -exec rm*": "deny",
+          // Destruction de disque/partition macOS
+          "dd *of=/dev/*": "deny",
+          "diskutil eraseDisk*": "deny",
+          "diskutil eraseVolume*": "deny",
+          "diskutil reformat*": "deny",
+          "mkfs*": "deny",
+          "fdisk *": "deny"
         },
-        "webfetch": "ask",
+        "webfetch": "allow",
         "external_directory": {
-          "/tmp/*": "allow",
-          "/private/tmp/*": "allow",
-          "/var/folders/*": "allow",
-          "/Users/yohannannlarbi/orca/workspaces/web-components/feat-poc-reactflow/*": "allow",
-          "/Users/yohannlarbi/dev/ciyl-content-engine/*": "allow",
-          "/Users/yohannlarbi/Library/Developer/Xcode/UserData/*": "allow",
-          "/Users/yohannlarbi/Library/Developer/Xcode/UserData/Provisioning Profiles/*": "allow"
+          // =============================================================
+          // Modèle inversé : tout allow sauf exceptions deny/ask
+          // Règle : 'last matching rule wins' → deny en dernier
+          // =============================================================
+
+          // --- Catch-all : tout autorisé par défaut ---
+          "*": "allow",
+
+          // --- Ask : chemins sensibles mais accès légitime possible ---
+          // Système : configs, bibliothèques, logs
+          "/Library/*": "ask",
+          "/usr/local/*": "ask",
+          "/opt/homebrew/*": "ask",
+          "/etc/*": "ask",
+          "/private/etc/*": "ask",
+          "/var/log/*": "ask",
+          "/private/var/log/*": "ask",
+          // macOS : cookies et données partagées entre apps
+          "~/Library/Cookies/*": "ask",
+          "~/Library/Group Containers/*": "ask",
+
+          // --- Deny : secrets et système critique, aucun accès ---
+          // Système macOS
+          "/System/*": "deny",
+          "/private/etc/master.passwd": "deny",
+          "/etc/master.passwd": "deny",
+          "/private/var/db/dslocal/*": "deny",
+          // Clés cryptographiques
+          "~/.ssh/*": "deny",
+          "~/.gnupg/*": "deny",
+          "~/Library/Keychains/*": "deny",
+          // Credentials cloud et services
+          "~/.aws/credentials": "deny",
+          "~/.aws/config": "deny",
+          "~/.kube/config": "deny",
+          "~/.docker/config.json": "deny",
+          "~/.netrc": "deny",
+          "~/.git-credentials": "deny",
+          // Secrets OpenCode (defense-in-depth, .env déjà deny par read par défaut)
+          "~/.config/opencode/.env*": "deny"
         }
       }
     },
@@ -1136,9 +1121,48 @@
   },
   "lsp": true,
   "permission": {
+    // =============================================================
+    // Modèle inversé : tout allow sauf exceptions deny/ask
+    // Règle : 'last matching rule wins' → deny en dernier
+    // S'applique aux agents sans bloc external_directory spécifique
+    // =============================================================
+
     "external_directory": {
-      "/tmp/*": "allow",
-      "/private/tmp/*": "allow"
+      // --- Catch-all : tout autorisé par défaut ---
+      "*": "allow",
+
+      // --- Ask : chemins sensibles mais accès légitime possible ---
+      // Système : configs, bibliothèques, logs
+      "/Library/*": "ask",
+      "/usr/local/*": "ask",
+      "/opt/homebrew/*": "ask",
+      "/etc/*": "ask",
+      "/private/etc/*": "ask",
+      "/var/log/*": "ask",
+      "/private/var/log/*": "ask",
+      // macOS : cookies et données partagées entre apps
+      "~/Library/Cookies/*": "ask",
+      "~/Library/Group Containers/*": "ask",
+
+      // --- Deny : secrets et système critique, aucun accès ---
+      // Système macOS
+      "/System/*": "deny",
+      "/private/etc/master.passwd": "deny",
+      "/etc/master.passwd": "deny",
+      "/private/var/db/dslocal/*": "deny",
+      // Clés cryptographiques
+      "~/.ssh/*": "deny",
+      "~/.gnupg/*": "deny",
+      "~/Library/Keychains/*": "deny",
+      // Credentials cloud et services
+      "~/.aws/credentials": "deny",
+      "~/.aws/config": "deny",
+      "~/.kube/config": "deny",
+      "~/.docker/config.json": "deny",
+      "~/.netrc": "deny",
+      "~/.git-credentials": "deny",
+      // Secrets OpenCode (defense-in-depth, .env déjà deny par read par défaut)
+      "~/.config/opencode/.env*": "deny"
     }
   }
 }
