@@ -5,7 +5,8 @@ Exemple de projet Node.js / Express montrant les conventions attendues pour un p
 Initialisé via :
 
 ```bash
-~/.config/opencode-config/scripts/init-project.sh
+npm run init-project --prefix ~/.config/opencode-config
+# ou: ~/.config/opencode-config/scripts/init-project.sh
 ```
 
 ## Structure cible après initialisation

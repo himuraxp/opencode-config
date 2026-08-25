@@ -153,7 +153,8 @@ Changes will take effect after running `install.sh` or on next OpenCode restart.
 If the user asks to deploy, run:
 
 ```bash
-~/.config/opencode-config/scripts/install.sh --no-config
+npm run update -- --no-config
+# ou: ~/.config/opencode-config/scripts/install.sh --no-config
 ```
 
 This copies the updated `opencode.json` to `~/.config/opencode/opencode.json`.

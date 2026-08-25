@@ -67,7 +67,7 @@ skill({ name: "commit" })
 
 1. Créer un dossier `skills/<skill-name>/`
 2. Écrire un fichier `SKILL.md` avec le workflow
-3. Lancer `scripts/install.sh` pour déployer dans `~/.config/opencode/skills/`
+3. Lancer `npm run update` (ou `./scripts/install.sh`) pour déployer dans `~/.config/opencode/skills/`
 4. Le skill est automatiquement disponible via `skill({ name: "<skill-name>" })`
 
 Voir `standards/artifact-authoring.md` pour les règles de création homogène.

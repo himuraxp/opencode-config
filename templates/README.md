@@ -24,7 +24,8 @@ Templates injectés dans les projets via `scripts/init-project.sh` et `scripts/s
 
 ```bash
 cd /path/to/project
-~/.config/opencode-config/scripts/init-project.sh
+npm run init-project --prefix ~/.config/opencode-config
+# ou: ~/.config/opencode-config/scripts/init-project.sh
 ```
 
 Copie les templates manquants, détecte la stack, ajoute le framework. Ne remplace jamais les fichiers existants.
@@ -33,7 +34,8 @@ Copie les templates manquants, détecte la stack, ajoute le framework. Ne rempla
 
 ```bash
 cd /path/to/project
-~/.config/opencode-config/scripts/sync-project.sh
+npm run sync --prefix ~/.config/opencode-config
+# ou: ~/.config/opencode-config/scripts/sync-project.sh
 ```
 
 Compare les templates avec les fichiers existants. En cas de différence, crée un fichier `.new` à côté de l'original pour review manuelle.

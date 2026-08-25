@@ -17,7 +17,8 @@ Le script `scripts/init-project.sh` détecte la stack du projet et ajoute automa
 
 ```bash
 cd /path/to/project
-~/.config/opencode-config/scripts/init-project.sh
+npm run init-project --prefix ~/.config/opencode-config
+# ou: ~/.config/opencode-config/scripts/init-project.sh
 ```
 
 ## Application
@@ -35,6 +36,6 @@ Le framework fournit des règles spécifiques (structure de dossiers, naming, pa
 1. Créer un fichier `<framework-name>.md`
 2. Documenter : structure, conventions, patterns, tests, dépendances
 3. Ajouter la détection dans `scripts/init-project.sh`
-4. Lancer `scripts/install.sh` pour déployer
+4. Lancer `npm run update` (ou `./scripts/install.sh`) pour déployer
 
 Voir `standards/artifact-authoring.md` pour les règles de création homogène.

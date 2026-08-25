@@ -64,7 +64,9 @@ Ne jamais modifier un projet utilisateur sans respecter son `AGENTS.md` local. L
 
 ```bash
 git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-config
-~/.config/opencode-config/scripts/setup.sh
+cd ~/.config/opencode-config
+npm run setup
+# ou: ~/.config/opencode-config/scripts/setup.sh
 ```
 
 `setup.sh` est interactif : il installe `opencode-ai`, `rtk`, propose les MCP servers, copie la config, demande les secrets et vérifie l'installation.
@@ -72,14 +74,15 @@ git clone https://github.com/himuraxp/opencode-config.git ~/.config/opencode-con
 ### Mise à jour
 
 ```bash
-cd ~/.config/opencode-config && git pull && ./scripts/install.sh
+cd ~/.config/opencode-config && git pull && npm run update
+# ou: ./scripts/install.sh
 ```
 
-`install.sh` track les changements (new/updated/unchanged) et ne copie que les fichiers modifiés. Options : `--prune` (nettoyer orphelins), `--no-config` (ignorer config/), `--dry-run`.
+`install.sh` track les changements (new/updated/unchanged) et ne copie que les fichiers modifiés. Options : `--prune` (nettoyer orphelins), `--no-config` (ignorer config/), `--dry-run`. Équivalents npm : `npm run prune`, `npm run dry-run`.
 
 ### Secrets
 
-Les secrets sont externalisés via `{env:...}` dans `config/opencode.json` et stockés dans `~/.config/opencode/.env` (jamais versionné). `setup.sh --force` reconfigure les variables.
+Les secrets sont externalisés via `{env:...}` dans `config/opencode.json` et stockés dans `~/.config/opencode/.env` (jamais versionné). `npm run setup -- --force` reconfigure les variables.
 
 ## MCP Servers
 

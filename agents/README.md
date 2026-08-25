@@ -72,7 +72,7 @@ Aurora détecte les mots-clés dans la demande utilisateur et délègue aux spé
 3. Définir le prompt système (rôle, règles, style)
 4. Ajouter l'entrée dans `config/opencode.json` → `agent.<name>`
 5. Documenter la délégation dans `agents/aurora.md` si applicable
-6. Lancer `scripts/install.sh` pour déployer
+6. Lancer `npm run update` (ou `./scripts/install.sh`) pour déployer
 
 ## Hiérarchie d'autorité
 

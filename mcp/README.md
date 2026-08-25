@@ -69,4 +69,4 @@ npm start
 2. Initialiser un projet Node.js avec `@modelcontextprotocol/sdk`
 3. Implémenter les tools (voir `angular-elements/` comme exemple)
 4. Ajouter l'entrée dans `config/opencode.json` → `mcp.<server-name>`
-5. Lancer `scripts/install.sh` pour déployer
+5. Lancer `npm run update` (ou `./scripts/install.sh`) pour déployer

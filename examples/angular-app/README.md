@@ -5,7 +5,8 @@ Exemple de structure projet Angular 20+ avec `AGENTS.md`, modes de travail et do
 À copier dans un projet Angular ou à générer via :
 
 ```bash
-~/.config/opencode-config/scripts/init-project.sh
+npm run init-project --prefix ~/.config/opencode-config
+# ou: ~/.config/opencode-config/scripts/init-project.sh
 ```
 
 ## Structure de la documentation IA

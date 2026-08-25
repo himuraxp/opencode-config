@@ -48,5 +48,6 @@ Documente les dettes techniques, avertissements et zones à risque. Si un warnin
 
 ```bash
 # Vérifier qu'un projet a une mémoire bien formée
-~/.config/opencode-config/scripts/validate-memory.sh /path/to/project
+npm run validate-memory --prefix ~/.config/opencode-config -- /path/to/project
+# ou: ~/.config/opencode-config/scripts/validate-memory.sh /path/to/project
 ```

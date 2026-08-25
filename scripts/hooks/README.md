@@ -45,4 +45,4 @@ git commit --no-verify
 1. Créer un fichier `<hook-name>.sh` dans ce dossier
 2. Le rendre exécutable (`chmod +x`)
 3. Documenter les patterns et l'installation
-4. Lancer `scripts/install.sh` pour déployer
+4. Lancer `npm run update` (ou `./scripts/install.sh`) pour déployer

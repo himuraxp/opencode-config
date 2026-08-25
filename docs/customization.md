@@ -28,13 +28,14 @@ Les agents spécialisés sont dans `agents/` du repo forké. Chacun a un rôle p
 Pour personnaliser :
 
 1. Modifiez le fichier dans le repo forké
-2. Relancez `./scripts/install.sh`
+2. Relancez `npm run update` (ou `./scripts/install.sh`)
 3. Les fichiers sont copiés dans `~/.config/opencode/agents/`
 
 Après un renommage ou une suppression d'artefact, utilisez :
 
 ```bash
-./scripts/install.sh --prune
+npm run prune
+# ou: ./scripts/install.sh --prune
 ```
 
 ## Ajouter un framework
@@ -53,7 +54,7 @@ Pour ajouter un framework :
 
 1. Créer `frameworks/<mon-framework>.md`
 2. Adapter `templates/AGENTS.md` pour référencer le framework
-3. Relancer `./scripts/install.sh`
+3. Relancer `npm run update` (ou `./scripts/install.sh`)
 
 Le template `AGENTS.md` doit indiquer quel framework est actif pour le projet :
 
@@ -139,7 +140,8 @@ cat > frameworks/angular-performance.md << 'EOF'
 - Lazy-loading des routes.
 EOF
 
-./scripts/install.sh
+npm run update
+# ou: ./scripts/install.sh
 ```
 
 Dans le `frameworks/angular-20.md` original, ajoutez une référence :
@@ -191,6 +193,6 @@ Ne jamais ajouter une capacité par intuition métier. Exemple : un produit avec
 - **Ne modifiez jamais directement** `~/.config/opencode/*`.
 - **Les fichiers `.new`** générés par `sync-project.sh` ne sont pas lus automatiquement par OpenCode. Fusionnez-les manuellement dans les fichiers existants avant de les supprimer.
 - Si un fichier `.new` existe déjà, `sync-project.sh` crée une proposition horodatée au lieu de l'écraser.
-- Faîtes les modifications dans le repo forké, puis `install.sh`.
+- Faîtes les modifications dans le repo forké, puis `npm run update` (ou `./scripts/install.sh`).
 - Versionnez votre fork pour suivre vos personnalisations.
 - Utilisez `git pull` pour récupérer les mises à jour upstream.

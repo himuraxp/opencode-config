@@ -30,7 +30,7 @@ Toute la logique de réécriture vit dans `rtk` (Rust, `src/discover/registry.rs
 2. Exporter un objet `Plugin` depuis `@opencode-ai/plugin`
 3. Implémenter les hooks nécessaires (`tool.execute.before`, `tool.execute.after`, etc.)
 4. Ajouter les dépendances npm dans `config/package.json`
-5. Lancer `scripts/install.sh` pour déployer
+5. Lancer `npm run update` (ou `./scripts/install.sh`) pour déployer
 6. Référencer le plugin dans `config/oh-my-opencode-slim.json` si applicable
 
 ## API Plugin

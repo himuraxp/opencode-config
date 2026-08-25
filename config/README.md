@@ -48,11 +48,13 @@ Définies dans `~/.config/opencode/.env` (jamais versionné). Template dans `.en
 ## Installation
 
 ```bash
-# setup.sh copie la config interactivement
-~/.config/opencode-config/scripts/setup.sh
+# setup copie la config interactivement
+npm run setup
+# ou: ~/.config/opencode-config/scripts/setup.sh
 
-# install.sh met à jour sans interaction
-~/.config/opencode-config/scripts/install.sh
+# install met à jour sans interaction
+npm run update
+# ou: ~/.config/opencode-config/scripts/install.sh
 ```
 
 La config est copiée vers `~/.config/opencode/opencode.json`.

@@ -5,7 +5,8 @@ Exemple de monorepo montrant la structure cible avec `AGENTS.md` et documentatio
 Initialisé via :
 
 ```bash
-~/.config/opencode-config/scripts/init-project.sh
+npm run init-project --prefix ~/.config/opencode-config
+# ou: ~/.config/opencode-config/scripts/init-project.sh
 ```
 
 ## Structure cible après initialisation

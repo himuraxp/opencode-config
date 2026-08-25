@@ -118,7 +118,8 @@ npm run prune
 Pour mettre à jour sans toucher aux fichiers de config (`opencode.json`, plugins) :
 
 ```bash
-./scripts/install.sh --no-config
+npm run update -- --no-config
+# ou: ./scripts/install.sh --no-config
 ```
 
 Cela installe dans `~/.config/opencode/` :
@@ -200,6 +201,7 @@ Pour prévisualiser sans rien modifier :
 
 ```bash
 ~/.config/opencode-config/scripts/init-project.sh --dry-run
+# ou depuis le repo: npm run init-project -- --dry-run
 ```
 
 Résultat :
@@ -229,6 +231,7 @@ Pour prévisualiser sans rien modifier :
 
 ```bash
 ~/.config/opencode-config/scripts/sync-project.sh --dry-run
+# ou depuis le repo: npm run sync -- --dry-run
 ```
 
 Par défaut, le script n'écrase pas les fichiers existants. Il crée des fichiers `.new` si une version existe déjà. Si un `.new` existe déjà, il crée un fichier horodaté pour ne pas écraser une fusion en cours.
@@ -378,7 +381,7 @@ La règle d'or : **le local l'emporte toujours**. `AGENTS.md` à la racine du pr
 
 ### Personnaliser les agents
 
-Modifiez les fichiers dans le repo cloné, puis relancez `./scripts/install.sh`.
+Modifiez les fichiers dans le repo cloné, puis relancez `npm run update` (ou `./scripts/install.sh`).
 
 Les agents disponibles sont dans `agents/` :
 
@@ -415,13 +418,13 @@ frameworks/
 └── astro.md        # Sites statiques Astro, SEO, i18n
 ```
 
-Le nom du fichier sera le nom du framework. Relancez `./scripts/install.sh` pour le déployer.
+Le nom du fichier sera le nom du framework. Relancez `npm run update` (ou `./scripts/install.sh`) pour le déployer.
 
 ### Créer une nouvelle règle
 
 1. Dans le repo `~/.config/opencode-config`
 2. Créez un fichier dans `standards/` (universel) ou `agents/` (rôle spécialisé)
-3. Relancez `./scripts/install.sh`
+3. Relancez `npm run update` (ou `./scripts/install.sh`)
 4. Référencez-le dans le `AGENTS.md` du projet concerné
 
 ### Personnaliser le workflow de session
