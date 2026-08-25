@@ -22,3 +22,7 @@ bun.lock
 *.log
 *.tmp
 dist/
+
+# AI session memory — local only, not for version control
+# Templates for user projects are in templates/ and templates/project-docs/
+docs/ai/
