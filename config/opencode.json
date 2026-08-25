@@ -717,19 +717,13 @@
       "permission": {
         "edit": "allow",
         "bash": {
-          // === Default: tout autorisé sauf exceptions ===
           "*": "allow",
 
-          // --- Ask: commandes sensibles nécessitant confirmation ---
-          // Git destructif
           "git push *": "ask",
           "git push --force*": "ask",
-          // Boucle infinie
           "watch *": "ask",
-          // Fuite de secrets
           "env *": "ask",
           "printenv*": "ask",
-          // Exfiltration réseau (envoi de données vers remote)
           "curl *-X POST*": "ask",
           "curl *--data*": "ask",
           "curl *-d *": "ask",
@@ -739,25 +733,19 @@
           "scp *": "ask",
           "rsync *": "ask",
           "wget *--post*": "ask",
-          // Persistance / modification système macOS
           "launchctl load*": "ask",
           "launchctl bootstrap*": "ask",
           "launchctl enable*": "ask",
           "crontab *": "ask",
           "defaults write*": "ask",
-          // Modification de permissions récursive
           "chmod -R *": "ask",
           "chown -R *": "ask",
-          // Process management par nom (vs PID)
           "killall *": "ask",
           "pkill *": "ask",
 
-          // --- Deny: commandes destructives non négociables ---
-          // Escalade de privilèges
           "sudo *": "deny",
           "su *": "deny",
           "doas *": "deny",
-          // Suppression de masse (élargi)
           "rm -rf /*": "deny",
           "rm -rf /": "deny",
           "rm -rf /Users*": "deny",
@@ -768,7 +756,6 @@
           "rm -rf /Library*": "deny",
           "find * -delete": "deny",
           "find * -exec rm*": "deny",
-          // Destruction de disque/partition macOS
           "dd *of=/dev/*": "deny",
           "diskutil eraseDisk*": "deny",
           "diskutil eraseVolume*": "deny",
@@ -778,16 +765,9 @@
         },
         "webfetch": "allow",
         "external_directory": {
-          // =============================================================
-          // Modèle inversé : tout allow sauf exceptions deny/ask
-          // Règle : 'last matching rule wins' → deny en dernier
-          // =============================================================
 
-          // --- Catch-all : tout autorisé par défaut ---
           "*": "allow",
 
-          // --- Ask : chemins sensibles mais accès légitime possible ---
-          // Système : configs, bibliothèques, logs
           "/Library/*": "ask",
           "/usr/local/*": "ask",
           "/opt/homebrew/*": "ask",
@@ -795,28 +775,22 @@
           "/private/etc/*": "ask",
           "/var/log/*": "ask",
           "/private/var/log/*": "ask",
-          // macOS : cookies et données partagées entre apps
           "~/Library/Cookies/*": "ask",
           "~/Library/Group Containers/*": "ask",
 
-          // --- Deny : secrets et système critique, aucun accès ---
-          // Système macOS
           "/System/*": "deny",
           "/private/etc/master.passwd": "deny",
           "/etc/master.passwd": "deny",
           "/private/var/db/dslocal/*": "deny",
-          // Clés cryptographiques
           "~/.ssh/*": "deny",
           "~/.gnupg/*": "deny",
           "~/Library/Keychains/*": "deny",
-          // Credentials cloud et services
           "~/.aws/credentials": "deny",
           "~/.aws/config": "deny",
           "~/.kube/config": "deny",
           "~/.docker/config.json": "deny",
           "~/.netrc": "deny",
           "~/.git-credentials": "deny",
-          // Secrets OpenCode (defense-in-depth, .env déjà deny par read par défaut)
           "~/.config/opencode/.env*": "deny"
         }
       }
@@ -826,19 +800,13 @@
       "permission": {
         "edit": "allow",
         "bash": {
-          // === Default: tout autorisé sauf exceptions ===
           "*": "allow",
 
-          // --- Ask: commandes sensibles nécessitant confirmation ---
-          // Git destructif
           "git push *": "ask",
           "git push --force*": "ask",
-          // Boucle infinie
           "watch *": "ask",
-          // Fuite de secrets
           "env *": "ask",
           "printenv*": "ask",
-          // Exfiltration réseau (envoi de données vers remote)
           "curl *-X POST*": "ask",
           "curl *--data*": "ask",
           "curl *-d *": "ask",
@@ -848,25 +816,19 @@
           "scp *": "ask",
           "rsync *": "ask",
           "wget *--post*": "ask",
-          // Persistance / modification système macOS
           "launchctl load*": "ask",
           "launchctl bootstrap*": "ask",
           "launchctl enable*": "ask",
           "crontab *": "ask",
           "defaults write*": "ask",
-          // Modification de permissions récursive
           "chmod -R *": "ask",
           "chown -R *": "ask",
-          // Process management par nom (vs PID)
           "killall *": "ask",
           "pkill *": "ask",
 
-          // --- Deny: commandes destructives non négociables ---
-          // Escalade de privilèges
           "sudo *": "deny",
           "su *": "deny",
           "doas *": "deny",
-          // Suppression de masse (élargi)
           "rm -rf /*": "deny",
           "rm -rf /": "deny",
           "rm -rf /Users*": "deny",
@@ -877,7 +839,6 @@
           "rm -rf /Library*": "deny",
           "find * -delete": "deny",
           "find * -exec rm*": "deny",
-          // Destruction de disque/partition macOS
           "dd *of=/dev/*": "deny",
           "diskutil eraseDisk*": "deny",
           "diskutil eraseVolume*": "deny",
@@ -887,16 +848,9 @@
         },
         "webfetch": "allow",
         "external_directory": {
-          // =============================================================
-          // Modèle inversé : tout allow sauf exceptions deny/ask
-          // Règle : 'last matching rule wins' → deny en dernier
-          // =============================================================
 
-          // --- Catch-all : tout autorisé par défaut ---
           "*": "allow",
 
-          // --- Ask : chemins sensibles mais accès légitime possible ---
-          // Système : configs, bibliothèques, logs
           "/Library/*": "ask",
           "/usr/local/*": "ask",
           "/opt/homebrew/*": "ask",
@@ -904,28 +858,22 @@
           "/private/etc/*": "ask",
           "/var/log/*": "ask",
           "/private/var/log/*": "ask",
-          // macOS : cookies et données partagées entre apps
           "~/Library/Cookies/*": "ask",
           "~/Library/Group Containers/*": "ask",
 
-          // --- Deny : secrets et système critique, aucun accès ---
-          // Système macOS
           "/System/*": "deny",
           "/private/etc/master.passwd": "deny",
           "/etc/master.passwd": "deny",
           "/private/var/db/dslocal/*": "deny",
-          // Clés cryptographiques
           "~/.ssh/*": "deny",
           "~/.gnupg/*": "deny",
           "~/Library/Keychains/*": "deny",
-          // Credentials cloud et services
           "~/.aws/credentials": "deny",
           "~/.aws/config": "deny",
           "~/.kube/config": "deny",
           "~/.docker/config.json": "deny",
           "~/.netrc": "deny",
           "~/.git-credentials": "deny",
-          // Secrets OpenCode (defense-in-depth, .env déjà deny par read par défaut)
           "~/.config/opencode/.env*": "deny"
         }
       }
@@ -1020,6 +968,7 @@
           "*": "ask",
           "git add *": "allow",
           "git commit *": "allow",
+          "git push *": "allow",
           "git status *": "allow",
           "git diff*": "allow",
           "git log *": "allow",
@@ -1121,18 +1070,10 @@
   },
   "lsp": true,
   "permission": {
-    // =============================================================
-    // Modèle inversé : tout allow sauf exceptions deny/ask
-    // Règle : 'last matching rule wins' → deny en dernier
-    // S'applique aux agents sans bloc external_directory spécifique
-    // =============================================================
 
     "external_directory": {
-      // --- Catch-all : tout autorisé par défaut ---
       "*": "allow",
 
-      // --- Ask : chemins sensibles mais accès légitime possible ---
-      // Système : configs, bibliothèques, logs
       "/Library/*": "ask",
       "/usr/local/*": "ask",
       "/opt/homebrew/*": "ask",
@@ -1140,28 +1081,22 @@
       "/private/etc/*": "ask",
       "/var/log/*": "ask",
       "/private/var/log/*": "ask",
-      // macOS : cookies et données partagées entre apps
       "~/Library/Cookies/*": "ask",
       "~/Library/Group Containers/*": "ask",
 
-      // --- Deny : secrets et système critique, aucun accès ---
-      // Système macOS
       "/System/*": "deny",
       "/private/etc/master.passwd": "deny",
       "/etc/master.passwd": "deny",
       "/private/var/db/dslocal/*": "deny",
-      // Clés cryptographiques
       "~/.ssh/*": "deny",
       "~/.gnupg/*": "deny",
       "~/Library/Keychains/*": "deny",
-      // Credentials cloud et services
       "~/.aws/credentials": "deny",
       "~/.aws/config": "deny",
       "~/.kube/config": "deny",
       "~/.docker/config.json": "deny",
       "~/.netrc": "deny",
       "~/.git-credentials": "deny",
-      // Secrets OpenCode (defense-in-depth, .env déjà deny par read par défaut)
       "~/.config/opencode/.env*": "deny"
     }
   }
