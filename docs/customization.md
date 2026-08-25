@@ -7,7 +7,7 @@ Les agents spécialisés sont dans `agents/` du repo forké. Chacun a un rôle p
 | Agent | Rôle |
 |-------|------|
 | `aurora.md` | Agent principal — chargement et coordination |
-| `aurora-heavy.md` | Agent pour tâches complexes (Qwen 397B) |
+| `aurora-heavy.md` | Agent pour tâches complexes (euria-code) |
 | `reviewer.md` | Code review stricte (checklist, verdict) |
 | `tester.md` | Tests qualité (Jest, Angular standalone) |
 | `security.md` | Cybersécurité défensive — AppSec, threat modeling, DevSecOps |

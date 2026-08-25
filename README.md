@@ -228,17 +228,19 @@ Opérationnel en moins de 2 minutes.
 
 ## Modèles et Fallback
 
-### 18 modèles configurés
+### 17 modèles configurés
 
-La configuration utilise **18 modèles** répartis en 4 catégories :
+La configuration utilise **17 modèles** répartis en 6 catégories :
 
 | Catégorie | Modèles | Context max | Coût (input/output) | Usage |
 |-----------|---------|-------------|---------------------|-------|
 | **Expert** | euria-code (GLM-5.2) | 250k | $0.60 / $3.00 | Raisonnement complexe, architecture, sécurité, review, code |
-| **Intermédiaire** | Mistral-Small-4 (119B) | 256k | $0.20 / $0.75 | UX/UI, content, analytics, SEO technique |
+| | euria-code-tiny | 200k | $0.30 / $0.40 | Version légère d'euria-code, multimodal (image) |
+| **Intermédiaire** | Mistral-Small-4 (119B) | 256k | $0.20 / $0.75 | Commits, skills CLI, SEO technique, content |
 | | Kimi-K2.6 | 256k | $0.60 / $3.00 | Fallback gros contextes |
 | | Qwen3.5-397B | 204k | $0.80 / $3.60 | Multimodal natif (image+video), disponible sur demande |
-| **Léger** | Ministral-3 (14B) | 80k | $0.30 / $0.40 | Commits, skills CLI |
+| | Qwen3.5-122B | 200k | $0.40 / $3.20 | Intermédiaire Qwen, output 100k |
+| **Léger** | Ministral-3 (14B) | 80k | $0.30 / $0.40 | Modèle léger (non utilisé par défaut) |
 | | Gemma-4-31B | 100k | $0.20 / $0.40 | Tâches générales |
 | | Apertus-70B | 100k | $0.70 / $2.50 | Tâches générales |
 | **Ultra-léger** | **Nemotron-3-Nano (30B)** | **1M** | **$0.05 / $0.20** | **Fallback ultime, gros contextes** |
@@ -374,7 +376,7 @@ Les agents disponibles sont dans `agents/` :
 | Agent | Rôle |
 |-------|------|
 | `aurora.md` | Agent principal — chargement et coordination |
-| `aurora-heavy.md` | Agent pour tâches complexes (Qwen 397B) |
+| `aurora-heavy.md` | Agent pour tâches complexes (euria-code) |
 | `reviewer.md` | Code review stricte |
 | `tester.md` | Tests qualité |
 | `security.md` | Cybersécurité défensive — AppSec, threat modeling, secure code review, DevSecOps, hardening |
@@ -465,7 +467,7 @@ opencode-config/
 │
 ├── agents/                    Personnalités spécialisées
 │   ├── aurora.md              Agent principal et coordinateur
-│   ├── aurora-heavy.md        Agent pour tâches complexes (Qwen 397B)
+│   ├── aurora-heavy.md        Agent pour tâches complexes (euria-code)
 │   ├── reviewer.md            Code review stricte
 │   ├── tester.md              Tests Jest + Angular
 │   ├── security.md            Cybersécurité défensive (AppSec, threat modeling, DevSecOps)

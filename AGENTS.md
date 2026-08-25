@@ -93,15 +93,15 @@ La configuration inclut cinq MCP servers :
 
 ## Modèles et Fallback
 
-### Architecture des modèles
+### 17 modèles configurés
 
-La configuration utilise **18 modèles** répartis en 4 catégories :
+La configuration utilise **17 modèles** répartis en 6 catégories :
 
 | Catégorie | Modèles | Usage | Coût (input/output) |
 |-----------|---------|-------|---------------------|
-| **Expert** | euria-code (GLM-5.2) | Raisonnement complexe, architecture, sécurité, review, code | $0.60 / $3.00 |
-| **Intermédiaire** | Mistral-Small-4 (119B), Kimi-K2.6, Qwen3.5-397B | SEO, analytics, multimodal | $0.20-0.80 / $0.75-3.60 |
-| **Léger** | Ministral-3 (14B), Gemma-4-31B, Apertus-70B | Tâches simples, commits, skills CLI | $0.20-0.70 / $0.40-2.50 |
+| **Expert** | euria-code (GLM-5.2), euria-code-tiny | Raisonnement complexe, architecture, sécurité, review, code | $0.30-0.60 / $0.40-3.00 |
+| **Intermédiaire** | Mistral-Small-4 (119B), Kimi-K2.6, Qwen3.5-397B, Qwen3.5-122B | SEO, analytics, multimodal, commits | $0.20-0.80 / $0.75-3.60 |
+| **Léger** | Ministral-3 (14B), Gemma-4-31B, Apertus-70B | Tâches simples, skills CLI | $0.20-0.70 / $0.40-2.50 |
 | **Ultra-léger** | Nemotron-3-Nano (30B) | Fallback ultime, gros contextes | **$0.05 / $0.20** |
 | **Embedding** | Qwen3-Embedding-8B, bge_multilingual_gemma2, mini_lm_l12_v2 | Vectorisation, RAG | $0.005-0.01 / $0 |
 | **Transcription** | whisper | Audio → texte | $0.006 / $0 |
@@ -121,26 +121,26 @@ Ministral-3 (80k) → Mistral-Small-4 (256k) → Kimi-K2.6 → Nemotron-3-Nano (
 
 ### Matrice des agents
 
-| Agent | Modèle | Rôle | Quand déléguer |
-|-------|--------|------|----------------|
-| `spark` | Mistral-Small-4 (119B) | Commits, skills CLI | ✅ Par défaut pour `commit`, `create-mr` |
-| `mobile` | euria-code | iOS, Android, RN, Flutter | Audit mobile, code natif |
-| `designer` | Qwen3.5-397B | UX/UI, design system, a11y | Screenshots UI, mockups, wireframes |
-| `vision` | Qwen3.5-397B | Images non-UI | Diagrammes, photos, charts |
-| `reviewer` | euria-code | Revue de code adversarial | Pre-MR, code review stricte |
-| `tester` | euria-code | Tests unitaires, intégration | Jest, Cypress, Vitest, coverage |
-| `architect` | euria-code | Architecture, découpage | Dette technique, migration, structure |
-| `security` | euria-code | Sécurité défensive | AppSec, threat modeling, OWASP |
-| `cybersec` | euria-code | Sécurité offensive | Pentest, exploitation, Red Team |
-| `atlas` | euria-code | Stratégie SEO | Keyword research, content gaps |
-| `crawler` | Mistral-Small-4 | SEO technique | Indexation, Core Web Vitals, SSR |
-| `sage` | euria-code | AIO / GEO | AI Overviews, ChatGPT Search |
-| `scribe` | Mistral-Small-4 | Contenu SEO | Copywriting, meta, H1-H3, FAQ |
-| `pulse` | Mistral-Small-4 | Growth marketing | Funnels, A/B testing, landing pages |
-| `echo` | Mistral-Small-4 | Social distribution | LinkedIn, Instagram, X, TikTok |
-| `beacon` | Mistral-Small-4 | Analytics | GSC, GA4, PageSpeed, conversion |
-| `aurora` | euria-code | Orchestrator principal | Tâches complexes, coordination |
-| `aurora-heavy` | euria-code | Raisonnement avancé | Architecture critique, legacy complexe |
+| Agent | Modèle | Coût (in/out) | Rôle | Quand déléguer |
+|-------|--------|---------------|------|----------------|
+| `spark` | Mistral-Small-4 (119B) | $0.20 / $0.75 | Commits, skills CLI | ✅ Par défaut pour `commit`, `create-mr` |
+| `mobile` | euria-code | $0.60 / $3.00 | iOS, Android, RN, Flutter | Audit mobile, code natif |
+| `designer` | Qwen3.5-397B | $0.80 / $3.60 | UX/UI, design system, a11y | Screenshots UI, mockups, wireframes |
+| `vision` | Qwen3.5-397B | $0.80 / $3.60 | Images non-UI | Diagrammes, photos, charts |
+| `reviewer` | euria-code | $0.60 / $3.00 | Revue de code adversarial | Pre-MR, code review stricte |
+| `tester` | euria-code | $0.60 / $3.00 | Tests unitaires, intégration | Jest, Cypress, Vitest, coverage |
+| `architect` | euria-code | $0.60 / $3.00 | Architecture, découpage | Dette technique, migration, structure |
+| `security` | euria-code | $0.60 / $3.00 | Sécurité défensive | AppSec, threat modeling, OWASP |
+| `cybersec` | euria-code | $0.60 / $3.00 | Sécurité offensive | Pentest, exploitation, Red Team |
+| `atlas` | euria-code | $0.60 / $3.00 | Stratégie SEO | Keyword research, content gaps |
+| `crawler` | Mistral-Small-4 | $0.20 / $0.75 | SEO technique | Indexation, Core Web Vitals, SSR |
+| `sage` | euria-code | $0.60 / $3.00 | AIO / GEO | AI Overviews, ChatGPT Search |
+| `scribe` | Mistral-Small-4 | $0.20 / $0.75 | Contenu SEO | Copywriting, meta, H1-H3, FAQ |
+| `pulse` | Mistral-Small-4 | $0.20 / $0.75 | Growth marketing | Funnels, A/B testing, landing pages |
+| `echo` | Mistral-Small-4 | $0.20 / $0.75 | Social distribution | LinkedIn, Instagram, X, TikTok |
+| `beacon` | Mistral-Small-4 | $0.20 / $0.75 | Analytics | GSC, GA4, PageSpeed, conversion |
+| `aurora` | euria-code | $0.60 / $3.00 | Orchestrator principal | Tâches complexes, coordination |
+| `aurora-heavy` | euria-code | $0.60 / $3.00 | Raisonnement avancé | Architecture critique, legacy complexe |
 
 > **Règle** : Aurora délègue **automatiquement** via les mots-clés déclencheurs (voir `agents/aurora.md`). Ne jamais déléguer manuellement sauf besoin spécifique.
 
