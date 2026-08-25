@@ -1,7 +1,7 @@
 {
   "name": "opencode-config",
   "version": "1.1.0",
-  "description": "OpenCode Config — Configuration OpenCode de référence pour les workflows IA en production",
+  "description": "Aurora — Configuration OpenCode de référence pour les workflows IA en production",
   "license": "MIT",
   "repository": {
     "type": "git",

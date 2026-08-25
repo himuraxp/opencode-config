@@ -79,7 +79,7 @@ Utilisée par `setup.sh` et `install.sh` pour les animations et couleurs. 100% b
 
 ```bash
 source "$(dirname "${BASH_SOURCE[0]}")/ui.sh"
-ui_logo "OpenCode Config"
+ui_logo "Aurora"
 ui_section "System Check"
 ui_info "Checking prerequisites..."
 ui_run "Installing opencode-ai" npm install -g opencode-ai

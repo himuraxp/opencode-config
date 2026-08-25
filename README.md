@@ -1,4 +1,4 @@
-# OpenCode Config
+# Aurora
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/himuraxp/opencode-config.svg)](https://github.com/himuraxp/opencode-config/commits/main)

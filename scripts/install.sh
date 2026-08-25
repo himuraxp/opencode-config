@@ -318,7 +318,7 @@ install_config() {
 
 # Show logo
 if [[ "$DRY_RUN" == false ]]; then
-  ui_logo "OpenCode Config"
+  ui_logo "Aurora"
 fi
 
 # Pre-count files for progress bar

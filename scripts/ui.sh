@@ -7,7 +7,7 @@
 #
 # Usage:
 #   source "$(dirname "${BASH_SOURCE[0]}")/ui.sh"
-#   ui_logo "OpenCode Config"
+#   ui_logo "Aurora"
 #   ui_section "System Check"
 #   ui_info "Checking prerequisites..."
 #   ui_run "Installing opencode-ai" npm install -g opencode-ai
@@ -99,7 +99,7 @@ AURORA_LOGO=(
 )
 
 ui_logo() {
-  local subtitle="${1:-OpenCode Config}"
+  local subtitle="${1:-Aurora}"
   local logo_width=61
 
   if [[ "$UI_ANIMATE" == true ]]; then
