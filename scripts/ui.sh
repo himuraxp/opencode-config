@@ -123,6 +123,8 @@ ui_logo() {
     done
   fi
 
+  # Blank lines for spacing before next output
+  printf '\n\n'
 }
 
 # ─── Section headers ──────────────────────────────────────────────────────────
