@@ -573,4 +573,143 @@ export const radioTools: ToolDef[] = [
         path: `/1/radios/${args.radio_product_id}/players/${args.player_id}`,
       }),
   },
+
+  // ─── AutoDJ — Config Update (1) ─────────────────────────────────────────────
+
+  {
+    name: "update_radio_autodj",
+    description:
+      "Update AutoDJ configuration — change the playing playlist (vod_fill_mixtape_id), " +
+      "fade settings, normalization, repeat protection, hybrid mode, cover metadata injection. " +
+      "The PUT can take several seconds — ensure a timeout of at least 30s.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        radio_product_id: { type: "string", description: "Radio product ID" },
+        station_id: { type: "string", description: "Station ID" },
+        body: {
+          type: "object",
+          description: "AutoDJ config fields to update",
+          properties: {
+            vod_fill_mixtape_id: {
+              type: "string",
+              description: "Playlist ID to set as playing",
+            },
+            vod_fill_mixtape_type: {
+              type: "string",
+              description: "Type: 'playlist' or 'mixtape'",
+            },
+            fade_type: {
+              type: "string",
+              description: "Fade type: 'none', 'fadeIn', etc.",
+            },
+            fade_time: {
+              type: "number",
+              description: "Fade time in seconds",
+            },
+            is_normalized_song: {
+              type: "boolean",
+              description: "Normalize volume across tracks",
+            },
+            time_before_same_song: {
+              type: "number",
+              description: "Min seconds before the same song can repeat",
+            },
+            is_live_priority: { type: "boolean" },
+            is_hybrid: { type: "boolean" },
+            inject_cover_metadata: { type: "boolean" },
+          },
+        },
+      },
+      required: ["radio_product_id", "station_id", "body"],
+    },
+    handler: async (args) =>
+      apiCall({
+        method: "PUT",
+        path: `/1/radios/${args.radio_product_id}/stations/${args.station_id}/autodj`,
+        body: args.body as Record<string, unknown>,
+      }),
+  },
+
+  // ─── AutoDJ — Delete Media (1) ──────────────────────────────────────────────
+
+  {
+    name: "delete_radio_autodj_media",
+    description:
+      "Delete a VOD media via the radio AutoDJ endpoint. " +
+      "The direct VOD delete (DELETE /2/vod/media/{id}) does not exist — " +
+      "deletion is done through the radio AutoDJ media endpoint. " +
+      "Error 'cannot_delete_object' means the media may be in the playing playlist.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        radio_product_id: { type: "string", description: "Radio product ID" },
+        station_id: { type: "string", description: "Station ID" },
+        media_id: { type: "string", description: "VOD media ID to delete" },
+      },
+      required: ["radio_product_id", "station_id", "media_id"],
+    },
+    handler: async (args) =>
+      apiCall({
+        method: "DELETE",
+        path: `/1/radios/${args.radio_product_id}/stations/${args.station_id}/autodj/medias/${args.media_id}`,
+      }),
+  },
+
+  // ─── AutoDJ — Playlist Update & Delete (2) ──────────────────────────────────
+
+  {
+    name: "update_radio_autodj_playlist",
+    description:
+      "Update an AutoDJ playlist. 'criteria' is required (e.g. 'folder:xxx*'). " +
+      "Set 'is_advanced' to false for standard playlists, true for mixtape/advanced playlists.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        radio_product_id: { type: "string", description: "Radio product ID" },
+        station_id: { type: "string", description: "Station ID" },
+        playlist_id: { type: "string", description: "Playlist ID" },
+        body: {
+          type: "object",
+          description: "Playlist fields to update",
+          properties: {
+            name: { type: "string", description: "Playlist name" },
+            criteria: {
+              type: "string",
+              description: "Selection criteria, e.g. 'folder:xxx*'",
+            },
+            is_advanced: {
+              type: "boolean",
+              description: "Whether this is an advanced (mixtape) playlist",
+            },
+          },
+        },
+      },
+      required: ["radio_product_id", "station_id", "playlist_id", "body"],
+    },
+    handler: async (args) =>
+      apiCall({
+        method: "PUT",
+        path: `/1/radios/${args.radio_product_id}/stations/${args.station_id}/autodj/playlists/${args.playlist_id}`,
+        body: args.body as Record<string, unknown>,
+      }),
+  },
+  {
+    name: "delete_radio_autodj_playlist",
+    description: "Delete an AutoDJ playlist",
+    inputSchema: {
+      type: "object",
+      properties: {
+        radio_product_id: { type: "string", description: "Radio product ID" },
+        station_id: { type: "string", description: "Station ID" },
+        playlist_id: { type: "string", description: "Playlist ID to delete" },
+      },
+      required: ["radio_product_id", "station_id", "playlist_id"],
+    },
+    handler: async (args) =>
+      apiCall({
+        method: "DELETE",
+        path: `/1/radios/${args.radio_product_id}/stations/${args.station_id}/autodj/playlists/${args.playlist_id}`,
+      }),
+  },
 ];

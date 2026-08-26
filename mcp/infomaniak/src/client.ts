@@ -6,8 +6,13 @@
  * - Rate limiting (60 req/min — queues requests if needed)
  * - Pagination (page/per_page, offset/limit)
  * - Error parsing (result: success | error)
+ * - Multipart/form-data upload (file upload via FormData)
  * - Base URL: https://api.infomaniak.com
  */
+
+import { readFileSync } from "fs";
+import { join } from "path";
+import { homedir } from "os";
 
 const BASE_URL = "https://api.infomaniak.com";
 const RATE_LIMIT_PER_MIN = 60;
@@ -83,20 +88,17 @@ function waitForRateLimit(): void {
  * receive the environment variable from OpenCode's `{env:...}` substitution.
  */
 function getToken(): string {
-  // 1. Direct environment variable
+  // 1. Direct environment variable (injected by OpenCode via `env` config)
   const envToken = process.env.INFOMANIAK_API_TOKEN;
   if (envToken) {
     return envToken;
   }
 
   // 2. Fallback: read from ~/.config/opencode/.env
+  //    Uses ESM imports (not require) — critical for "type": "module" packages.
   try {
-    const fs = require("fs");
-    const path = require("path");
-    const os = require("os");
-
-    const envPath = path.join(os.homedir(), ".config", "opencode", ".env");
-    const envContent = fs.readFileSync(envPath, "utf-8");
+    const envPath = join(homedir(), ".config", "opencode", ".env");
+    const envContent = readFileSync(envPath, "utf-8");
 
     const match = envContent.match(/^INFOMANIAK_API_TOKEN\s*=\s*(.+)$/m);
     if (match) {
@@ -194,4 +196,78 @@ export async function paginate<T>(
     page: response.page ?? 1,
     pages: response.pages ?? 1,
   };
+}
+
+// ─── Multipart upload ────────────────────────────────────────────────────────
+
+/** Parameters for a multipart/form-data API call (file upload). */
+export interface MultipartCallParams {
+  method: "POST" | "PUT";
+  path: string;
+  /** Path to the local file to upload. */
+  filePath: string;
+  /** Optional fields to include alongside the file (folder, name, etc.). */
+  fields?: Record<string, string>;
+  /** Optional content-type override for the file (default: auto-detect). */
+  contentType?: string;
+}
+
+/**
+ * Make a multipart/form-data API call for file uploads.
+ *
+ * Uses Node's Blob (Node 18+) + FormData to construct the multipart body.
+ * Does NOT set Content-Type manually — the runtime sets it with the correct
+ * boundary automatically.
+ *
+ * @example
+ * await apiCallMultipart({
+ *   method: "POST",
+ *   path: "/1/vod/channel/14733/upload",
+ *   filePath: "/tmp/upload.mp3",
+ *   fields: { folder: "1jijk03un7ebc", name: "01 The Prelude.mp3" },
+ * });
+ */
+export async function apiCallMultipart<T = unknown>(
+  params: MultipartCallParams,
+): Promise<InfomaniakResponse<T>> {
+  waitForRateLimit();
+
+  const url = `${BASE_URL}${params.path}`;
+  const token = getToken();
+
+  // Read file into a Blob (Node 18+: Buffer is a valid BlobPart)
+  const fileBuffer = readFileSync(params.filePath);
+  const blob = new Blob([fileBuffer], {
+    type: params.contentType || "application/octet-stream",
+  });
+
+  const formData = new FormData();
+  formData.append("file", blob);
+
+  if (params.fields) {
+    for (const [key, value] of Object.entries(params.fields)) {
+      formData.append(key, value);
+    }
+  }
+
+  const fetchOptions: RequestInit = {
+    method: params.method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // Do NOT set Content-Type — FormData sets the multipart boundary
+    },
+    body: formData,
+  };
+
+  const response = await fetch(url, fetchOptions);
+  const json = (await response.json()) as InfomaniakResponse<T>;
+
+  if (json.result === "error") {
+    const err = json.error;
+    const desc = err?.description || "Unknown error";
+    const code = err?.code || "unknown";
+    throw new Error(`Infomaniak API error [${code}]: ${desc}`);
+  }
+
+  return json;
 }
