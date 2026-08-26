@@ -318,7 +318,7 @@ install_config() {
 
 # Show logo
 if [[ "$DRY_RUN" == false ]]; then
-  ui_logo "Aurora"
+  ui_logo
 fi
 
 # Pre-count files for progress bar

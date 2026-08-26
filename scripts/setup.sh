@@ -57,7 +57,7 @@ done
 
 # ─── Step 1: Prerequisites ───────────────────────────────────────────────────
 
-ui_logo "Aurora"
+ui_logo
 
 ui_section "System Check"
 

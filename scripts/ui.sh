@@ -7,7 +7,7 @@
 #
 # Usage:
 #   source "$(dirname "${BASH_SOURCE[0]}")/ui.sh"
-#   ui_logo "Aurora"
+#   ui_logo
 #   ui_section "System Check"
 #   ui_info "Checking prerequisites..."
 #   ui_run "Installing opencode-ai" npm install -g opencode-ai
@@ -99,7 +99,6 @@ AURORA_LOGO=(
 )
 
 ui_logo() {
-  local subtitle="${1:-Aurora}"
   local logo_width=61
 
   if [[ "$UI_ANIMATE" == true ]]; then
@@ -124,13 +123,6 @@ ui_logo() {
     done
   fi
 
-  # Subtitle left-aligned under the logo
-  local sub_text="($subtitle)"
-  if [[ -n "$C_DIM" ]]; then
-    printf "\033[38;5;%dm%s\033[0m\n\n" "$C_DIM" "$sub_text"
-  else
-    printf '%s\n\n' "$sub_text"
-  fi
 }
 
 # ─── Section headers ──────────────────────────────────────────────────────────
