@@ -329,12 +329,14 @@ START_DATETIME=$(date +"%Y-%m-%d %H:%M:%S")
 END_TIMESTAMP=$(date -v+20M +"%s" 2>/dev/null || date -d "+20 minutes" +"%s")
 END_DATETIME=$(date -r "$END_TIMESTAMP" +"%Y-%m-%d %H:%M:%S" 2>/dev/null || date -d "@$END_TIMESTAMP" +"%Y-%m-%d %H:%M:%S")
 
+# IMPORTANT : le champ API est "ended_at" (pas "finished_at")
+# Format attendu : "Y-m-d H:i:s" (ex: 2026-08-31 10:27:45)
 PAYLOAD=$(jq -n \
   --arg type "maintenance" \
   --arg business_units "media" \
   --arg event_type "internal" \
   --arg started_at "$START_DATETIME" \
-  --arg finished_at "$END_DATETIME" \
+  --arg ended_at "$END_DATETIME" \
   --arg title "$CHANGELOG_TITLE" \
   --arg description "$CHANGELOG_CONTENT" \
   '{
@@ -342,7 +344,7 @@ PAYLOAD=$(jq -n \
     business_units: [$business_units],
     event_type: $event_type,
     started_at: $started_at,
-    finished_at: $finished_at,
+    ended_at: $ended_at,
     description: {
       title: $title,
       body: $description
@@ -404,5 +406,6 @@ Le skill est invoqué quand l'utilisateur demande :
 - Groupe automatiquement en Features/Bug Fixes/Other
 - **Nouvelle fonctionnalité** : Après génération, le changelog est affiché pour validation avant création automatique de l'événement Infomaniak
 - L'événement est créé avec les paramètres : type=maintenance, business_unit=media, public_service=VOD/AOD, maintenance_type=scheduled
+- **Date de fin d'événement** : le champ API est `ended_at` (format `Y-m-d H:i:s`, ex: `2026-08-31 10:27:45`), réglé sur `now + 20 minutes`. La durée est auto-calculée par l'API et le status passe à `terminated` une fois la date passée. Pour modifier une date sur un événement existant : `PUT /2/events/private/{id}` (PATCH n'existe pas)
 - Si la variable `BEARER_EVENT` n'est pas définie, le token sera demandé interactivement
 - **Amélioration des merge commits** : Pour les commits "Merge branch..." (fait via merge local manuel), le skill tente automatiquement de récupérer le titre de la MR associée via l'API GitLab et l'affiche à la place du message de merge technique
