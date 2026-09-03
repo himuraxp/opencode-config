@@ -6,6 +6,7 @@
  *   check   - Check if sync is needed
  *   sync    - Perform full sync
  *   diff    - Show diff between snapshots
+ *   mapping - Generate Figma ↔ ik-* component mapping
  */
 
 import { execSync } from 'node:child_process';
@@ -20,18 +21,46 @@ import {
   writeSnapshot,
   loadExistingSnapshot,
   updateChangelog,
-  commitSnapshot
+  commitSnapshot,
+  validateSnapshotIntegrity,
+  CommitError,
+  DataIntegrityError
 } from './snapshots.js';
+
+interface JsonResult {
+  command: string;
+  ok: boolean;
+  written?: string[];
+  commit?: string | null;
+  requests?: number;
+  dryRun: boolean;
+  [key: string]: any;
+}
+
+function emitJsonResult(result: JsonResult): void {
+  console.log(`##JSON## ${JSON.stringify(result)}`);
+}
 
 const args = process.argv.slice(2);
 const command = args[0];
 const fileKeyArg = args.find(a => a.startsWith('--file='))?.split('=')[1];
 const dryRun = args.includes('--dry-run');
+const force = args.includes('--force');
 
 if (!command || !['check', 'sync', 'diff', 'mapping'].includes(command)) {
-  console.error('Usage: figma-ds-sync <command> [--file=<key>] [--dry-run]');
+  console.error('Usage: figma-ds-sync <command> [--file=<key>] [--dry-run | --force]');
   console.error('Commands: check, sync, diff, mapping');
+  console.error('Options:');
+  console.error('  --file=<key>   Figma file key to sync');
+  console.error('  --dry-run      Only supported by mapping command');
+  console.error('  --force        Skip data integrity checks (use with caution)');
   process.exit(1);
+}
+
+// Reject --dry-run before anything else (documented exit 2, even without FIGMA_TOKEN)
+if (dryRun && command !== 'mapping') {
+  console.error('Error: --dry-run is only supported by the mapping command');
+  process.exit(2);
 }
 
 async function main() {
@@ -59,7 +88,16 @@ async function main() {
       break;
     case 'mapping':
       // Local-only operation: snapshot data + ik reference, never hits the Figma API
-      generateMapping(config.snapshotsDir, dryRun);
+      const mappingResult = generateMapping(config.snapshotsDir, dryRun);
+      emitJsonResult({
+        command: 'mapping',
+        ok: true,
+        written: dryRun ? [] : ['mapping.json'],
+        exactMatches: mappingResult.entries.filter(e => e.confidence === 'exact').length,
+        fuzzyMatches: mappingResult.entries.filter(e => e.confidence === 'fuzzy').length,
+        manualMatches: mappingResult.entries.filter(e => e.confidence === 'manual').length,
+        dryRun
+      });
       break;
   }
 }
@@ -84,7 +122,14 @@ async function checkCommand(client: FigmaClient, fileKey: string, snapshotsDir: 
     
     if (!existing || !existing.meta) {
       console.log('SYNC REQUIS — aucun snapshot local trouvé');
-      process.exit(1);
+      process.exitCode = 1;
+      return;
+    }
+
+    // Check fileKey mismatch
+    if (existing.meta.file_key && existing.meta.file_key !== fileKey) {
+      console.error(`Error: snapshot dir contains data for file ${existing.meta.file_key}, refusing to mix with ${fileKey}`);
+      process.exit(2);
     }
 
     const localLastModified = existing.meta.lastModified;
@@ -92,11 +137,14 @@ async function checkCommand(client: FigmaClient, fileKey: string, snapshotsDir: 
     // Compare as real timestamps — lexicographic comparison breaks on mixed ISO precisions
     if (Date.parse(lastModified) > Date.parse(localLastModified)) {
       console.log(`SYNC REQUIS (lastModified ${lastModified} > sync du ${localLastModified})`);
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
 
     console.log('À JOUR');
-    process.exit(0);
+    emitJsonResult({ command: 'check', ok: true, dryRun });
+    // Natural exit (no process.exit): piped stdout is async — process.exit would
+    // truncate the log lines above (observed: empty output with exit 0).
   } catch (error: any) {
     if (error instanceof FigmaQuotaError) {
       console.error(`Quota Figma épuisé — impossible de vérifier maintenant. ${error.message}`);
@@ -123,6 +171,12 @@ async function syncCommand(
     // Load existing snapshot for diff
     const existing = loadExistingSnapshot(snapshotsDir);
 
+    // Check fileKey mismatch
+    if (existing?.meta?.file_key && existing.meta.file_key !== fileKey) {
+      console.error(`Error: snapshot dir contains data for file ${existing.meta.file_key}, refusing to mix with ${fileKey}`);
+      process.exit(2);
+    }
+
     // Capture all data
     const captureResult = await captureAll(client, fileKey);
     
@@ -136,6 +190,17 @@ async function syncCommand(
         .sort()
         .pop();
       normalized.meta.lastModified = new Date(maxDate!).toISOString();
+    }
+
+    // Validate data integrity before writing
+    try {
+      validateSnapshotIntegrity(normalized, existing, force);
+    } catch (error: any) {
+      if (error instanceof DataIntegrityError) {
+        console.error(`Error: ${error.message}`);
+        process.exit(3);
+      }
+      throw error;
     }
 
     // Compute diff
@@ -168,7 +233,7 @@ async function syncCommand(
     // Write snapshot only when something changed — keeps the git repo clean
     // (no dirty meta.json with a fresh syncedAt and no commit to explain it).
     if (diff.hasChanges) {
-      writeSnapshot(writer, normalized, captureResult.raw);
+      const written = writeSnapshot(writer, normalized, captureResult.raw, existing);
 
       // Update changelog
       const changelogEntry = generateChangelogEntry(diff, normalized.meta);
@@ -176,21 +241,75 @@ async function syncCommand(
 
       // Commit
       const commitMessage = `sync: ${normalized.meta.syncedAt} lastModified=${normalized.meta.lastModified}`;
-      commitSnapshot(snapshotsDir, commitMessage);
-    }
+      try {
+        commitSnapshot(snapshotsDir, commitMessage);
+      } catch (error: any) {
+        if (error instanceof CommitError) {
+          console.error(`Error: ${error.message}`);
+          process.exit(3);
+        }
+        throw error;
+      }
 
-    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log('');
-    console.log('=== SYNC COMPLETE ===');
-    console.log(`Duration: ${duration}s`);
-    console.log(`Requests made: ${client.getRequestCount()}`);
-    console.log(`Pages: ${normalized.meta.counts.pages}`);
-    console.log(`Styles: ${normalized.meta.counts.styles}`);
-    console.log(`Components: ${normalized.meta.counts.components}`);
-    console.log(`Component Sets: ${normalized.meta.counts.componentSets}`);
-    console.log(`Variables: ${normalized.variables.status} ${normalized.variables.reason ? `(${normalized.variables.reason})` : ''}`);
-    console.log(`Content: ${normalized.meta.contentStatus}`);
-    console.log(`Changes: ${diff.hasChanges ? 'yes (committed)' : 'no (snapshot kept as-is)'}`);
+      // Machine-readable: only files actually rewritten (+ CHANGELOG, updated above)
+      const jsonWritten = [...written.written, 'CHANGELOG.md'];
+      if (written.preserved.length > 0) {
+        console.log(`Preserved (gated): ${written.preserved.join(', ')}`);
+      }
+
+      const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+      console.log('');
+      console.log('=== SYNC COMPLETE ===');
+      console.log(`Duration: ${duration}s`);
+      console.log(`Requests made: ${client.getRequestCount()}`);
+      console.log(`Pages: ${normalized.meta.counts.pages}`);
+      console.log(`Styles: ${normalized.meta.counts.styles}`);
+      console.log(`Components: ${normalized.meta.counts.components}`);
+      console.log(`Component Sets: ${normalized.meta.counts.componentSets}`);
+      console.log(`Variables: ${normalized.variables.status} ${normalized.variables.reason ? `(${normalized.variables.reason})` : ''}`);
+      console.log(`Content: ${normalized.meta.contentStatus}`);
+      console.log(`Changes: yes (committed)`);
+
+      // Get commit hash if a commit was made
+      let commitHash: string | null = null;
+      try {
+        commitHash = execSync('git rev-parse HEAD', { cwd: snapshotsDir, encoding: 'utf-8' }).trim();
+      } catch {
+        commitHash = null;
+      }
+
+      emitJsonResult({
+        command: 'sync',
+        ok: true,
+        written: jsonWritten,
+        preserved: written.preserved,
+        commit: commitHash,
+        requests: client.getRequestCount(),
+        dryRun
+      });
+    } else {
+      const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+      console.log('');
+      console.log('=== SYNC COMPLETE ===');
+      console.log(`Duration: ${duration}s`);
+      console.log(`Requests made: ${client.getRequestCount()}`);
+      console.log(`Pages: ${normalized.meta.counts.pages}`);
+      console.log(`Styles: ${normalized.meta.counts.styles}`);
+      console.log(`Components: ${normalized.meta.counts.components}`);
+      console.log(`Component Sets: ${normalized.meta.counts.componentSets}`);
+      console.log(`Variables: ${normalized.variables.status} ${normalized.variables.reason ? `(${normalized.variables.reason})` : ''}`);
+      console.log(`Content: ${normalized.meta.contentStatus}`);
+      console.log(`Changes: no (snapshot kept as-is)`);
+
+      emitJsonResult({
+        command: 'sync',
+        ok: true,
+        written: [],
+        commit: null,
+        requests: client.getRequestCount(),
+        dryRun
+      });
+    }
     
   } catch (error: any) {
     console.error(`Sync failed: ${error.message}`);
@@ -207,6 +326,12 @@ async function diffCommand(client: FigmaClient, fileKey: string, snapshotsDir: s
     if (!existing) {
       console.log('No local snapshot found. Run "sync" first.');
       process.exit(1);
+    }
+
+    // Check fileKey mismatch
+    if (existing.meta.file_key && existing.meta.file_key !== fileKey) {
+      console.error(`Error: snapshot dir contains data for file ${existing.meta.file_key}, refusing to mix with ${fileKey}`);
+      process.exit(2);
     }
 
     // Try to get previous commit from git
@@ -237,10 +362,15 @@ async function diffCommand(client: FigmaClient, fileKey: string, snapshotsDir: s
     console.log(`  components: ${existing.meta.counts.components}`);
     console.log(`  componentSets: ${existing.meta.counts.componentSets}`);
 
+    emitJsonResult({ command: 'diff', ok: true, dryRun });
+
   } catch (error: any) {
     console.error(`Diff failed: ${error.message}`);
     process.exit(1);
   }
 }
 
-main();
+main().catch((error: any) => {
+  console.error(`Unexpected error: ${error.message}`);
+  process.exit(1);
+});

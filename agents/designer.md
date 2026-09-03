@@ -71,6 +71,27 @@ Activé quand le prompt contient une section `## DS Infomaniak (contexte)` (mapp
 - **Données manquantes** : si le contexte indique `contentStatus: "gated"` (structure/valeurs indisponibles) ou qu'une donnée attendue est absente du bloc, le signaler et basculer explicitement en mode autonome pour la partie concernée ("hors périmètre DS Infomaniak actuel").
 - **Styles** : n'utiliser les valeurs de couleurs/tailles que si elles sont présentes dans le contexte ; sinon recommander par nom de style Figma (`Primary/red-light`) sans inventer de valeur hex.
 
+#### Format canonique du bloc de contexte
+
+Aurora injecte le bloc selon ce gabarit (un seul format, toute dérive fragilise le comportement du mode) :
+
+```md
+## DS Infomaniak (contexte)
+
+Source : ~/dev/infomaniak-ds-snapshots (sync figma-ds-sync)
+contentStatus: "gated"   ← "available" si structure + valeurs de styles complètes
+
+mapping (entrées pertinentes pour la tâche) :
+- "Buttons" → ik-button (exact)
+- "Notifications" → ik-notification (exact)
+- "Status" → figmaOnly
+- "badge" → codeOnly
+
+styles connus par nom (valeurs indisponibles si gated) : Primary/red-light, Products/invitation, Focused
+```
+
+Règles du bloc : sentinelle unique `## DS Infomaniak (contexte)` ; n'injecter que les entrées de mapping concernées par la tâche (+ les `figmaOnly`/`codeOnly` pertinents) ; ne jamais injecter les champs `note` (messages destinés aux humains dans mapping.json) ; toujours indiquer `contentStatus`.
+
 ## Règles
 
 ### Principes

@@ -43,7 +43,7 @@ Le check fait **1 seule requête** sur `/versions` (jamais bloqué par le quota 
 ### 2. Lancer une synchronisation complète
 
 ```bash
-node dist/cli.js sync
+node dist/cli.js sync [--force]
 ```
 
 Cette commande :
@@ -51,17 +51,35 @@ Cette commande :
 2. Capture les styles (~118 : fill, text, effect, grid) — valeurs résolues uniquement si `/nodes` est accessible
 3. Capture les composants (~1992) et component sets (~224) via les endpoints dédiés
 4. Tente de capturer les variables (peut échouer en 403 si le token n'a pas le scope)
-5. Écrit les fichiers JSON normalisés dans `~/dev/infomaniak-ds-snapshots/` **uniquement si un changement est détecté**
-6. Génère un CHANGELOG.md avec le diff
-7. Commit dans le repo git si des changements sont détectés (sinon rien n'est écrit)
+5. **Valide l'intégrité des données** — abort si un count chute de >50% par rapport au précédent snapshot (sauf si `--force` est passé)
+6. Écrit les fichiers JSON normalisés dans `~/dev/infomaniak-ds-snapshots/` **uniquement si un changement est détecté**
+7. Préserve les données précédentes si la nouvelle capture est gated (structure.json, styles.json, variables.json)
+8. Génère un CHANGELOG.md avec le diff
+9. Commit dans le repo git si des changements sont détectés (sinon rien n'est écrit)
+
+**Options :**
+- `--force` : Ignore les validations d'intégrité (à utiliser uniquement si vous savez que la baisse de counts est légitime, ex. nettoyage manuel dans Figma)
 
 ### Exit codes
 
 | Code | Signification |
 |------|---------------|
 | 0 | OK (sync fait, ou à jour, ou aucun changement) |
-| 1 | Sync requise (check) ou erreur (sync) |
-| 2 | Quota Figma épuisé (check) |
+| 1 | Sync requise (check) ou erreur générale (sync) |
+| 2 | Quota Figma épuisé (check), --dry-run utilisé sur mauvaise commande, ou fileKey mismatch |
+| 3 | Commit échoué ou validation d'intégrité échouée (drop suspect de données) |
+
+### Sortie machine-readable (`##JSON##`)
+
+Chaque commande qui se termine avec succès émet en **dernière ligne stdout** :
+
+```txt
+##JSON## {"command":"check","ok":true,"dryRun":false}
+```
+
+Champs : `command`, `ok`, `written` (fichiers écrits), `commit` (hash ou null), `requests`, `dryRun` (+ extras selon la commande, ex. `exactMatches`/`fuzzyMatches` pour mapping).
+
+**Règle agent** : ne JAMAIS citer un hash de commit, un nombre de requêtes ou un fichier écrit qui ne figure pas dans la sortie `##JSON##` de l'outil — extraire les valeurs de la sortie, jamais les déduire.
 
 ### Comportement quand le quota Figma est épuisé
 
@@ -106,6 +124,25 @@ Pour utiliser un autre fichier :
 node dist/cli.js sync --file=YOUR_FILE_KEY
 ```
 
+### Force flag (skip integrity checks)
+
+Par défaut, le CLI aborte si un count (styles, components, componentSets, pages) chute de plus de 50% par rapport au précédent snapshot. Utilisez `--force` pour ignorer cette validation :
+
+```bash
+node dist/cli.js sync --force
+```
+
+**Attention** : N'utilisez `--force` que si vous savez que la baisse est légitime (ex. nettoyage manuel dans Figma).
+
+### Dry-run flag
+
+`--dry-run` est **uniquement supporté par la commande `mapping`**. Son utilisation sur `check`, `sync` ou `diff` sera rejetée avec exit code 2 :
+
+```bash
+node dist/cli.js sync --dry-run
+# Error: --dry-run is only supported by the mapping command
+```
+
 ### Répertoire de snapshots personnalisé
 
 Par défaut, les snapshots sont stockés dans `~/dev/infomaniak-ds-snapshots`.
@@ -124,17 +161,17 @@ Le repo de snapshots contient :
 ```
 ~/dev/infomaniak-ds-snapshots/
 ├── meta.json              # Métadonnées (file_key, lastModified, counts, contentStatus, variables status)
-├── structure.json         # Arborescence des pages (depth 2) — { status, pages: [] } si quota gated
+├── structure.json         # Arborescence des pages (depth 2) — { pages: [...] } ; statut gated = meta.contentStatus
 ├── styles.json            # Liste des styles normalisés (+ resolvedValue si /nodes accessible)
 ├── components.json        # Composants, component sets, component properties + componentPropertiesStatus
-├── variables.json         # Statut des variables (available/unavailable)
+├── variables.json         # { status, reason, count } des variables (available/unavailable)
 ├── CHANGELOG.md           # Historique des syncs avec diffs
-└── raw/                   # Payloads API bruts (pour debug, non commités)
-    ├── file-*.json
-    ├── styles-meta-*.json
-    ├── components-meta-*.json
-    ├── component-sets-meta-*.json
-    └── nodes-batch-*.json
+└── raw/                   # Payloads API bruts (pour debug, non commités — last-write-wins)
+    ├── file.json          # absent si payload null (gated)
+    ├── styles-meta.json
+    ├── components-meta.json
+    ├── component-sets-meta.json
+    └── nodes-batch.json   # seulement si des valeurs résolues ont été obtenues
 ```
 
 ## Format des données normalisées

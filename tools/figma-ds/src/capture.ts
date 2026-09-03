@@ -10,7 +10,7 @@
  *   - lastModified: falls back to the latest file version date via /versions
  */
 
-import { FigmaClient, FigmaQuotaError } from './figma-client.js';
+import { FigmaClient, FigmaQuotaError, HttpError } from './figma-client.js';
 import { DEFAULT_FILE_NAME } from './config.js';
 
 export interface CaptureResult {
@@ -306,7 +306,7 @@ export async function captureVariables(client: FigmaClient, fileKey: string): Pr
       variables: vars
     };
   } catch (error: any) {
-    if (error.message?.includes('403') || error.message?.includes('Invalid scope')) {
+    if (error instanceof HttpError && error.status === 403) {
       return {
         status: 'unavailable',
         reason: 'Token missing variables scope'

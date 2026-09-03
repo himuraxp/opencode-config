@@ -48,24 +48,58 @@ export function initSnapshotsRepo(dir: string): void {
 
 /**
  * Write snapshot files atomically
+ * Preserves previous data when new capture is gated but old data exists
  */
-export function writeSnapshot(writer: SnapshotWriter, data: NormalizedOutput, raw: any): void {
+export function writeSnapshot(writer: SnapshotWriter, data: NormalizedOutput, raw: any, previous: NormalizedOutput | null = null): { written: string[]; preserved: string[] } {
   const { dir } = writer;
+  const written: string[] = [];
+  const preserved: string[] = [];
 
-  // Write meta.json
+  // Write meta.json (always updated)
   writeAtomic(path.join(dir, 'meta.json'), JSON.stringify(data.meta, null, 2));
+  written.push('meta.json');
 
-  // Write structure.json
-  writeAtomic(path.join(dir, 'structure.json'), JSON.stringify(data.structure, null, 2));
+  // Write structure.json — preserve previous if gated and previous has pages
+  const structurePath = path.join(dir, 'structure.json');
+  if (data.meta.contentStatus === 'gated' && previous?.structure?.pages && previous.structure.pages.length > 0) {
+    console.log('structure: gated — previous data preserved');
+    preserved.push('structure.json');
+  } else {
+    writeAtomic(structurePath, JSON.stringify(data.structure, null, 2));
+    written.push('structure.json');
+  }
 
-  // Write styles.json
-  writeAtomic(path.join(dir, 'styles.json'), JSON.stringify(data.styles, null, 2));
+  // Write styles.json — preserve previous if gated and previous has styles with resolvedValue
+  const stylesPath = path.join(dir, 'styles.json');
+  if (data.meta.contentStatus === 'gated' && previous?.styles && previous.styles.length > 0) {
+    const hasResolvedValues = previous.styles.some((s: any) => s.resolvedValue !== undefined);
+    if (hasResolvedValues) {
+      console.log('styles: gated — previous data preserved');
+      preserved.push('styles.json');
+    } else {
+      writeAtomic(stylesPath, JSON.stringify(data.styles, null, 2));
+      written.push('styles.json');
+    }
+  } else {
+    writeAtomic(stylesPath, JSON.stringify(data.styles, null, 2));
+    written.push('styles.json');
+  }
 
   // Write components.json
   writeAtomic(path.join(dir, 'components.json'), JSON.stringify(data.components, null, 2));
+  written.push('components.json');
 
-  // Write variables.json
-  writeAtomic(path.join(dir, 'variables.json'), JSON.stringify(data.variables, null, 2));
+  // Write variables.json — preserve previous if new has no data but previous did.
+  // variables.json format is { status, reason, count } (no variables array) —
+  // judge by status + count, coherent with what normalizeVariables writes.
+  const variablesPath = path.join(dir, 'variables.json');
+  if (data.variables.status === 'unavailable' && previous?.variables?.status === 'available' && (previous.variables.count ?? 0) > 0) {
+    console.log('variables: unavailable — previous data preserved');
+    preserved.push('variables.json');
+  } else {
+    writeAtomic(variablesPath, JSON.stringify(data.variables, null, 2));
+    written.push('variables.json');
+  }
 
   // Write raw data
   const rawDir = path.join(dir, 'raw');
@@ -73,30 +107,18 @@ export function writeSnapshot(writer: SnapshotWriter, data: NormalizedOutput, ra
     fs.mkdirSync(rawDir, { recursive: true });
   }
 
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  
-  writeAtomic(
-    path.join(rawDir, `file-${timestamp}.json`),
-    JSON.stringify(raw.fileData, null, 2)
-  );
-  writeAtomic(
-    path.join(rawDir, `styles-meta-${timestamp}.json`),
-    JSON.stringify(raw.stylesMeta, null, 2)
-  );
-  writeAtomic(
-    path.join(rawDir, `components-meta-${timestamp}.json`),
-    JSON.stringify(raw.componentsMeta, null, 2)
-  );
-  writeAtomic(
-    path.join(rawDir, `component-sets-meta-${timestamp}.json`),
-    JSON.stringify(raw.componentSetsMeta, null, 2)
-  );
-  if (raw.nodesBatch && Object.keys(raw.nodesBatch).length > 0) {
-    writeAtomic(
-      path.join(rawDir, `nodes-batch-${timestamp}.json`),
-      JSON.stringify(raw.nodesBatch, null, 2)
-    );
+  // Write raw data — non-timestamped names (last write wins), skip null/undefined payloads
+  if (raw.fileData != null) {
+    writeAtomic(path.join(rawDir, 'file.json'), JSON.stringify(raw.fileData, null, 2));
   }
+  writeAtomic(path.join(rawDir, 'styles-meta.json'), JSON.stringify(raw.stylesMeta, null, 2));
+  writeAtomic(path.join(rawDir, 'components-meta.json'), JSON.stringify(raw.componentsMeta, null, 2));
+  writeAtomic(path.join(rawDir, 'component-sets-meta.json'), JSON.stringify(raw.componentSetsMeta, null, 2));
+  if (raw.nodesBatch && Object.keys(raw.nodesBatch).length > 0) {
+    writeAtomic(path.join(rawDir, 'nodes-batch.json'), JSON.stringify(raw.nodesBatch, null, 2));
+  }
+
+  return { written, preserved };
 }
 
 /**
@@ -118,31 +140,48 @@ function writeAtomic(filePath: string, content: string): void {
 
 /**
  * Load existing snapshot data if available
+ * Throws on corruption (JSON parse error or missing required meta fields)
  */
 export function loadExistingSnapshot(dir: string): NormalizedOutput | null {
-  try {
-    const meta = fs.existsSync(path.join(dir, 'meta.json')) 
-      ? JSON.parse(fs.readFileSync(path.join(dir, 'meta.json'), 'utf-8')) 
-      : null;
-    const structure = fs.existsSync(path.join(dir, 'structure.json'))
-      ? JSON.parse(fs.readFileSync(path.join(dir, 'structure.json'), 'utf-8'))
-      : null;
-    const styles = fs.existsSync(path.join(dir, 'styles.json'))
-      ? JSON.parse(fs.readFileSync(path.join(dir, 'styles.json'), 'utf-8'))
-      : null;
-    const components = fs.existsSync(path.join(dir, 'components.json'))
-      ? JSON.parse(fs.readFileSync(path.join(dir, 'components.json'), 'utf-8'))
-      : null;
-    const variables = fs.existsSync(path.join(dir, 'variables.json'))
-      ? JSON.parse(fs.readFileSync(path.join(dir, 'variables.json'), 'utf-8'))
-      : null;
+  const metaPath = path.join(dir, 'meta.json');
+  const structurePath = path.join(dir, 'structure.json');
+  const stylesPath = path.join(dir, 'styles.json');
+  const componentsPath = path.join(dir, 'components.json');
+  const variablesPath = path.join(dir, 'variables.json');
 
-    if (!meta) return null;
-
-    return { meta, structure, styles, components, variables };
-  } catch {
+  // Check if meta.json exists — if not, no previous snapshot (return null)
+  if (!fs.existsSync(metaPath)) {
     return null;
   }
+
+  // Parse meta.json — throw on corruption
+  let meta: any;
+  try {
+    meta = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
+  } catch (error: any) {
+    throw new Error(`snapshot meta.json is corrupted — repair or delete ${dir} and re-sync. Original error: ${error.message}`);
+  }
+
+  if (!meta || typeof meta.file_key !== 'string') {
+    throw new Error(`snapshot meta.json is corrupted (missing required fields) — repair or delete ${dir} and re-sync`);
+  }
+
+  // Parse other files — return null if missing/corrupted (they are optional)
+  const parseOptional = (filePath: string) => {
+    if (!fs.existsSync(filePath)) return null;
+    try {
+      return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    } catch {
+      return null;
+    }
+  };
+
+  const structure = parseOptional(structurePath);
+  const styles = parseOptional(stylesPath);
+  const components = parseOptional(componentsPath);
+  const variables = parseOptional(variablesPath);
+
+  return { meta, structure, styles, components, variables };
 }
 
 /**
@@ -166,15 +205,110 @@ export function updateChangelog(dir: string, entry: string, diff: any): void {
 }
 
 /**
+ * Custom error for git commit failures
+ */
+export class CommitError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'CommitError';
+  }
+}
+
+/**
+ * Error for suspicious data drops
+ */
+export class DataIntegrityError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DataIntegrityError';
+  }
+}
+
+/**
+ * Validate snapshot data integrity before commit
+ * Checks for suspicious drops in counts (>50% decrease from previous snapshot)
+ */
+export function validateSnapshotIntegrity(current: NormalizedOutput, previous: NormalizedOutput | null, force: boolean = false): void {
+  if (!previous) {
+    // No previous snapshot to compare against
+    return;
+  }
+
+  const checks: Array<{ name: string; prev: number; curr: number }> = [];
+
+  // Check styles count
+  if (previous.styles && current.styles) {
+    checks.push({
+      name: 'styles',
+      prev: previous.styles.length,
+      curr: current.styles.length
+    });
+  }
+
+  // Check components count
+  if (previous.components && current.components) {
+    checks.push({
+      name: 'components',
+      prev: previous.components.components?.length || 0,
+      curr: current.components.components?.length || 0
+    });
+  }
+
+  // Check componentSets count
+  if (previous.components && current.components) {
+    checks.push({
+      name: 'componentSets',
+      prev: previous.components.componentSets?.length || 0,
+      curr: current.components.componentSets?.length || 0
+    });
+  }
+
+  // Check pages count — exempt in gated mode: pages are EXPECTED to be empty
+  // (content endpoints 429), so a full pages list → [] is expected, not a drop.
+  if (current.meta?.contentStatus !== 'gated' && previous.structure?.pages && current.structure?.pages) {
+    checks.push({
+      name: 'pages',
+      prev: previous.structure.pages.length,
+      curr: current.structure.pages.length
+    });
+  }
+
+  // Validate each check
+  for (const check of checks) {
+    if (check.prev > 0) {
+      const dropPercent = ((check.prev - check.curr) / check.prev) * 100;
+      if (dropPercent > 50) {
+        const errorMsg = `suspicious drop in ${check.name}: ${check.prev} → ${check.curr} (${dropPercent.toFixed(1)}% decrease — API response may be partial)`;
+        if (!force) {
+          throw new DataIntegrityError(errorMsg);
+        } else {
+          console.warn(`⚠️ WARNING: ${errorMsg} (--force flag used, proceeding)`);
+        }
+      }
+    }
+  }
+}
+
+/**
  * Commit snapshot to git
+ * Stages only the snapshot files that exist on disk (meta.json, structure.json, styles.json, components.json, variables.json, CHANGELOG.md)
  */
 export function commitSnapshot(dir: string, message: string): void {
+  const snapshotFiles = ['meta.json', 'structure.json', 'styles.json', 'components.json', 'variables.json', 'CHANGELOG.md'];
+  
   try {
-    execSync('git add -A', { cwd: dir, stdio: 'inherit' });
+    // Stage only existing snapshot files (not all untracked files)
+    for (const file of snapshotFiles) {
+      const filePath = path.join(dir, file);
+      if (fs.existsSync(filePath)) {
+        execSync(`git add "${file}"`, { cwd: dir, stdio: 'inherit' });
+      }
+    }
     // execFileSync avoids shell interpolation of the commit message
     execFileSync('git', ['commit', '-m', message], { cwd: dir, stdio: 'inherit' });
     console.log(`Committed: ${message}`);
-  } catch (error) {
-    console.error('Git commit failed:', error);
+  } catch (error: any) {
+    // If commit fails, throw explicit error so caller can handle it
+    throw new CommitError(`git commit failed — repo may be dirty or misconfigured. Fix the issue and re-run. Original error: ${error.message}`);
   }
 }

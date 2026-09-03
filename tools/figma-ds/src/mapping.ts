@@ -22,7 +22,6 @@ export interface MappingEntry {
   figma: string;
   ik: string;
   confidence: 'exact' | 'fuzzy' | 'manual';
-  figmaComponentCount?: number;
   note?: string;
 }
 
@@ -31,6 +30,8 @@ export interface MappingResult {
   entries: MappingEntry[];
   figmaOnly: string[];
   codeOnly: string[];
+  unreferencedFamilies?: string[];
+  orphanedManualEntries?: string[];
 }
 
 interface IkComponent {
@@ -81,7 +82,7 @@ function levenshtein(a: string, b: string): number {
  * Score in [0, 1]. A full-token containment (ik name present as a Figma token,
  * or the reverse) weighs more than raw token overlap.
  */
-function scoreMatch(figmaName: string, ikName: string): number {
+export function scoreMatch(figmaName: string, ikName: string): number {
   const tokA = tokens(figmaName);
   const tokB = tokens(ikName);
   if (tokA.length === 0 || tokB.length === 0) return 0;
@@ -92,11 +93,13 @@ function scoreMatch(figmaName: string, ikName: string): number {
   for (const t of setA) if (setB.has(t)) overlap++;
   const tokenScore = overlap / Math.max(setA.size, setB.size);
 
-  // containment: the ik name (as tokens) appears inside the Figma family name, or the reverse
-  const containmentScore = (setB.has(tokA.join(' ')) || setA.has(tokB.join(' '))) ? 0.8 : 0;
-
+  // containment: the ik name (as tokens) appears inside the Figma family name, or the reverse.
+  // Guard: the shorter joined string must be >= 4 chars — otherwise any 1-3 char
+  // fragment ("a", "in") would be "contained" in almost every name (noise).
   const joinedA = tokA.join(' ');
   const joinedB = tokB.join(' ');
+  const containmentScore = (joinedA && joinedB && Math.min(joinedA.length, joinedB.length) >= 4 && (joinedA.includes(joinedB) || joinedB.includes(joinedA))) ? 0.8 : 0;
+
   const dist = levenshtein(joinedA, joinedB);
   const levScore = 1 - dist / Math.max(joinedA.length, joinedB.length);
 
@@ -111,55 +114,109 @@ interface FamilyInfo {
 }
 
 /**
- * Priority: manual reference of the COMPONENTS page sub-pages (exact, quota-proof,
- * maintained on demand). Fallback: derive families from component name prefixes
- * (noisy on this file — mixes DS components with product mockups).
+ * Family source for matching: the manual reference of the COMPONENTS page
+ * sub-pages (exact, quota-proof, maintained on demand) ONLY. Derived families
+ * from component name prefixes are deliberately NEVER used for matching
+ * (noisy on this file — mixes DS components with product mockups); they are
+ * only reported as unreferencedFamilies so the manual reference can be updated.
  */
-function getFamilies(componentsPayload: any): Map<string, FamilyInfo> {
-  const families = new Map<string, FamilyInfo>();
+interface ComponentsPayload {
+  components?: { name: string }[];
+  componentSets?: { name: string }[];
+}
 
-  if (fs.existsSync(FAMILIES_FILE)) {
-    const ref = JSON.parse(fs.readFileSync(FAMILIES_FILE, 'utf-8'));
+function getFamilies(componentsPayload: ComponentsPayload, familiesFile: string = FAMILIES_FILE): { families: Map<string, FamilyInfo>; unreferencedFamilies: string[] } {
+  const families = new Map<string, FamilyInfo>();
+  const unreferencedFamilies: string[] = [];
+
+  // Derive families from snapshot components (used for reporting only)
+  const derivedFamilies = new Map<string, number>();
+  const bumpDerived = (raw: string) => {
+    const first = normalizeName(raw).split(' ')[0];
+    if (!first) return;
+    derivedFamilies.set(first, (derivedFamilies.get(first) || 0) + 1);
+  };
+  for (const c of componentsPayload?.components ?? []) bumpDerived(c.name);
+  for (const s of componentsPayload?.componentSets ?? []) bumpDerived(s.name);
+
+  if (fs.existsSync(familiesFile)) {
+    const ref = JSON.parse(fs.readFileSync(familiesFile, 'utf-8')) as { families?: string[] };
     for (const name of ref.families ?? []) {
       families.set(name, { name });
     }
-    return families;
+    // Families present in the snapshot but missing from the reference: report only
+    for (const [name, count] of derivedFamilies) {
+      if (!families.has(name)) {
+        unreferencedFamilies.push(name);
+        void count;
+      }
+    }
+  } else {
+    // Fallback (no manual reference): use derived families
+    for (const [name, count] of derivedFamilies) {
+      families.set(name, { name, componentCount: count });
+      unreferencedFamilies.push(name);
+    }
   }
 
-  const bump = (raw: string) => {
-    const first = normalizeName(raw).split(' ')[0];
-    if (!first) return;
-    const existing = families.get(first);
-    families.set(first, existing
-      ? { name: first, componentCount: (existing.componentCount || 0) + 1 }
-      : { name: first, componentCount: 1 });
-  };
-  for (const c of componentsPayload?.components ?? []) bump(c.name);
-  for (const s of componentsPayload?.componentSets ?? []) bump(s.name);
-  return families;
+  return { families, unreferencedFamilies };
 }
 
 // ── Main entry ───────────────────────────────────────────────────────────────
 
-export function generateMapping(snapshotsDir: string, dryRun = false): MappingResult {
+export interface MappingSourceOptions {
+  /** Override path to ik-components.reference.json (tests). Defaults to the bundled reference. */
+  referenceFile?: string;
+  /** Override path to figma-families.reference.json (tests). Defaults to the bundled reference. */
+  familiesFile?: string;
+}
+
+export function generateMapping(
+  snapshotsDir: string,
+  dryRun = false,
+  sourceOptions: MappingSourceOptions = {}
+): MappingResult {
+  const referenceFile = sourceOptions.referenceFile ?? REFERENCE_FILE;
+  const familiesFile = sourceOptions.familiesFile ?? FAMILIES_FILE;
   const componentsPath = path.join(snapshotsDir, 'components.json');
   if (!fs.existsSync(componentsPath)) {
     throw new Error(`No snapshot found at ${componentsPath} — run "sync" first.`);
   }
   const componentsPayload = JSON.parse(fs.readFileSync(componentsPath, 'utf-8'));
-  const reference = JSON.parse(fs.readFileSync(REFERENCE_FILE, 'utf-8'));
+  const reference = JSON.parse(fs.readFileSync(referenceFile, 'utf-8'));
   const ikComponents: IkComponent[] = reference.components ?? [];
+  const ikSet = new Set(ikComponents.map(c => c.name));
 
-  // 1. Manual entries survive regeneration
+  // Load families reference for validation
+  let familiesSet: Set<string> = new Set();
+  if (fs.existsSync(familiesFile)) {
+    const familiesRef = JSON.parse(fs.readFileSync(familiesFile, 'utf-8')) as { families?: string[] };
+    familiesSet = new Set(familiesRef.families ?? []);
+  }
+
+  // 1. Manual entries survive regeneration — but validate they still reference valid ik/families
   const mappingPath = path.join(snapshotsDir, 'mapping.json');
   const existing: MappingResult | null = fs.existsSync(mappingPath)
     ? JSON.parse(fs.readFileSync(mappingPath, 'utf-8'))
     : null;
-  const manualEntries = (existing?.entries ?? []).filter(e => e.confidence === 'manual');
+  const manualEntries: MappingEntry[] = [];
+  const orphanedManualEntries: string[] = [];
+  
+  if (existing?.entries) {
+    for (const entry of existing.entries.filter(e => e.confidence === 'manual')) {
+      // Validate: ik must exist in ik-components.reference.json AND figma family must exist in figma-families.reference.json
+      if (ikSet.has(entry.ik) && familiesSet.has(entry.figma)) {
+        manualEntries.push(entry);
+      } else {
+        orphanedManualEntries.push(`${entry.figma} → ik-${entry.ik}`);
+        console.warn(`⚠️ Warning: orphaned manual mapping entry excluded (ik or figma family no longer exists): ${entry.figma} → ik-${entry.ik}`);
+      }
+    }
+  }
   const manualIkSet = new Set(manualEntries.map(e => e.ik));
 
   // 2. Families + candidates
-  const families = getFamilies(componentsPayload);
+  const { families, unreferencedFamilies } = getFamilies(componentsPayload, familiesFile);
   const remainingIk = new Set(
     ikComponents.map(c => c.name).filter(n => !manualIkSet.has(n))
   );
@@ -198,13 +255,26 @@ export function generateMapping(snapshotsDir: string, dryRun = false): MappingRe
     generatedAt: new Date().toISOString(),
     entries,
     figmaOnly,
-    codeOnly
+    codeOnly,
+    ...(unreferencedFamilies.length > 0 ? { unreferencedFamilies } : {}),
+    ...(orphanedManualEntries.length > 0 ? { orphanedManualEntries } : {})
   };
 
   const changed = !existing || JSON.stringify({ ...result, generatedAt: null }) !== JSON.stringify({ ...existing, generatedAt: null });
   if (changed && !dryRun) {
     writeAtomic(mappingPath, JSON.stringify(result, null, 2));
     commitMapping(snapshotsDir, result);
+  }
+
+  // Log warning for unreferenced families (INFORMATIONAL — do NOT add as-is:
+  // most are product-mockup name prefixes, not real DS families)
+  if (unreferencedFamilies.length > 0) {
+    console.warn(`⚠️ Info: snapshot name-prefixes absent from the reference (review manually, most are NOT real DS families): ${unreferencedFamilies.join(', ')}`);
+  }
+
+  // Log warning for orphaned manual entries
+  if (orphanedManualEntries.length > 0) {
+    console.warn(`⚠️ Warning: ${orphanedManualEntries.length} orphaned manual mapping entries excluded: ${orphanedManualEntries.join(', ')}`);
   }
 
   printReport(result, dryRun);
@@ -237,7 +307,7 @@ function printReport(result: MappingResult, dryRun: boolean): void {
   console.log(`Matched: ${result.entries.length} (exact: ${byConf('exact').length}, fuzzy: ${byConf('fuzzy').length}, manual: ${byConf('manual').length})`);
   for (const e of result.entries) {
     const badge = e.confidence === 'exact' ? '✓' : e.confidence === 'manual' ? '★' : '~';
-    console.log(`  ${badge} ${e.figma}  →  ik-${e.ik}${e.figmaComponentCount ? ` (${e.figmaComponentCount} composants Figma)` : ''}`);
+    console.log(`  ${badge} ${e.figma}  →  ik-${e.ik}`);
   }
   if (result.figmaOnly.length) {
     console.log(`Figma sans implémentation code (${result.figmaOnly.length}) : ${result.figmaOnly.join(', ')}`);

@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "start": "node dist/cli.js"
+    "start": "node dist/cli.js",
+    "test": "tsc -p tsconfig.test.json && node --test 'dist-tests/tests/*.test.js'"
   },
   "devDependencies": {
     "typescript": "^5.5.0",
