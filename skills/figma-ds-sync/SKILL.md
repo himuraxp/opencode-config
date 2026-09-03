@@ -79,6 +79,21 @@ node dist/cli.js diff
 
 Affiche les métadonnées du snapshot actuel et du précédent commit git.
 
+### 4. Générer le mapping Figma ↔ composants ik-*
+
+```bash
+node dist/cli.js mapping [--dry-run]
+```
+
+Croise les familles Figma (référence `tools/figma-ds/figma-families.reference.json`) avec les composants Angular `ik-*` (référence `ik-components.reference.json`). **100 % local** : ne consomme aucun quota Figma. **Sur demande uniquement** — jamais automatique à chaque sync.
+
+Sortie : `~/dev/infomaniak-ds-snapshots/mapping.json` + commit dédié.
+- `confidence: "exact"` — match fiable
+- `confidence: "fuzzy"` — match probable (score affiché) → à valider
+- Pour corriger : éditer `mapping.json`, passer `confidence` à `"manual"` → préservé à la prochaine régénération
+
+Utilisation : injecter `mapping.json` dans les délégations Designer/revues UI pour savoir si un composant Figma existe en code (et inversement). Les listes `figmaOnly` / `codeOnly` sont aussi utiles comme roadmap (composants Figma non implémentés).
+
 ## Options
 
 ### Fichier Figma personnalisé

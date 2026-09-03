@@ -13,6 +13,7 @@ import { loadConfig, Config } from './config.js';
 import { FigmaClient, FigmaQuotaError } from './figma-client.js';
 import { captureAll, CaptureResult } from './capture.js';
 import { normalizeCapture, computeDiff, generateChangelogEntry, DiffResult } from './normalize.js';
+import { generateMapping } from './mapping.js';
 import {
   createSnapshotWriter,
   initSnapshotsRepo,
@@ -25,10 +26,11 @@ import {
 const args = process.argv.slice(2);
 const command = args[0];
 const fileKeyArg = args.find(a => a.startsWith('--file='))?.split('=')[1];
+const dryRun = args.includes('--dry-run');
 
-if (!command || !['check', 'sync', 'diff'].includes(command)) {
-  console.error('Usage: figma-ds-sync <command> [--file=<key>]');
-  console.error('Commands: check, sync, diff');
+if (!command || !['check', 'sync', 'diff', 'mapping'].includes(command)) {
+  console.error('Usage: figma-ds-sync <command> [--file=<key>] [--dry-run]');
+  console.error('Commands: check, sync, diff, mapping');
   process.exit(1);
 }
 
@@ -54,6 +56,10 @@ async function main() {
       break;
     case 'diff':
       await diffCommand(client, fileKey, config.snapshotsDir);
+      break;
+    case 'mapping':
+      // Local-only operation: snapshot data + ik reference, never hits the Figma API
+      generateMapping(config.snapshotsDir, dryRun);
       break;
   }
 }
