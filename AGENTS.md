@@ -8,13 +8,15 @@ Ce repo sépare les responsabilités en 5 couches :
 
 ```txt
 config/      Configuration OpenCode (opencode.json, plugins, .env.example — sans secrets)
-agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile, explorer, fixer, librarian, oracle)
+agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
-skills/      Skills réutilisables (commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres)
+skills/      Skills réutilisables (commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync)
 ```
 
-Plus 5 dossiers de support :
+Les agents `explorer`, `fixer`, `librarian` et `oracle` sont fournis par le plugin **oh-my-opencode-slim** (définis dans `config/oh-my-opencode-slim.json`), pas comme fichiers `agents/*.md`.
+
+Plus 6 dossiers de support :
 
 ```txt
 scripts/     Installation et maintenance (setup.sh, install.sh, init-project.sh, sync-project.sh, health-check.sh, permissions-matrix.sh, validate-memory.sh, create-mr/, hooks/)
@@ -22,6 +24,7 @@ templates/   Fichiers injectés dans les projets (AGENTS.md, docs/ai/*)
 docs/        Guides utilisateur (workflow, customization, angular-20, code-review, testing, architecture)
 examples/    Exemples prêts à l'emploi (angular-app, node-api, monorepo)
 mcp/         MCP servers locaux (infomaniak, angular-elements)
+tools/       CLIs d'infrastructure du repo (figma-ds — sync du design system Figma Infomaniak, procédure dans skills/figma-ds-sync/)
 ```
 
 ## Mémoire projet auto-entretenue

@@ -39,10 +39,10 @@ Les agents IA (OpenCode, Cursor, Claude...) ne savent pas quel standard utiliser
 
 Ce repo apporte :
 
-- **Agents spécialisés** : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security (défensif), cybersec (offensif/pentest), architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter)
+- **Agents spécialisés** (repo) : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security (défensif), cybersec (offensif/pentest), architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter) — **plus les agents du plugin oh-my-opencode-slim** : explorer (recherche codebase), fixer (exécution de spec), librarian (docs externes), oracle (conseil technique)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
-- **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres
+- **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
 - **Audit read-only** : health-check multi-axes sans modification de code
@@ -151,6 +151,7 @@ Les secrets sont stockés dans `~/.config/opencode/.env` et référencés via `{
 | `IDB_PATH` | Chemin binaires idb | Non |
 | `INFOMANIAK_API_TOKEN` | Token API Infomaniak (MCP infomaniak) | Non |
 | `GITLAB_TOKEN` | Token GitLab (MCP angular-elements) | Non |
+| `FIGMA_TOKEN` | Token API Figma (skill `figma-ds-sync` — sync design system) | Non |
 
 `setup.sh` demande ces valeurs interactivement. Pour les modifier ultérieurement, éditez `~/.config/opencode/.env` directement.
 
@@ -282,6 +283,9 @@ Qwen3.5-397B (204k)    → Kimi-K2.6 (256k)       → Nemotron-3-Nano (1M)
 | `designer`, `vision` | Qwen3.5-397B | Multimodal natif (image+video), analyse de screenshots et mockups |
 | `echo`, `scribe`, `pulse`, `beacon`, `crawler` | Mistral-Small-4 (119B) | Bon équilibre coût/performance/créativité |
 | `spark` | Mistral-Small-4 (119B) | Commits, skills CLI — 256k contexte évite la boucle de compaction |
+| `oracle` (plugin) | euria-code (variant high) | Conseil stratégique, review adversariale |
+| `fixer` (plugin) | Qwen3.5-122B | Exécution rapide de spec |
+| `explorer`, `librarian` (plugin) | Ministral-3 (14B) | Recherche rapide codebase / docs externes |
 
 ---
 
@@ -330,7 +334,7 @@ Global Configuration
         ↓
      Standards    (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output)
         ↓
-         Agents       (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
+         Agents       (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile) + plugin (explorer, fixer, librarian, oracle)
         ↓
     Frameworks     (angular-20, nodejs, nestjs, astro...)
         ↓
@@ -367,7 +371,7 @@ Après installation, l'agent Aurora (principal) charge automatiquement :
 
 ```txt
 1. Standards globaux (workflow, communication, verification...)
-2. Agents globaux (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
+2. Agents globaux (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile) + agents du plugin (explorer, fixer, librarian, oracle)
 3. Framework ciblé (Angular 20+, Node.js, etc.)
 4. Standards entreprise (si configurés)
 5. AGENTS.md local + docs/ai/
@@ -403,8 +407,10 @@ Les agents disponibles sont dans `agents/` :
 | `pulse.md` | Growth Marketing — acquisition, conversion, funnel |
 | `echo.md` | Social Distribution — distribution multi-canal |
 | `beacon.md` | Analytics — mesure SEO et marketing |
-| `designer.md` | UX/UI Designer — conception d'interfaces, DA, design system, accessibilité |
+| `designer.md` | UX/UI Designer — conception d'interfaces, DA, design system, accessibilité (2 modes : autonome / DS Infomaniak) |
 | `mobile.md` | Mobile Engineer — iOS, Android, React Native, Flutter |
+
+> Agents **fournis par le plugin** `oh-my-opencode-slim` (config `config/oh-my-opencode-slim.json`) : `explorer` (recherche codebase), `fixer` (exécution rapide de spec), `librarian` (recherche docs externes), `oracle` (conseil technique stratégique, review adversariale).
 
 ### Ajouter un framework
 
@@ -494,7 +500,7 @@ opencode-config/
 │   ├── pulse.md               Growth Marketing
 │   ├── echo.md                Social Distribution
 │   ├── beacon.md              Analytics
-│   ├── designer.md            UX/UI Designer, DA, Design System
+│   ├── designer.md            UX/UI Designer, DA, Design System (2 modes)
 │   └── mobile.md              Mobile Engineer (iOS/Android/RN/Flutter)
 │
 ├── frameworks/                Règles par stack technique
@@ -523,12 +529,19 @@ opencode-config/
 │   ├── infomaniak/            API Infomaniak (radio, VOD, newsletter, DNS, events, AI)
 │   └── angular-elements/      Design system Angular Elements (composants, API, stories)
 │
+├── tools/                     CLIs d'infrastructure (repo, pas installés comme agents)
+│   └── figma-ds/              CLI de sync du design system Figma Infomaniak
+│       ├── src/               TypeScript strict (check / sync / diff / mapping)
+│       ├── tests/             Suite node:test (53 tests)
+│       └── *-reference.json   Références manuelles (familles Figma, composants ik-*)
+│
 ├── skills/                    Skills réutilisables
 │   ├── allow-command/         Pré-approuver des commandes shell dans opencode.json
 │   ├── code-review/           Review adversariale de code
 │   ├── commit/                Messages de commit (conventions Infomaniak)
 │   ├── create-mr/             Création de merge requests (scripts + tests)
 │   ├── deployment-changelog/  Changelog de déploiement
+│   ├── figma-ds-sync/         Sync du design system Figma Infomaniak (check/sync/diff/mapping)
 │   ├── gitlab-ci/             Interaction GitLab CI/CD (glab)
 │   ├── gitlab-issues/         Gestion des issues GitLab (glab)
 │   ├── gitlab-summary/        Résumé d'activité GitLab
@@ -571,7 +584,7 @@ opencode-config/
 L'agent reçoit et applique dans cet ordre (du plus général au plus spécifique, le plus spécifique l'emporte) :
 
 1. **Standards** globaux `~/.config/opencode/standards/` (workflow, memory-session-flow, memory-auto-update, memory-checklist, verification, communication, escalation, commits, review-before-done, audit, exploration-limits, error-correction, anti-patterns, artifact-authoring, delegation-failure, agent-output).
-2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile).
+2. **Agents** globaux `~/.config/opencode/agents/` (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile) + agents du plugin oh-my-opencode-slim (explorer, fixer, librarian, oracle).
 3. **Frameworks** globaux `~/.config/opencode/frameworks/` (angular-20, nodejs, nestjs, astro).
 4. Standards entreprise (si configurés).
 5. **`AGENTS.md`** local du projet.
