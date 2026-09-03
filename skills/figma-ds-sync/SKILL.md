@@ -28,7 +28,7 @@ Outil CLI pour synchroniser et sauvegarder le Design System Figma d'Infomaniak d
 ### 1. Vérifier si une sync est nécessaire
 
 ```bash
-cd /Users/yohannlarbi/.config/opencode-config/mcp/figma-ds
+cd /Users/yohannlarbi/.config/opencode-config/tools/figma-ds
 npm run build
 node dist/cli.js check
 ```
@@ -226,7 +226,7 @@ Pas nativement, mais vous pouvez utiliser un cron (le CLI ne suspend jamais : fa
 
 ```bash
 # Exemple : sync quotidienne à 8h
-0 8 * * * cd /Users/yohannlarbi/.config/opencode-config/mcp/figma-ds && node dist/cli.js sync
+0 8 * * * cd /Users/yohannlarbi/.config/opencode-config/tools/figma-ds && node dist/cli.js sync
 ```
 
 ## Limitations connues
