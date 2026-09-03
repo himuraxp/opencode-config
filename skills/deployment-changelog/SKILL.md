@@ -3,7 +3,7 @@ name: deployment-changelog
 description: Génère un changelog de déploiement au format spécifié pour les commits sur master depuis 00:01 ce matin jusqu'à maintenant.
 ---
 
-## Version: 1.0.0
+## Version: 1.1.0
 
 # Deployment Changelog Generator
 
@@ -325,30 +325,37 @@ fi
 ```bash
 # Préparer les timestamps
 START_DATETIME=$(date +"%Y-%m-%d %H:%M:%S")
-# Calculer la date de fin (+20 minutes)
-END_TIMESTAMP=$(date -v+20M +"%s" 2>/dev/null || date -d "+20 minutes" +"%s")
-END_DATETIME=$(date -r "$END_TIMESTAMP" +"%Y-%m-%d %H:%M:%S" 2>/dev/null || date -d "@$END_TIMESTAMP" +"%Y-%m-%d %H:%M:%S")
 
-# IMPORTANT : le champ API est "ended_at" (pas "finished_at")
-# Format attendu : "Y-m-d H:i:s" (ex: 2026-08-31 10:27:45)
+# IMPORTANT : payload aligné sur le formulaire internal.infomaniak.com
+# - ended_at reste null à la création : c'est autoclose + estimated_time (min) qui terminent l'événement
+# - Pour poser une date de fin explicite après création : PUT /2/events/private/{id} avec {"ended_at": "Y-m-d H:i:s"}
 PAYLOAD=$(jq -n \
-  --arg type "maintenance" \
-  --arg business_units "media" \
-  --arg event_type "internal" \
   --arg started_at "$START_DATETIME" \
-  --arg ended_at "$END_DATETIME" \
   --arg title "$CHANGELOG_TITLE" \
   --arg description "$CHANGELOG_CONTENT" \
   '{
-    type: $type,
-    business_units: [$business_units],
-    event_type: $event_type,
+    type: "maintenance",
+    status: "inprogress",
+    description: { title: $title, body: $description },
     started_at: $started_at,
-    ended_at: $ended_at,
-    description: {
-      title: $title,
-      body: $description
-    }
+    ended_at: null,
+    event_type: "internal",
+    visibility: "internal",
+    estimated_time: 5,
+    autoclose: true,
+    business_units: ["media"],
+    groups: ["dev-central", "unix-central"],
+    disable_notify: false,
+    confidentiality_impact: false,
+    integrity_impact: false,
+    availability_impact: false,
+    risk_score: 1,
+    perimeter_score: 1,
+    business_score: 2,
+    intervention_score: 2,
+    global_score: 4,
+    deploy_slug: "default_team",
+    is_cyberattack: false
   }')
 
 API_ENDPOINT="https://api.infomaniak.com/2/events/private"
@@ -405,7 +412,8 @@ Le skill est invoqué quand l'utilisateur demande :
 - Affiche les commits avec leur hash court et lien vers GitLab
 - Groupe automatiquement en Features/Bug Fixes/Other
 - **Nouvelle fonctionnalité** : Après génération, le changelog est affiché pour validation avant création automatique de l'événement Infomaniak
-- L'événement est créé avec les paramètres : type=maintenance, business_unit=media, public_service=VOD/AOD, maintenance_type=scheduled
-- **Date de fin d'événement** : le champ API est `ended_at` (format `Y-m-d H:i:s`, ex: `2026-08-31 10:27:45`), réglé sur `now + 20 minutes`. La durée est auto-calculée par l'API et le status passe à `terminated` une fois la date passée. Pour modifier une date sur un événement existant : `PUT /2/events/private/{id}` (PATCH n'existe pas)
+- L'événement est créé avec les paramètres : type=maintenance, business_units=["media"], event_type=internal, visibility=internal, groups=["dev-central","unix-central"], deploy_slug=default_team
+- **Fin d'événement** : `ended_at` reste `null` à la création ; `autoclose: true` + `estimated_time: 5` (minutes) terminent l'événement automatiquement. Payload aligné sur le formulaire internal.infomaniak.com
+- **Date de fin explicite** (optionnel) : après création, `PUT /2/events/private/{id}` avec `{"ended_at": "Y-m-d H:i:s"}` (format obligatoire `Y-m-d H:i:s`, PATCH n'existe pas). La durée est auto-calculée par l'API et le status passe à `terminated` une fois la date passée
 - Si la variable `BEARER_EVENT` n'est pas définie, le token sera demandé interactivement
 - **Amélioration des merge commits** : Pour les commits "Merge branch..." (fait via merge local manuel), le skill tente automatiquement de récupérer le titre de la MR associée via l'API GitLab et l'affiche à la place du message de merge technique
