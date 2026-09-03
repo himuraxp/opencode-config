@@ -1,0 +1,19 @@
+{
+  "name": "@opencode/mcp-figma-ds",
+  "version": "1.0.0",
+  "description": "Figma Design System sync CLI — captures Figma DS snapshots to git-tracked JSON",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "figma-ds-sync": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
+  }
+}
