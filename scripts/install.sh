@@ -368,6 +368,25 @@ _step_run "Installing Scripts"       install_scripts
 
 if [[ "$NO_CONFIG" == false ]]; then
   _step_run "Installing Configuration" install_config
+  # The Infomaniak AI key is exported in the user's shell rc (single copy,
+  # managed block written by setup.sh) and read via {env:...}. A missing key
+  # only breaks the Infomaniak provider (401), not OpenCode itself.
+  if [[ "$DRY_RUN" != true ]]; then
+    KEY_FOUND=false
+    for rc in "$HOME/.zshrc" "$HOME/.bash_profile" "$HOME/.bashrc"; do
+      if grep -qsE '^[[:space:]]*export[[:space:]]+OPENAI_API_KEY_INFOMANIAK=' "$rc"; then
+        KEY_FOUND=true
+        break
+      fi
+    done
+    if [[ "$KEY_FOUND" == true ]]; then
+      ok "Infomaniak AI key found in shell rc"
+    else
+      warn "Infomaniak AI key not found in shell rc (~/.zshrc, ...)"
+      warn "The Infomaniak provider will return 401 until you run:"
+      warn "  ${ROOT_DIR}/scripts/setup.sh"
+    fi
+  fi
 fi
 
 if [[ "$DRY_RUN" == true ]]; then

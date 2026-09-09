@@ -85,7 +85,9 @@ cd ~/.config/opencode-config && git pull && npm run update
 
 ### Secrets
 
-Les secrets sont externalisés via `{env:...}` dans `config/opencode.json` et stockés dans `~/.config/opencode/.env` (jamais versionné). `npm run setup -- --force` reconfigure les variables.
+Les secrets sont stockés dans `~/.config/opencode/.env` (jamais versionné) ; la clé API Infomaniak AI a une **seule copie** : exportée dans le shell rc de l'utilisateur (`~/.zshrc`, bloc managé par `setup.sh`) et lue via `{env:OPENAI_API_KEY_INFOMANIAK}` dans `config/opencode.json` — OpenCode ne charge pas les `.env` dans son process, ne jamais dupliquer la clé ailleurs. `npm run setup -- --force` reconfigure les variables.
+
+Le même bloc managé exporte aussi `IDB_UDID` et `IDB_PATH` (MCP ios-simulator, qui ne lit que son environnement process — pas de fallback `.env`). Le bloc est idempotent et **déplace** les exports préexistants de ces 3 variables dans le bloc — jamais de duplication. Les autres variables (`INFOMANIAK_API_TOKEN`, `FIGMA_TOKEN`, ...) restent dans `.env` : les MCP concernés lisent ce fichier en fallback dans leur propre code.
 
 ## MCP Servers
 

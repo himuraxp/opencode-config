@@ -6,7 +6,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "infomaniak",
       "options": {
-        "baseURL": "{env:OPENAI_B300_BASE_URL}",
+        "baseURL": "https://kimi-k26-nvfp4.ia2-kub.infomaniak.ch/v1",
         "headers": {
           "X-LLM-Application-Tag": "codegpt"
         }
@@ -49,7 +49,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "infomaniak",
       "options": {
-        "baseURL": "{env:OPENAI_BASE_URL}",
+        "baseURL": "https://api.infomaniak.com/2/ai/private/openai/v1",
         "headers": {
           "X-LLM-Application-Tag": "codegpt",
           "Authorization": "Bearer {env:OPENAI_API_KEY_INFOMANIAK}"
@@ -791,7 +791,8 @@
           "~/.docker/config.json": "deny",
           "~/.netrc": "deny",
           "~/.git-credentials": "deny",
-          "~/.config/opencode/.env*": "deny"
+          "~/.config/opencode/.env*": "deny",
+          "~/.config/opencode/secrets/*": "deny"
         }
       }
     },
@@ -874,7 +875,8 @@
           "~/.docker/config.json": "deny",
           "~/.netrc": "deny",
           "~/.git-credentials": "deny",
-          "~/.config/opencode/.env*": "deny"
+          "~/.config/opencode/.env*": "deny",
+          "~/.config/opencode/secrets/*": "deny"
         }
       }
     },
@@ -1097,7 +1099,8 @@
       "~/.docker/config.json": "deny",
       "~/.netrc": "deny",
       "~/.git-credentials": "deny",
-      "~/.config/opencode/.env*": "deny"
+      "~/.config/opencode/.env*": "deny",
+          "~/.config/opencode/secrets/*": "deny"
     }
   }
 }

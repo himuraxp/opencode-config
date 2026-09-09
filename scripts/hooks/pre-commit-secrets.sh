@@ -20,7 +20,7 @@ set -euo pipefail
 # Patterns that indicate potential secrets
 # NOTE: use [[:space:]] instead of \s for BSD grep (macOS) compatibility
 PATTERNS=(
-  'OPENAI_API_KEY=[A-Za-z0-9]'
+  'OPENAI_API_KEY[A-Za-z_]*=[A-Za-z0-9]'
   'Bearer[[:space:]]\+[A-Za-z0-9._-]\{20,\}'
   '-----BEGIN[A-Z ]*PRIVATE KEY-----'
   'password[[:space:]]*[:=][[:space:]]*[A-Za-z0-9]'
@@ -101,7 +101,8 @@ if [[ $found_secrets -gt 0 ]]; then
   echo ""
   echo "Found $found_secrets potential secret(s) in staged files."
   echo "If these are false positives, commit with --no-verify."
-  echo "Otherwise, move secrets to ~/.config/opencode/.env and use {env:...} in config."
+  echo "Otherwise, move secrets to your shell rc (shell exports) or"
+  echo "~/.config/opencode/.env (vars for MCP/tools, read manually by their clients)."
   exit 1
 fi
 

@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-09-09
+
+- Migration du stockage de la clé API Infomaniak : OpenCode ne charge pas les `.env` → la clé vit désormais dans le shell rc de l'utilisateur (`~/.zshrc`, bloc managé idempotent par `setup.sh`), lue via `{env:OPENAI_API_KEY_INFOMANIAK}` (correction 401 sur installation fraîche)
+- `scripts/setup.sh` : bloc managé idempotent (markers `# >>> opencode-config (managed by setup.sh) >>>`), dédoublonnage des exports libres de `OPENAI_API_KEY_INFOMANIAK`/`IDB_UDID`/`IDB_PATH` (déplacement, jamais de duplication), re-émission verbatim des valeurs rc (pas de double-échappement %q), rewrite atomique (tmp + `mv` unique), permissions préservées, backup + syntax-check du rc avec restauration, seed clé `shell rc > secret legacy > .env > prompt`, seed `IDB_*` depuis rc, lectures secrets masquées (`read -rs`)
+- `config/opencode.json` : provider Infomaniak en `Bearer {env:...}`, baseURLs en dur (standard + B300), deny-list `secrets/*` préventive
+- `IDB_UDID`/`IDB_PATH` quittent le `.env` pour le shell rc (MCP ios-simulator sans fallback `.env`)
+- `scripts/install.sh` : migration automatique non bloquante + warn si clé absente du shell rc
+- `scripts/migrate-secrets.sh` + `scripts/test-migrate-secrets.sh` : supprimés (approche V1 abandonnée avant commit)
+- `scripts/hooks/pre-commit-secrets.sh` : pattern `OPENAI_API_KEY[A-Za-z_]*=` (couvre la nouvelle variable)
+- Docs alignées : `README.md`, `AGENTS.md`, `config/README.md`, `config/.env.example`
+
 ## 2026-08-12
 
 - Audit read-only + correction de 10 findings (3 high, 4 medium, 2 low, 1 info)

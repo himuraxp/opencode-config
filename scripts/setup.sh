@@ -9,13 +9,15 @@ set -euo pipefail
 #   3. Optionally installs MCP servers (chrome-devtools, ios-simulator)
 #   4. Runs install.sh (agents, standards, frameworks, config files)
 #   5. Installs npm dependencies for plugins
-#   6. Collects environment variables interactively (skips if .env is complete)
-#   7. Writes ~/.config/opencode/.env
+#   6. Collects environment variables interactively (skips if already configured)
+#   7. Writes ~/.config/opencode/.env + managed export block in the user's shell rc
 #   8. Runs a final verification
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_BASE="${HOME}/.config/opencode"
 ENV_FILE="${TARGET_BASE}/.env"
+# Legacy secret file ({file:} era) — cleaned up automatically by this script
+INFOMANIAK_SECRET_LEGACY="${TARGET_BASE}/secrets/infomaniak-ai-api-key"
 FORCE_ENV=false
 IDB_VENV="${HOME}/.local/idb-venv"
 
@@ -273,17 +275,149 @@ fi
 
 # ─── Step 5: Environment variables ───────────────────────────────────────────
 
-# Check if .env already exists and is complete
+# The Infomaniak AI key has a SINGLE copy: an export line in the user's shell rc
+# (managed block written by this script). opencode.json reads it via {env:...}
+# because OpenCode never loads .env files into its process environment.
+
+# Detect the user's shell rc (empty for unsupported shells — manual instructions)
+detect_shell_rc() {
+  case "${SHELL##*/}" in
+    zsh)  echo "$HOME/.zshrc" ;;
+    bash)
+      if [[ "$(uname)" == "Darwin" ]]; then
+        echo "$HOME/.bash_profile"
+      else
+        echo "$HOME/.bashrc"
+      fi
+      ;;
+    *)    echo "" ;;
+  esac
+}
+
+SHELL_RC="$(detect_shell_rc)"
+MANAGED_BLOCK_BEGIN="# >>> opencode-config (managed by setup.sh) >>>"
+MANAGED_BLOCK_END="# <<< opencode-config (managed by setup.sh) <<<"
+
+# Extract the current literal value of a managed export line (last one wins).
+# Used for OPENAI_API_KEY_INFOMANIAK, IDB_UDID and IDB_PATH (all exported in
+# the managed block — see write_shell_block).
+rc_var_value() {
+  local var="$1"
+  [[ -n "$SHELL_RC" && -f "$SHELL_RC" ]] || return 0
+  sed -nE "s/^[[:space:]]*export[[:space:]]+${var}=(.+)/\1/p" "$SHELL_RC" 2>/dev/null \
+    | tail -1 | sed -E "s/^'(.*)'$/\1/; s/^\"(.*)\"$/\1/" | tr -d '\r'
+}
+
+rc_key_value() { rc_var_value OPENAI_API_KEY_INFOMANIAK; }
+
+# Print one export line on stdout (caller redirects). A plain $VAR reference is
+# preserved verbatim (resolves at runtime); a value identical to the one already
+# stored in the rc is re-emitted verbatim too — the rc text is already in final
+# shell form, so re-emitting it as-is prevents progressive %q double-escaping.
+# Anything else is %q-escaped safely for bash and zsh.
+_emit_export() {
+  local var="$1" val="$2" prev="$3"
+  if [[ "$val" == "$prev" || "$val" =~ ^\$[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+    printf 'export %s=%s\n' "$var" "$val"
+  else
+    printf 'export %s=%q\n' "$var" "$val"
+  fi
+}
+
+# Rewrite (or append) the managed export block in the shell rc. Idempotent.
+# Also MOVES any existing free-standing export of the managed variables into
+# the block, so nothing is ever duplicated: the managed block is the single
+# copy of the API key, IDB_UDID and IDB_PATH (read by opencode.json {env:...}).
+write_shell_block() {
+  local key_value="$1" idb_udid="${2:-}" idb_path="${3:-}"
+  [[ -n "$SHELL_RC" ]] || return 1
+  local tmp="${SHELL_RC}.opencode.tmp"
+  local prev_key prev_udid prev_path mode=""
+  prev_key="$(rc_var_value OPENAI_API_KEY_INFOMANIAK)"
+  prev_udid="$(rc_var_value IDB_UDID)"
+  prev_path="$(rc_var_value IDB_PATH)"
+  if [[ -f "$SHELL_RC" ]]; then
+    cp -p "$SHELL_RC" "${SHELL_RC}.opencode.bak" || return 1
+    mode=$(stat -f '%Lp' "$SHELL_RC" 2>/dev/null || stat -c '%a' "$SHELL_RC" 2>/dev/null || echo "")
+    # Drop managed block, free-standing managed exports and trailing blank lines
+    awk -v begin="$MANAGED_BLOCK_BEGIN" -v end="$MANAGED_BLOCK_END" \
+      'index($0, begin) == 1 { skip = 1; next }
+       index($0, end) == 1   { skip = 0; next }
+       skip == 1 { next }
+       /^[[:space:]]*export[[:space:]]+(OPENAI_API_KEY_INFOMANIAK|IDB_UDID|IDB_PATH)=/ { next }
+       { lines[NR] = $0 }
+       END { n = NR; while (n > 0 && lines[n] ~ /^[[:space:]]*$/) n--;
+             for (i = 1; i <= n; i++) print lines[i] }' \
+      "$SHELL_RC" > "$tmp"
+    if [[ -s "$tmp" ]]; then
+      printf '\n%s\n' "$MANAGED_BLOCK_BEGIN" >> "$tmp"
+    else
+      printf '%s\n' "$MANAGED_BLOCK_BEGIN" > "$tmp"
+    fi
+  else
+    printf '%s\n' "$MANAGED_BLOCK_BEGIN" > "$tmp"
+  fi
+  _emit_export OPENAI_API_KEY_INFOMANIAK "$key_value" "$prev_key" >> "$tmp"
+  [[ -n "$idb_udid" ]] && _emit_export IDB_UDID "$idb_udid" "$prev_udid" >> "$tmp"
+  [[ -n "$idb_path" ]] && _emit_export IDB_PATH "$idb_path" "$prev_path" >> "$tmp"
+  printf '%s\n' "$MANAGED_BLOCK_END" >> "$tmp"
+  # Atomic replace, preserving the rc's original permissions (or 600 for fresh rc)
+  if [[ -n "$mode" ]]; then chmod "$mode" "$tmp" 2>/dev/null; else chmod 600 "$tmp" 2>/dev/null; fi
+  mv "$tmp" "$SHELL_RC"
+  # Syntax check: restore the backup if the rewrite broke the rc structure
+  if [[ -f "${SHELL_RC}.opencode.bak" ]] && ! "$SHELL" -n "$SHELL_RC" 2>/dev/null; then
+    warn "Shell rc syntax broken after rewrite — restoring previous rc"
+    mv "${SHELL_RC}.opencode.bak" "$SHELL_RC"
+    return 1
+  fi
+  rm -f "${SHELL_RC}.opencode.bak"
+}
+
+# Environment is complete when the key is exported somewhere in the shell rc
 env_is_complete() {
+  [[ -n "$(rc_key_value)" ]] || return 1
   [[ -f "$ENV_FILE" ]] || return 1
-  grep -q "^OPENAI_API_KEY_INFOMANIAK=.\+" "$ENV_FILE" || return 1
-  grep -q "^OPENAI_BASE_URL=.\+" "$ENV_FILE" || return 1
   return 0
 }
 
+# ── Key discovery: shell rc > legacy secret file > .env > prompt ─────────────
+# The rc-managed block is the source of truth: when it already exports the key,
+# its value wins over any legacy copy so Enter-keep never swaps the managed key
+# for an older one. Legacy sources are only used when the rc has no key yet
+# (migration path). Values read from the rc are already in final shell form and
+# are re-emitted verbatim by write_shell_block (no double-escaping).
+INFOMANIAK_KEY=""
+INFOMANIAK_KEY_SOURCE=""
+INFOMANIAK_KEY_LEGACY_FILE=""
+RC_HAS_KEY=false
+[[ -n "$(rc_key_value)" ]] && RC_HAS_KEY=true
+
+if [[ "$RC_HAS_KEY" == true ]]; then
+  INFOMANIAK_KEY="$(rc_key_value)"
+  INFOMANIAK_KEY_SOURCE="shell rc (${SHELL_RC})"
+elif [[ -s "$INFOMANIAK_SECRET_LEGACY" ]]; then
+  INFOMANIAK_KEY="$(tr -d '\r' < "$INFOMANIAK_SECRET_LEGACY")"
+  INFOMANIAK_KEY_SOURCE="$INFOMANIAK_SECRET_LEGACY"
+  INFOMANIAK_KEY_LEGACY_FILE="$INFOMANIAK_SECRET_LEGACY"
+fi
+
+if [[ -z "$INFOMANIAK_KEY" && -f "$ENV_FILE" ]]; then
+  INFOMANIAK_KEY=$(grep '^OPENAI_API_KEY_INFOMANIAK=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- || true)
+  INFOMANIAK_KEY="${INFOMANIAK_KEY%$'\r'}"
+  [[ -n "$INFOMANIAK_KEY" ]] && INFOMANIAK_KEY_SOURCE="$ENV_FILE"
+fi
+
+if [[ -n "$INFOMANIAK_KEY" ]]; then
+  ok "Infomaniak AI key found (${INFOMANIAK_KEY_SOURCE})"
+elif [[ "$RC_HAS_KEY" == true ]]; then
+  ok "Infomaniak AI key already exported in ${SHELL_RC} (shell reference — kept as is)"
+else
+  info "No Infomaniak AI key found yet (not in shell rc, .env, nor secrets file)"
+fi
+
 if [[ "$FORCE_ENV" == false ]] && env_is_complete; then
   ui_section "Environment Configuration"
-  ok ".env already exists and contains required variables."
+  ok "Environment already configured (Infomaniak AI key exported in shell rc)."
   ok "Use --force to reconfigure environment variables."
   info "Skipping environment configuration."
 else
@@ -325,7 +459,12 @@ else
     fi
 
     printf "%s: " "${prompt_display}"
-    read -r input_value || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
+    if [[ "${is_secret}" == "true" ]]; then
+      read -rs input_value || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
+      echo ""
+    else
+      read -r input_value || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
+    fi
 
     # Use default/current if user pressed Enter
     if [[ -z "${input_value}" ]]; then
@@ -341,56 +480,54 @@ else
 
   # --- Required variables ---
 
-  OPENAI_API_KEY_INFOMANIAK=""
-  OPENAI_BASE_URL=""
-  OPENAI_B300_BASE_URL=""
+  # IDB values are exported in the managed shell rc block (read by opencode.json
+  # via {env:IDB_*}; the ios-simulator MCP has no .env fallback). Seed from the
+  # rc first, then from an old .env, so a re-run keeps existing values on Enter.
   IDB_UDID=""
   IDB_PATH=""
+  IDB_UDID="$(rc_var_value IDB_UDID)"
+  IDB_PATH="$(rc_var_value IDB_PATH)"
+  if [[ -z "$IDB_UDID" || -z "$IDB_PATH" ]]; then
+    if [[ -f "$ENV_FILE" ]]; then
+      [[ -z "$IDB_UDID" ]] && IDB_UDID="$(grep '^IDB_UDID=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | head -1 | sed 's/\r$//')"
+      [[ -z "$IDB_PATH" ]] && IDB_PATH="$(grep '^IDB_PATH=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | head -1 | sed 's/\r$//')"
+    fi
+  fi
   INFOMANIAK_API_TOKEN=""
 
-  # Migration: if an old installation used OPENAI_API_KEY for Infomaniak,
-  # carry its value over to OPENAI_API_KEY_INFOMANIAK (without displaying the secret).
-  if [[ -f "$ENV_FILE" ]]; then
-    OLD_OPENAI_API_KEY=$(grep "^OPENAI_API_KEY=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- || echo "")
-    NEW_INFOMANIAK_KEY=$(grep "^OPENAI_API_KEY_INFOMANIAK=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- || echo "")
-    if [[ -n "$OLD_OPENAI_API_KEY" && -z "$NEW_INFOMANIAK_KEY" ]]; then
-      warn "Migrating OPENAI_API_KEY → OPENAI_API_KEY_INFOMANIAK in existing .env (value hidden)"
-      # Prepend the new variable; leave the old one in place for reference
-      # but it won't be used by opencode.json anymore.
-      {
-        echo "# Migrated from OPENAI_API_KEY on $(date '+%Y-%m-%d')"
-        echo "OPENAI_API_KEY_INFOMANIAK=${OLD_OPENAI_API_KEY}"
-        cat "$ENV_FILE"
-      } > "${ENV_FILE}.tmp" && mv "${ENV_FILE}.tmp" "$ENV_FILE"
-      chmod 600 "$ENV_FILE"
-      ok "Migration complete — OPENAI_API_KEY_INFOMANIAK added to .env"
-    fi
-    if [[ -n "$OLD_OPENAI_API_KEY" && -n "$NEW_INFOMANIAK_KEY" ]]; then
-      info "Both OPENAI_API_KEY and OPENAI_API_KEY_INFOMANIAK exist in .env — using OPENAI_API_KEY_INFOMANIAK"
-    fi
-    # Clean up: remove the old OPENAI_API_KEY line to prevent confusion
-    if [[ -n "$OLD_OPENAI_API_KEY" ]]; then
-      sed -i '' '/^OPENAI_API_KEY=/d' "$ENV_FILE" 2>/dev/null || sed -i '/^OPENAI_API_KEY=/d' "$ENV_FILE" 2>/dev/null || true
-      chmod 600 "$ENV_FILE"
+  # The Infomaniak AI key has a single copy: the managed export block in the
+  # shell rc. Seed from earlier discovery (rc > legacy secret file > .env);
+  # an old OPENAI_API_KEY line in .env is migrated here as well.
+  if [[ -z "$INFOMANIAK_KEY" && -f "$ENV_FILE" ]]; then
+    LEGACY_OPENAI_KEY=$(grep '^OPENAI_API_KEY=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- || true)
+    LEGACY_OPENAI_KEY="${LEGACY_OPENAI_KEY%$'\r'}"
+    if [[ -n "$LEGACY_OPENAI_KEY" ]]; then
+      INFOMANIAK_KEY="$LEGACY_OPENAI_KEY"
+      INFOMANIAK_KEY_SOURCE="legacy OPENAI_API_KEY line in .env"
+      warn "Migrating legacy OPENAI_API_KEY (.env) → shell rc export (value hidden)"
     fi
   fi
 
-  prompt_var OPENAI_API_KEY_INFOMANIAK \
-    "Enter your Infomaniak AI API key" "" true
-
-  if [[ -z "${OPENAI_API_KEY_INFOMANIAK}" ]]; then
-    fail "OPENAI_API_KEY_INFOMANIAK is required. Get it from the Infomaniak console."
+  if [[ -n "$INFOMANIAK_KEY" ]]; then
+    printf "%s: " "Enter your Infomaniak AI API key [Enter to keep current]"
+  elif [[ "$RC_HAS_KEY" == true ]]; then
+    printf "%s: " "Enter your Infomaniak AI API key [Enter to keep existing shell export]"
+  else
+    printf "%s: " "Enter your Infomaniak AI API key"
+  fi
+  read -rs KEY_INPUT || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
+  echo ""
+  if [[ -n "$KEY_INPUT" ]]; then
+    INFOMANIAK_KEY="$KEY_INPUT"
+  elif [[ -z "$INFOMANIAK_KEY" && "$RC_HAS_KEY" == true ]]; then
+    INFOMANIAK_KEY="$(rc_key_value)"
   fi
 
-  prompt_var OPENAI_BASE_URL \
-    "Enter the Infomaniak AI API endpoint" \
-    "https://api.infomaniak.com/2/ai/private/openai/v1" false
+  if [[ -z "$INFOMANIAK_KEY" ]]; then
+    fail "The Infomaniak AI API key is required. Get it from the Infomaniak console."
+  fi
 
   # --- Optional variables ---
-
-  prompt_var OPENAI_B300_BASE_URL \
-    "Enter the B300 endpoint (Kimi K2.6, optional)" \
-    "https://kimi-k26-nvfp4.ia2-kub.infomaniak.ch/v1" false
 
   prompt_var INFOMANIAK_API_TOKEN \
     "Enter your Infomaniak API token (for Infomaniak MCP, get it at https://manager.infomaniak.com/v3/ng/accounts/token/list)" \
@@ -405,15 +542,15 @@ else
       fi
       prompt_var IDB_UDID \
         "Enter iOS Simulator UDID (auto-detected, press Enter to skip)" \
-        "${AUTO_UDID}" false
+        "${IDB_UDID:-${AUTO_UDID}}" false
     else
       prompt_var IDB_UDID \
-        "Enter iOS Simulator UDID (skip if not on macOS)" "" false
+        "Enter iOS Simulator UDID (skip if not on macOS)" "${IDB_UDID}" false
     fi
 
     prompt_var IDB_PATH \
       "Enter PATH for idb binaries" \
-      "${IDB_VENV}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" false
+      "${IDB_PATH:-${IDB_VENV}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin}" false
   else
     info "Skipping iOS Simulator variables (MCP not installed)"
     IDB_UDID=""
@@ -427,23 +564,65 @@ else
   # Expand $HOME in IDB_PATH (safe: only $HOME is expanded, no arbitrary eval)
   IDB_PATH_EXPANDED="${IDB_PATH/\$HOME/${HOME}}"
 
+  # Preserve user-managed variables not collected by setup.sh (e.g. GITLAB_TOKEN,
+  # FIGMA_TOKEN, INFOMANIAK_PREPROD_*): keep non-empty KEY=VALUE lines whose key
+  # is not written by the heredoc below, so a re-run never loses custom secrets.
+  # OPENAI_API_KEY / OPENAI_API_KEY_INFOMANIAK / IDB_* lines are dropped on
+  # purpose: those values now live in the shell rc (single copy), never in .env.
+  MANAGED_KEYS_PATTERN='^(OPENAI_API_KEY|OPENAI_API_KEY_INFOMANIAK|IDB_UDID|IDB_PATH|INFOMANIAK_API_TOKEN)='
+  EXTRA_ENV_LINES=""
+  if [[ -f "$ENV_FILE" ]]; then
+    EXTRA_ENV_LINES=$(
+      grep -vE '^[[:space:]]*(#|$)' "$ENV_FILE" 2>/dev/null \
+        | grep -E '^[A-Za-z_][A-Za-z0-9_]*=.+' \
+        | grep -vE "$MANAGED_KEYS_PATTERN" || true
+    )
+    if [[ -n "$EXTRA_ENV_LINES" ]]; then
+      EXTRA_ENV_KEYS=$(grep -oE '^[A-Za-z_][A-Za-z0-9_]*=' <<<"$EXTRA_ENV_LINES" | sed 's/=$//' | tr '\n' ' ')
+      info "Preserving user-managed variables: ${EXTRA_ENV_KEYS%% }"
+    fi
+  fi
+
   cat > "${ENV_FILE}" <<EOF
 # OpenCode environment variables — generated by setup.sh
 # DO NOT commit this file. It contains secrets.
+#
+# NOTE: The Infomaniak AI API key and the IDB values are NOT stored here.
+# They are exported in the user's shell rc (${SHELL_RC:-manual}) inside the
+# managed block: OpenCode never loads .env files, and {env:...} in
+# opencode.json only reads the process environment. Update with: setup.sh --force
 
-# Required
-OPENAI_API_KEY_INFOMANIAK=${OPENAI_API_KEY_INFOMANIAK}
-OPENAI_BASE_URL=${OPENAI_BASE_URL}
-
-# Optional
-OPENAI_B300_BASE_URL=${OPENAI_B300_BASE_URL}
-IDB_UDID=${IDB_UDID}
-IDB_PATH=${IDB_PATH_EXPANDED}
+# Optional — read by the Infomaniak MCP (.env fallback in its code)
 INFOMANIAK_API_TOKEN=${INFOMANIAK_API_TOKEN}
 EOF
 
+  # Append preserved user-managed variables (kept verbatim)
+  if [[ -n "$EXTRA_ENV_LINES" ]]; then
+    {
+      echo ""
+      echo "# Preserved — managed manually (not collected by setup.sh)"
+      printf '%s\n' "$EXTRA_ENV_LINES"
+    } >> "$ENV_FILE"
+  fi
+
   chmod 600 "${ENV_FILE}"
   ok "Environment file written to ${ENV_FILE} (permissions: 600)"
+
+  # Write the managed export block in the shell rc (single copy of the key
+  # + IDB values read by opencode.json {env:...})
+  if write_shell_block "$INFOMANIAK_KEY" "$IDB_UDID" "$IDB_PATH_EXPANDED"; then
+    ok "Infomaniak AI key exported in ${SHELL_RC} (managed block)"
+    ok "Open a new terminal or run: source ${SHELL_RC}"
+  else
+    fail "Unsupported shell (${SHELL:-unknown}). Add this line to your shell config manually:
+  export OPENAI_API_KEY_INFOMANIAK='<your Infomaniak AI API key>'"
+  fi
+
+  # Clean up legacy copies of the key (single-copy policy)
+  if [[ -n "$INFOMANIAK_KEY_LEGACY_FILE" && -f "$INFOMANIAK_KEY_LEGACY_FILE" ]]; then
+    rm -f "$INFOMANIAK_KEY_LEGACY_FILE"
+    ok "Removed legacy secret file (key now lives only in the shell rc)"
+  fi
 fi
 
 # ─── Step 7: Verification ────────────────────────────────────────────────────
@@ -467,6 +646,14 @@ check_file "${TARGET_BASE}/oh-my-opencode-slim.json" "oh-my-opencode-slim.json"
 check_file "${TARGET_BASE}/package.json" "package.json (plugins)"
 check_file "${TARGET_BASE}/plugins/rtk.ts" "plugins/rtk.ts"
 check_file "${TARGET_BASE}/.env" ".env (secrets)"
+
+# Check the Infomaniak AI key export in the shell rc (read via {env:...})
+if [[ -n "$(rc_key_value)" ]]; then
+  ok "Infomaniak AI key exported in ${SHELL_RC} (managed block)"
+else
+  warn "Infomaniak AI key NOT exported in ${SHELL_RC} — add it or re-run setup.sh"
+  ERRORS=$((ERRORS + 1))
+fi
 
 # Check agents
 for agent in aurora aurora-heavy reviewer tester security cybersec architect spark vision atlas crawler sage scribe pulse echo beacon designer mobile; do

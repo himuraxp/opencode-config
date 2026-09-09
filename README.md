@@ -77,6 +77,10 @@ npm run setup
 - Installe les dépendances npm des plugins
 - Demande interactivement les variables d'environnement (clé API, endpoints)
 - Écrit `~/.config/opencode/.env` (permissions 600, jamais versionné)
+- Écrit le **bloc managé** dans le shell rc (`~/.zshrc` sous zsh) : export de la
+  clé API Infomaniak AI et des valeurs `IDB_*` du MCP iOS. Idempotent (jamais de
+  doublon) et déplace automatiquement les exports préexistants de ces variables
+  dans le bloc — la clé n'existe jamais en deux copies
 - Vérifie que tout est fonctionnel
 
 Si `.env` existe déjà et contient les variables requises, l'étape de configuration est automatiquement skipée. Utilisez `--force` pour reconfigurer :
@@ -140,20 +144,30 @@ Cela installe dans `~/.config/opencode/` :
 
 ### 3. Variables d'environnement
 
-Les secrets sont stockés dans `~/.config/opencode/.env` et référencés via `{env:...}` dans `opencode.json`.
+OpenCode ne charge **pas** les fichiers `.env` : les références `{env:...}` de
+`opencode.json` lisent uniquement l'environnement du shell. D'où deux emplacements :
 
-| Variable | Usage | Requis |
-|----------|-------|--------|
-| `OPENAI_API_KEY_INFOMANIAK` | Clé API Infomaniak AI | Oui |
-| `OPENAI_BASE_URL` | Endpoint API Infomaniak | Oui |
-| `OPENAI_B300_BASE_URL` | Endpoint B300 (Kimi K2.6) | Non |
-| `IDB_UDID` | UDID simulateur iOS | Non |
-| `IDB_PATH` | Chemin binaires idb | Non |
-| `INFOMANIAK_API_TOKEN` | Token API Infomaniak (MCP infomaniak) | Non |
-| `GITLAB_TOKEN` | Token GitLab (MCP angular-elements) | Non |
-| `FIGMA_TOKEN` | Token API Figma (skill `figma-ds-sync` — sync design system) | Non |
+- **Shell rc (bloc managé par `setup.sh`)** : la clé API Infomaniak AI (**seule
+  copie**) et les valeurs `IDB_*` du MCP iOS, qui ne lit que son environnement
+  process (pas de fallback `.env`). Le bloc est idempotent : les exports
+  préexistants de ces variables sont déplacés dans le bloc, jamais dupliqués.
+- **`~/.config/opencode/.env`** : les variables lues directement par les MCP
+  servers et les outils (fallback interne dans leur code).
 
-`setup.sh` demande ces valeurs interactivement. Pour les modifier ultérieurement, éditez `~/.config/opencode/.env` directement.
+| Variable | Emplacement | Usage | Requis |
+|----------|-------------|-------|--------|
+| `OPENAI_API_KEY_INFOMANIAK` | shell rc (bloc managé) | Clé API Infomaniak AI | Oui |
+| `IDB_UDID` | shell rc (bloc managé) | UDID simulateur iOS (MCP ios-simulator) | Non |
+| `IDB_PATH` | shell rc (bloc managé) | Chemin binaires idb (MCP ios-simulator) | Non |
+| `INFOMANIAK_API_TOKEN` | `.env` | Token API Infomaniak (MCP infomaniak — fallback `.env`) | Non |
+| `GITLAB_TOKEN` | shell rc ou `.env` | Token GitLab (MCP angular-elements — fallback `.env`) | Non |
+| `FIGMA_TOKEN` | `.env` | Token API Figma (skill `figma-ds-sync` — sync design system) | Non |
+
+`setup.sh` demande ces valeurs interactivement. Pour les variables du `.env`
+(`INFOMANIAK_API_TOKEN`, `FIGMA_TOKEN`, ...), éditez `~/.config/opencode/.env`
+directement. Pour la clé et les valeurs `IDB_*`, utilisez `setup.sh --force`
+(Enter pour garder, nouvelle valeur pour remplacer) — ou éditez le bloc managé
+du shell rc.
 
 ### 4. MCP Servers
 
@@ -183,7 +197,8 @@ Ce MCP nécessite 3 dépendances externes :
 
 `setup.sh` propose d'installer ces dépendances automatiquement. Si vous refusez ou si vous êtes sur Linux, le MCP reste configuré dans `opencode.json` mais plantera au runtime — vous pouvez le désactiver en passant `"enabled": false`.
 
-Variables d'environnement associées (dans `.env`) :
+Variables d'environnement associées (shell rc, bloc managé par `setup.sh` — le
+MCP ios-simulator ne lit pas `.env`) :
 
 | Variable | Usage |
 |----------|-------|

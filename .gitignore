@@ -30,3 +30,6 @@ docs/ai/
 
 # Config backups (kept local, never versioned)
 *.bak
+
+# Local secret files (never commit — real secrets live outside this repo)
+secrets/
