@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Cancel-message colors (ui.sh exposes a different palette; these are the only
+# two the inline cancel handlers need — previously referenced but never defined,
+# so set -u turned every cancellation into an unbound-variable crash).
+RED='\033[0;31m'
+NC='\033[0m'
+
+# Read a secret: masked only when stdin is a real terminal (read -s misbehaves
+# when stdin is a pipe/closed by a wrapper such as npm).
+read_secret() {
+  if [[ -t 0 ]]; then
+    read -rs "$1"
+  else
+    read -r "$1"
+  fi
+}
+
 # setup.sh — First-time installation or update of opencode-config on a machine.
 #
 # This script:
@@ -113,13 +129,21 @@ fi
 if command -v rtk &>/dev/null; then
   CURRENT_VER=$(rtk --version 2>/dev/null || echo "unknown")
   if [[ "$(uname)" == "Darwin" ]] && command -v brew &>/dev/null; then
-    if brew outdated | grep -q "^rtk"; then
+    if [[ "$(uname -m)" == "x86_64" ]]; then
+      # Homebrew has no bottles for Intel and builds rtk from source — the build
+      # always fails on this platform (clang: unsupported -march=westmere).
+      # Never prompt: the brew failure would abort the whole setup (set -e).
+      ok "rtk installed: ${CURRENT_VER} (update skipped: macOS Intel — Homebrew builds from source, unsupported)"
+    elif brew outdated | grep -q "^rtk"; then
       warn "rtk: ${CURRENT_VER} installed, update available"
       printf "Update now? [Y/n] "
       read -r response || response="n"
       if [[ "$response" =~ ^[Yy]?$ ]]; then
-        brew upgrade rtk
-        ok "rtk updated to $(rtk --version 2>/dev/null || echo 'unknown')"
+        if brew upgrade rtk; then
+          ok "rtk updated to $(rtk --version 2>/dev/null || echo 'unknown')"
+        else
+          warn "rtk update failed (kept at ${CURRENT_VER}) — non-blocking, continuing setup"
+        fi
       else
         ok "rtk kept at ${CURRENT_VER}"
       fi
@@ -133,8 +157,11 @@ else
   if [[ "$(uname)" == "Darwin" ]]; then
     if command -v brew &>/dev/null; then
       info "Installing rtk via Homebrew..."
-      brew install rtk
-      ok "rtk installed: $(rtk --version 2>/dev/null || echo 'unknown')"
+      if brew install rtk; then
+        ok "rtk installed: $(rtk --version 2>/dev/null || echo 'unknown')"
+      else
+        warn "rtk install failed — non-blocking, continuing setup (install manually: https://github.com/nicholasgriffintn/rtk)"
+      fi
     else
       warn "Homebrew not found. Install rtk manually: https://github.com/nicholasgriffintn/rtk"
     fi
@@ -460,7 +487,7 @@ else
 
     printf "%s: " "${prompt_display}"
     if [[ "${is_secret}" == "true" ]]; then
-      read -rs input_value || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
+      read_secret input_value || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
       echo ""
     else
       read -r input_value || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
@@ -515,7 +542,7 @@ else
   else
     printf "%s: " "Enter your Infomaniak AI API key"
   fi
-  read -rs KEY_INPUT || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
+  read_secret KEY_INPUT || { echo -e "\n${RED}Cancelled.${NC}"; exit 1; }
   echo ""
   if [[ -n "$KEY_INPUT" ]]; then
     INFOMANIAK_KEY="$KEY_INPUT"
