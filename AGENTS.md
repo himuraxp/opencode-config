@@ -11,7 +11,7 @@ config/      Configuration OpenCode (opencode.json, plugins, .env.example — sa
 agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
-skills/      Skills réutilisables (commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync)
+skills/      Skills réutilisables (ai-cowork, commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync)
 ```
 
 Les agents `explorer`, `fixer`, `librarian` et `oracle` sont fournis par le plugin **oh-my-opencode-slim** (définis dans `config/oh-my-opencode-slim.json`), pas comme fichiers `agents/*.md`.
@@ -91,9 +91,10 @@ Le même bloc managé exporte aussi `IDB_UDID` et `IDB_PATH` (MCP ios-simulator,
 
 ## MCP Servers
 
-La configuration inclut cinq MCP servers :
+La configuration inclut six MCP servers :
 
-- **chrome-devtools** : auto-installé via `npx` (aucune action manuelle)
+- **chrome-devtools** : auto-installé via `npx` (aucune action manuelle) — navigateur headless isolé (Designer, audits)
+- **browser-debug** : auto-installé via `npx` — se connecte à un navigateur en mode debug (`http://127.0.0.1:9222`) ; utilisé par le skill `ai-cowork` (co-working Aurora ↔ ChatGPT) ; nécessite un navigateur lancé avec `--remote-debugging-port=9222 --user-data-dir=~/.config/opencode/brave-debug-profile`
 - **ios-simulator** (macOS) : optionnel — nécessite `idb-companion` (Homebrew) + `fb-idb` (Python venv). `setup.sh` propose l'installation.
 - **infomaniak** : MCP server pour l'API Infomaniak (radio, VOD, newsletter, DNS, events, AI, etc.)
 - **angular-elements** : MCP server pour le design system Angular Elements (composants, API, stories, install info)

@@ -1031,6 +1031,18 @@
       "enabled": true,
       "timeout": 30000
     },
+    "browser-debug": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--browserUrl",
+        "http://127.0.0.1:9222"
+      ],
+      "enabled": true,
+      "timeout": 30000
+    },
     "ios-simulator": {
       "type": "local",
       "command": [

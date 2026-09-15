@@ -42,7 +42,8 @@ Ce repo apporte :
 - **Agents spécialisés** (repo) : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security (défensif), cybersec (offensif/pentest), architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter) — **plus les agents du plugin oh-my-opencode-slim** : explorer (recherche codebase), fixer (exécution de spec), librarian (docs externes), oracle (conseil technique)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
-- **Skills réutilisables** : commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync
+- **Skills réutilisables** : ai-cowork, commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync
+- **Co-working IA** : skill `ai-cowork` — boucle de collaboration autonome Aurora ↔ ChatGPT (ChatGPT briefe et valide, Aurora travaille) pilotée via le MCP `browser-debug`
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
 - **Audit read-only** : health-check multi-axes sans modification de code
@@ -171,11 +172,12 @@ du shell rc.
 
 ### 4. MCP Servers
 
-La configuration inclut cinq MCP servers dans `opencode.json` :
+La configuration inclut six MCP servers dans `opencode.json` :
 
 | MCP Server | Rôle | Installation |
 |------------|------|-------------|
-| `chrome-devtools` | Navigation, screenshots, audit Lighthouse, debug Chrome | Auto-installé via `npx` au premier lancement |
+| `chrome-devtools` | Navigation, screenshots, audit Lighthouse, debug Chrome (navigateur headless isolé) | Auto-installé via `npx` au premier lancement |
+| `browser-debug` | Se connecte à un navigateur en mode debug (`http://127.0.0.1:9222`) — utilisé par le skill `ai-cowork` (Aurora ↔ ChatGPT) | Auto-installé via `npx` ; nécessite un navigateur lancé en mode debug (voir ci-dessous) |
 | `ios-simulator` | Interaction avec le simulateur iOS (tap, swipe, screenshots, UI tree) | Optionnel — nécessite `idb-companion` + `fb-idb` |
 | `context7` | Documentation à jour des librairies et frameworks | Auto-installé via `npx` |
 | `infomaniak` | API Infomaniak — radio, VOD, newsletter, DNS, events, AI | Local (voir `mcp/infomaniak/README.md`) |
@@ -184,6 +186,20 @@ La configuration inclut cinq MCP servers dans `opencode.json` :
 #### chrome-devtools-mcp
 
 Aucune installation manuelle nécessaire. Le package `chrome-devtools-mcp` est téléchargé automatiquement par `npx` au premier appel.
+
+Deux instances coexistent (tools préfixés par le nom du serveur) :
+- `chrome-devtools_*` — headless isolé (Designer, audits)
+- `browser-debug_*` — connecté à `http://127.0.0.1:9222` (skill `ai-cowork`)
+
+Pour le mode debug (session navigateur persistante, login ChatGPT conservé) :
+
+```bash
+"/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" \
+  --remote-debugging-port=9222 \
+  --user-data-dir="$HOME/.config/opencode/brave-debug-profile"
+```
+
+> Le `--user-data-dir` dédié est **obligatoire** (Chromium ≥136 ignore `--remote-debugging-port` sur le profil par défaut).
 
 #### ios-simulator-mcp (macOS uniquement)
 
@@ -551,6 +567,7 @@ opencode-config/
 │       └── *-reference.json   Références manuelles (familles Figma, composants ik-*)
 │
 ├── skills/                    Skills réutilisables
+│   ├── ai-cowork/             Co-working Aurora ↔ ChatGPT (boucle de review autonome via browser-debug)
 │   ├── allow-command/         Pré-approuver des commandes shell dans opencode.json
 │   ├── code-review/           Review adversariale de code
 │   ├── commit/                Messages de commit (conventions Infomaniak)

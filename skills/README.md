@@ -34,6 +34,12 @@ Skills réutilisables pour OpenCode. Chaque skill est un dossier contenant au mi
 | `image-transparent-background` | Suppression de fond blanc via ImageMagick |
 | `radio-tag-genres` | Tagging de genres musicaux pour playlists radio AutoDJ |
 
+### Collaboration IA
+
+| Skill | Description |
+|-------|-------------|
+| `ai-cowork` | Co-working Aurora ↔ ChatGPT : boucle de travail autonome via MCP `browser-debug` (navigateur debug :9222) — ChatGPT briefe et valide (`VERDICT: ITERATE\|APPROVED`), Aurora travaille ; veto négocié sur règles AGENTS.md, rapport final avec lien conversation |
+
 ### Configuration
 
 | Skill | Description |
