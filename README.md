@@ -42,7 +42,7 @@ Ce repo apporte :
 - **Agents spécialisés** (repo) : aurora (principal), aurora-heavy (tâches complexes), reviewer, tester, security (défensif), cybersec (offensif/pentest), architect, spark (sous-agent léger), vision (multimodal), designer (UX/UI/DA/DS), mobile (iOS/Android/RN/Flutter) — **plus les agents du plugin oh-my-opencode-slim** : explorer (recherche codebase), fixer (exécution de spec), librarian (docs externes), oracle (conseil technique)
 - **Équipe Search & Growth** : atlas (SEO strategy), crawler (technical SEO), sage (AIO/GEO), scribe (SEO content), pulse (growth marketing), echo (social distribution), beacon (analytics)
 - **Standards de développement** : workflow, communication, vérification, escalation, commits, audit, création d'artefacts, mémoire de session, limites d'exploration, correction d'erreurs, anti-patterns, format de retour JSON des sous-agents
-- **Skills réutilisables** : ai-cowork, commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, gitlab-feature-planner, deployment-changelog, new-worktree, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync
+- **Skills réutilisables** : accessibility, ai-cowork, allow-command, clonedeps, code-review, codemap, commit, create-mr, deepwork, deployment-changelog, figma-ds-sync, gitlab-ci, gitlab-feature-planner, gitlab-issues, gitlab-summary, image-transparent-background, laravel-cruddy-by-design, loop-engineering, mr-review, mr-review-feedback, new-worktree, oh-my-opencode-slim, pre-mr-review, radio-tag-genres, readme, reflect, release-smoke-test, review-gap-analyzer, simplify, translate-doc, user-stories, verification-planning, worktrees
 - **Co-working IA** : skill `ai-cowork` — boucle de collaboration autonome Aurora ↔ ChatGPT (ChatGPT briefe et valide, Aurora travaille) pilotée via le MCP `browser-debug`
 - **Conventions Angular 20+** : standalone, signals, inject(), tests Jest
 - **Review adversarial** : examen contradictoire obligatoire avant déclaration de fin de tâche
@@ -567,11 +567,15 @@ opencode-config/
 │       └── *-reference.json   Références manuelles (familles Figma, composants ik-*)
 │
 ├── skills/                    Skills réutilisables
+│   ├── accessibility/         Suite accessibilité (17 sous-skills orchestrés : aria, contraste, focus, clavier, formulaires…)
 │   ├── ai-cowork/             Co-working Aurora ↔ ChatGPT (boucle de review autonome via browser-debug)
 │   ├── allow-command/         Pré-approuver des commandes shell dans opencode.json
+│   ├── clonedeps/             Cloner les sources des dépendances pour inspecter les internals des librairies
 │   ├── code-review/           Review adversariale de code
+│   ├── codemap/               Cartes de code hiérarchiques pour repos inconnus
 │   ├── commit/                Messages de commit (conventions Infomaniak)
 │   ├── create-mr/             Création de merge requests (scripts + tests)
+│   ├── deepwork/              Workflow orchestré multi-phases avec gates de review (chantiers lourds)
 │   ├── deployment-changelog/  Changelog de déploiement
 │   ├── figma-ds-sync/         Sync du design system Figma Infomaniak (check/sync/diff/mapping)
 │   ├── gitlab-ci/             Interaction GitLab CI/CD (glab)
@@ -579,14 +583,23 @@ opencode-config/
 │   ├── gitlab-issues/         Gestion des issues GitLab (glab)
 │   ├── gitlab-summary/        Résumé d'activité GitLab
 │   ├── image-transparent-background/  Suppression de fond blanc (ImageMagick)
+│   ├── laravel-cruddy-by-design/  Contrôleurs/routes Laravel RESTful stricts (max 7 méthodes)
+│   ├── loop-engineering/      Runtime Grill + Monitor pour boucles d'ingénierie
 │   ├── mr-review/             Review de MR avec commentaires inline
 │   ├── mr-review-feedback/    Application des retours de review MR
+│   ├── new-worktree/          Branche + worktree en une intention (jamais destructif)
+│   ├── oh-my-opencode-slim/   Configuration et tuning du plugin oh-my-opencode-slim
 │   ├── pre-mr-review/         Revue qualité pré-MR
 │   ├── radio-tag-genres/      Tagging de genres musicaux pour playlists radio
 │   ├── readme/                 Génération de README
+│   ├── reflect/               Analyse des sessions passées → skills/config réutilisables
 │   ├── release-smoke-test/    Validation de release oh-my-opencode-slim
+│   ├── review-gap-analyzer/   Retours de revue → amélioration des règles AGENTS.md/pre-mr-review
+│   ├── simplify/              Simplification de code sans changement de comportement
 │   ├── translate-doc/         Traduction de documentation
-│   └── user-stories/          Rédaction de user stories
+│   ├── user-stories/          Rédaction de user stories
+│   ├── verification-planning/ Plan de vérification avant changement de code non trivial
+│   └── worktrees/             Worktrees Git comme lanes isolées (protocole OMO)
 │
 ├── scripts/                   Automatisation
 │   ├── setup.sh                Installation complète (première fois, interactive)

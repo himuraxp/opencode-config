@@ -19,12 +19,19 @@ Skills réutilisables pour OpenCode. Chaque skill est un dossier contenant au mi
 | `gitlab-ci` | Interaction avec GitLab CI/CD (pipelines, jobs) via glab CLI |
 | `gitlab-issues` | Gestion des issues GitLab via glab CLI |
 | `gitlab-summary` | Résumé d'activité GitLab (daily standup) |
+| `worktrees` | Worktrees Git comme lanes de codage isolées (protocole OMO) |
 
 ### Planification produit
 
 | Skill | Description |
 |-------|-------------|
 | `gitlab-feature-planner` | Transforme un tableau d'estimation (Excel/CSV/Markdown) + maquettes Figma en proposition structurée d'issues GitLab (1 issue = 1 page/bloc fonctionnel, lignes → checklists) + suggestions de regroupement MR ; validation humaine obligatoire avant création |
+
+### Accessibilité
+
+| Skill | Description |
+|-------|-------------|
+| `accessibility` | Suite accessibilité — 17 sous-skills orchestrés via `accessibility-orchestrator` (aria, contraste, focus, clavier, formulaires, motion, structure, responsive…) |
 
 ### Documentation
 
@@ -41,6 +48,31 @@ Skills réutilisables pour OpenCode. Chaque skill est un dossier contenant au mi
 | `image-transparent-background` | Suppression de fond blanc via ImageMagick |
 | `radio-tag-genres` | Tagging de genres musicaux pour playlists radio AutoDJ |
 
+### Design System
+
+| Skill | Description |
+|-------|-------------|
+| `figma-ds-sync` | Synchronisation du design system Figma Infomaniak vers snapshots JSON locaux (check/sync/diff/mapping) |
+
+### Qualité & workflow de code
+
+| Skill | Description |
+|-------|-------------|
+| `codemap` | Cartes de code hiérarchiques pour se repérer dans un repo inconnu (opération coûteuse, sur demande) |
+| `clonedeps` | Cloner les sources des dépendances dans un workspace local pour inspecter les internals des librairies |
+| `deepwork` | Workflow orchestré multi-phases avec gates de review pour chantiers larges et risqués |
+| `loop-engineering` | Runtime Grill + Monitor pour boucles d'ingénierie |
+| `reflect` | Analyser les sessions récentes → patterns récurrents, skills/agents/config réutilisables à proposer |
+| `review-gap-analyzer` | Retours de revue (MR, bots) → amélioration des règles AGENTS.md et greps de pre-mr-review, sans faux positifs |
+| `simplify` | Simplification de code pour la lisibilité, sans changement de comportement |
+| `verification-planning` | Planifier la vérification (chemin de preuve projet-spécifique) avant un changement de code non trivial |
+
+### Frameworks
+
+| Skill | Description |
+|-------|-------------|
+| `laravel-cruddy-by-design` | Contrôleurs et routes Laravel strictement RESTful (max 7 méthodes, routage par ressources) |
+
 ### Collaboration IA
 
 | Skill | Description |
@@ -52,6 +84,7 @@ Skills réutilisables pour OpenCode. Chaque skill est un dossier contenant au mi
 | Skill | Description |
 |-------|-------------|
 | `allow-command` | Pré-approuver des commandes shell dans opencode.json |
+| `oh-my-opencode-slim` | Configurer et améliorer le plugin oh-my-opencode-slim (agents, modèles, presets, MCP) |
 | `release-smoke-test` | Validation de release oh-my-opencode-slim |
 
 ## Structure d'un skill

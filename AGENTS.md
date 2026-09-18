@@ -11,7 +11,7 @@ config/      Configuration OpenCode (opencode.json, plugins, .env.example — sa
 agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
-skills/      Skills réutilisables (ai-cowork, commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, gitlab-feature-planner, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync, new-worktree)
+skills/      Skills réutilisables (accessibility, ai-cowork, allow-command, clonedeps, code-review, codemap, commit, create-mr, deepwork, deployment-changelog, figma-ds-sync, gitlab-ci, gitlab-feature-planner, gitlab-issues, gitlab-summary, image-transparent-background, laravel-cruddy-by-design, loop-engineering, mr-review, mr-review-feedback, new-worktree, oh-my-opencode-slim, pre-mr-review, radio-tag-genres, readme, reflect, release-smoke-test, review-gap-analyzer, simplify, translate-doc, user-stories, verification-planning, worktrees)
 ```
 
 Les agents `explorer`, `fixer`, `librarian` et `oracle` sont fournis par le plugin **oh-my-opencode-slim** (définis dans `config/oh-my-opencode-slim.json`), pas comme fichiers `agents/*.md`.
