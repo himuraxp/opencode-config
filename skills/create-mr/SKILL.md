@@ -139,6 +139,20 @@ L'agent analyse le prompt utilisateur pour détecter une branche cible explicite
 
 Si aucune branche détectée → branche par défaut du dépôt via `glab repo view`.
 
+L'agent analyse aussi le prompt utilisateur pour détecter des **références d'issues** :
+
+| Mention dans le prompt | Référence insérée dans la description |
+|------------------------|----------------------------------------|
+| `#426` | `Related to #426` |
+| `Related to #426` | `Related to #426` (verbatim) |
+| `fixes #426`, `closes #426`, `resolves #426` | `Closes #426` |
+| `refs RM-1234` | `Refs RM-1234` |
+
+Les références détectées sont passées à `--resources` lors de l'assemblage du
+body (étape 7), donc affichées dans la section `Ressources` de la description.
+Utiliser `Closes`/`Fixes` **uniquement** si l'utilisateur demande la fermeture
+de l'issue au merge.
+
 ### 3. Analyser les changements
 
 ```bash
@@ -322,10 +336,13 @@ rm -f "$BODY_FILE"
 
 Reference issues in the MR body (French description):
 
-| Syntax        | Effect                        |
-| ------------- | ----------------------------- |
-| `Fixes #1234` | Closes GitLab issue on merge  |
-| `Refs RM-1234`| Link without closing          |
+| Syntax             | Effect                                  |
+| ------------------ | --------------------------------------- |
+| `Fixes #1234`      | Closes GitLab issue on merge            |
+| `Closes #1234`     | Closes GitLab issue on merge            |
+| `Resolves #1234`   | Closes GitLab issue on merge            |
+| `Related to #1234` | Links issue without closing             |
+| `Refs RM-1234`     | Link without closing                    |
 
 ## Editing Existing MRs
 
