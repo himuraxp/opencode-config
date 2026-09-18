@@ -11,7 +11,7 @@ config/      Configuration OpenCode (opencode.json, plugins, .env.example — sa
 agents/      Personnalités spécialisées (aurora, aurora-heavy, reviewer, tester, security, cybersec, architect, spark, vision, atlas, crawler, sage, scribe, pulse, echo, beacon, designer, mobile)
 standards/   Comportements universels (workflow, communication, verification, memory, review, audit, anti-patterns, agent-output...)
 frameworks/  Règles par stack technique (angular-20, nodejs, nestjs, astro)
-skills/      Skills réutilisables (ai-cowork, commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync)
+skills/      Skills réutilisables (ai-cowork, commit, create-mr, mr-review, code-review, pre-mr-review, gitlab-ci, gitlab-issues, gitlab-summary, gitlab-feature-planner, deployment-changelog, readme, release-smoke-test, image-transparent-background, translate-doc, user-stories, mr-review-feedback, allow-command, radio-tag-genres, figma-ds-sync)
 ```
 
 Les agents `explorer`, `fixer`, `librarian` et `oracle` sont fournis par le plugin **oh-my-opencode-slim** (définis dans `config/oh-my-opencode-slim.json`), pas comme fichiers `agents/*.md`.

@@ -19,6 +19,12 @@ Skills réutilisables pour OpenCode. Chaque skill est un dossier contenant au mi
 | `gitlab-issues` | Gestion des issues GitLab via glab CLI |
 | `gitlab-summary` | Résumé d'activité GitLab (daily standup) |
 
+### Planification produit
+
+| Skill | Description |
+|-------|-------------|
+| `gitlab-feature-planner` | Transforme un tableau d'estimation (Excel/CSV/Markdown) + maquettes Figma en proposition structurée d'issues GitLab (1 issue = 1 page/bloc fonctionnel, lignes → checklists) + suggestions de regroupement MR ; validation humaine obligatoire avant création |
+
 ### Documentation
 
 | Skill | Description |
