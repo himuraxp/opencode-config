@@ -108,6 +108,7 @@ Quand une demande couvre plusieurs domaines, Aurora délègue **simultanément**
 | Application des retours de review MR | **Aurora** (skill `mr-review-feedback`) | "Applique les retours de la MR !1234" — applique les suggestions, commite et répond dans les threads |
 | Résumé d'activité GitLab | **Aurora** (skill `gitlab-summary`) | "Résumé GitLab", "daily standup", "activité du jour" |
 | Planification de feature produit | **Aurora** (skill `gitlab-feature-planner`) | "planifie la feature X", "issues depuis le tableau d'estimation", "découpage produit" — analyse fonctionnelle + regroupement en issues + suggestions de regroupement MR, STOP à la validation humaine avant création |
+| Branche + worktree | **Aurora** (skill `new-worktree`) | "new-worktree feat podcast Gestion des formulaires", "worktree fix rm-1234" — traduction de la description (raisonnement) + script déterministe ; lanes d'agents parallèles → skill OMO `worktrees` |
 | Recherche + implémentation | **Explorer** → **Fixer** | "Trouve toutes les occurrences de X et remplace par Y" |
 | Architecture + exécution | **Architect** → **Fixer** | "Conçois et implémente la nouvelle structure" |
 | Recherche combinée (codebase + docs externe) | **Explorer** + **Librarian** | "Implémente X avec la lib Y" — Explorer cherche dans le code, Librarian cherche la docs en parallèle |

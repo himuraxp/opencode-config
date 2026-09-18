@@ -15,6 +15,7 @@ Skills réutilisables pour OpenCode. Chaque skill est un dossier contenant au mi
 | `pre-mr-review` | Revue de qualité pré-MR (code mort, duplications, simplifications) |
 | `code-review` | Review adversariale — force à trouver de vrais problèmes |
 | `deployment-changelog` | Changelog de déploiement pour les commits du jour |
+| `new-worktree` | Branche + worktree en une intention (`feat podcast Gestion des...` → `feat/podcast--dynamic-form-and-config-management` + worktree prêt pour Orca), base détectée sans hardcode, jamais destructif |
 | `gitlab-ci` | Interaction avec GitLab CI/CD (pipelines, jobs) via glab CLI |
 | `gitlab-issues` | Gestion des issues GitLab via glab CLI |
 | `gitlab-summary` | Résumé d'activité GitLab (daily standup) |
