@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "updated": "2026-09-18",
+  "gitlabHost": "gitlab.example.com",
+  "note": "TEMPLATE versionné (repo public) — données d'exemple uniquement. Pour ton installation : copie ce fichier vers projects-registry.json (git-ignoré, jamais commité) et remplis les projets RÉELS validés via `resolve_project.py --record`. Une entrée n'est ajoutée qu'après découverte + validation réelle (voir SKILL.md — Project resolution). Ne jamais inventer un projectId : le valider via `resolve-project.py --validate`.",
+  "projects": [
+    {
+      "alias": "site-manager",
+      "displayName": "Site Manager (example)",
+      "gitlabPath": "example-group/media/site-manager",
+      "projectId": 1001,
+      "validated": false,
+      "role": "Défaut pour les pages du module (à remplacer par tes valeurs réelles)"
+    },
+    {
+      "alias": "design-system",
+      "displayName": "Design System (example)",
+      "gitlabPath": "example-group/front/design-system",
+      "projectId": 1002,
+      "validated": false,
+      "role": "Design system (composants partagés)"
+    },
+    {
+      "alias": "admin-app",
+      "displayName": "Admin App (example)",
+      "gitlabPath": "example-group/admin-app",
+      "projectId": 1003,
+      "validated": false,
+      "role": "Application d'administration"
+    },
+    {
+      "alias": "player-app",
+      "displayName": "Player App (example)",
+      "gitlabPath": "example-group/media/player",
+      "projectId": 1004,
+      "validated": false,
+      "role": "Application player (pages publiques, embed)"
+    }
+  ]
+}

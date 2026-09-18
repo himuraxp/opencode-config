@@ -18,6 +18,12 @@ bun.lock
 __pycache__/
 *.py[cod]
 
+# Feature planner: REAL GitLab project data (namespaces, project IDs) — never commit.
+# Versioned template: skills/gitlab-feature-planner/projects-registry.example.json
+skills/gitlab-feature-planner/projects-registry.json
+**/projects-registry.json
+!**/projects-registry.example.json
+
 # IDE
 .idea/
 .vscode/

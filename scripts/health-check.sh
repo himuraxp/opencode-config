@@ -175,6 +175,25 @@ done
 
 ok "Standard references checked"
 
+# ─── 6. Git hooks (pre-commit secret scan) ──────────────────────────────────
+
+echo ""
+echo "--- Git hooks ---"
+
+HOOKS_PATH="$(git -C "$ROOT_DIR" config core.hooksPath 2>/dev/null || true)"
+if [[ "$HOOKS_PATH" == "scripts/hooks" ]]; then
+  ok "core.hooksPath=scripts/hooks"
+else
+  warn "pre-commit secret scan not enabled — run: git config core.hooksPath scripts/hooks"
+  WARNINGS=$((WARNINGS + 1))
+fi
+if [[ -x "$ROOT_DIR/scripts/hooks/pre-commit-secrets.sh" ]]; then
+  ok "pre-commit-secrets.sh executable"
+else
+  warn "pre-commit-secrets.sh not executable — run: chmod +x scripts/hooks/*.sh"
+  WARNINGS=$((WARNINGS + 1))
+fi
+
 # ─── Summary ─────────────────────────────────────────────────────────────────
 
 echo ""

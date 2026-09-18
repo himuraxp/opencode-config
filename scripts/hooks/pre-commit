@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# pre-commit — Git hook entry point (executed by git via core.hooksPath=scripts/hooks).
+# Delegates the actual secret scanning to pre-commit-secrets.sh.
+# The filename MUST be exactly "pre-commit" for git to invoke it.
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+exec "$DIR/pre-commit-secrets.sh" "$@"

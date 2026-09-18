@@ -34,6 +34,9 @@ PATTERNS=(
   'gh[pu]_[A-Za-z0-9]\{36\}'                    # GitHub tokens
   'AKIA[A-Z0-9]\{16\}'                           # AWS access keys
   'glpat-[A-Za-z0-9_-]\{20\}'                   # GitLab PAT
+  'figd_[A-Za-z0-9._-]\{16,\}'                  # Figma personal access token
+  'INFOMANIAK_API_TOKEN[[:space:]]*[:=]'        # Infomaniak API token assignment
+  'FIGMA_TOKEN[[:space:]]*[:=]'                 # Figma token assignment
   'AIza[0-9A-Za-z_-]\{35\}'                     # Google API keys
   'sk_live_[A-Za-z0-9]\{24,\}'                  # Stripe secret keys
   'eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*'  # JWT tokens
@@ -86,9 +89,9 @@ while IFS= read -r -d '' file; do
   fi
   [[ "$should_check" == false ]] && continue
 
-  # Check each pattern in the staged diff
+  # Check each pattern in the staged diff (-e so patterns starting with "--" are not parsed as options)
   for pattern in "${PATTERNS[@]}"; do
-    matches=$(git diff --cached -- "$file" 2>/dev/null | grep -E "^\+" | grep -E "$pattern" || true)
+    matches=$(git diff --cached -- "$file" 2>/dev/null | grep -E "^\+" | grep -Ee "$pattern" || true)
     if [[ -n "$matches" ]]; then
       echo "WARNING: Potential secret in $file:"
       echo "$matches" | head -3 | sed 's/^/  /'

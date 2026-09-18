@@ -74,9 +74,18 @@ Une issue séparée pour un **composant** est créée UNIQUEMENT si au moins une
 
 ## Project resolution
 
-La résolution d'un projet GitLab ne doit JAMAIS être devinée. Passer par le **registry** : `skills/gitlab-feature-planner/projects-registry.json` (+ `resolve-project.py`).
+La résolution d'un projet GitLab ne doit JAMAIS être devinée. Passer par le **registry** : `skills/gitlab-feature-planner/` + `resolve-project.py`.
 
-**Distinguer** : nom humain (« Manager », « Admin4 ») ≠ `gitlabPath` (`infomaniak/media/site-manager`) ≠ `projectId` (4902). Seul le couple path validé ↔ ID numérique est fiable.
+**Distinguer** : nom humain (« Site Manager », « Admin ») ≠ `gitlabPath` (`media/site-manager`) ≠ `projectId` (1001). Seul le couple path validé ↔ ID numérique est fiable.
+
+**Registry en deux variantes** (repo public = template, installation = données réelles) :
+
+| Fichier | Versionné ? | Contenu |
+|---|---|---|
+| `projects-registry.example.json` | ✅ versionné | Template avec données d'exemple (`example-group/...`, IDs fictifs) |
+| `projects-registry.json` | ❌ git-ignoré | Tes projets RÉELS validés (namespaces, IDs) — **jamais commité** |
+
+Le loader (`load_registry`) cherche dans l'ordre : registry local du repo → registry installé (`~/.config/opencode/skills/gitlab-feature-planner/`) → template example. `--record` écrit toujours dans le registry local, jamais dans le template (les namespaces/IDs internes ne doivent pas fuiter dans le repo public).
 
 Stratégie, dans l'ordre :
 
@@ -91,18 +100,18 @@ Stratégie, dans l'ordre :
 - Un projet découvert et validé est **mémorisé** dans le registry (`resolve-project.py --record <alias> --path <p> --id <n>`, après confirmation humaine) — la prochaine feature ne repart pas de zéro.
 - `resolve-project.py --validate` vérifie en live que chaque `projectId` répond avec le bon `path_with_namespace`.
 
-**Pièges `glab` constatés en réel (issues Podcast, 2026-09)** :
+**Pièges `glab` constatés en réel (issues d'une feature, 2026-09)** — `<ns>` = namespace, `<path>` = path du projet, `<id>` = ID numérique du registry :
 
 | Appel | Résultat |
 |-------|----------|
-| `glab api "projects/infomaniak%2Fmedia%2Fsite-manager"` (path URL-encodé) | ✅ fonctionne |
-| `glab api "projects/infomaniak/media/site-manager"` (slashes bruts) | ❌ 404 — le router ne matche pas `projects/:id` |
-| `glab repo view -R infomaniak/media/site-manager` | ❌ 404 malgré les droits (`project_access: 40`) |
-| `glab api "projects/4902"` (ID numérique) | ✅ toujours fiable |
+| `glab api "projects/<ns>%2F<path>"` (path URL-encodé) | ✅ fonctionne |
+| `glab api "projects/<ns>/<path>"` (slashes bruts) | ❌ 404 — le router ne matche pas `projects/:id` |
+| `glab repo view -R <ns>/<path>` | ❌ 404 malgré les droits (`project_access: 40`) |
+| `glab api "projects/<id>"` (ID numérique) | ✅ toujours fiable |
 
 → Pour toute opération API : **ID numérique du registry** (référence primaire) ou path encodé `%2F` (fallback). Ne jamais passer un path brut à `glab api`.
 
-**Recherche contrôlée d'un projet inconnu** (fallback) : `glab api "search?scope=projects&search=<nom>"` → vérifier `path_with_namespace` et les droits (`permissions.project_access`) → confirmer avec l'utilisateur → enregistrer.
+**Recherche contrôlée d'un projet inconnu** (fallback) : `glab api "search?scope=projects&search=<nom>"` → vérifier `path_with_namespace` et les droits (`permissions.project_access`) → confirmer avec l'utilisateur → enregistrer via `resolve-project.py --record`.
 
 ## Issue routing
 
@@ -382,7 +391,7 @@ Traitement des retours :
 
 Dans l'ordre des dépendances (composants/infra d'abord, puis pages). Le **corps du draft prime** : le skill `gitlab-issues` fournit uniquement les conventions CLI (flags, labels, cross-références) — ne pas lui emprunter son format de description (Summary/Details) au risque de mixer les styles.
 
-**API** : préférer `glab api` avec l'**ID numérique** du project registry (`glab api "projects/4902/issues" -f title=... -f description=... -f labels=feature::podcast`) — voir *Project resolution* pour les pièges d'encodage des paths.
+**API** : préférer `glab api` avec l'**ID numérique** du project registry (`glab api "projects/1001/issues" -f title=... -f description=... -f labels=feature::podcast`) — voir *Project resolution* pour les pièges d'encodage des paths.
 
 ```bash
 glab issue create \

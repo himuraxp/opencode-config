@@ -26,10 +26,10 @@ from sync_issues import (  # noqa: E402
 REGISTRY = {
     "version": 1,
     "projects": [
-        {"alias": "site-manager", "displayName": "Manager (média)", "gitlabPath": "infomaniak/media/site-manager", "projectId": 4902, "validated": True, "role": ""},
-        {"alias": "admin4", "displayName": "Admin4", "gitlabPath": "infomaniak/site-admin3-material", "projectId": 1412, "validated": True, "role": ""},
-        {"alias": "manager-element", "displayName": "Manager Element (design system)", "gitlabPath": "infomaniak/front/manager-elements", "projectId": 3898, "validated": True, "role": ""},
-        {"alias": "manager-page", "displayName": "Manager Page", "gitlabPath": "infomaniak/front/manager-page", "projectId": 1, "validated": True, "role": ""},
+        {"alias": "site-manager", "displayName": "Manager (média)", "gitlabPath": "acme-group/media/site-manager", "projectId": 2001, "validated": True, "role": ""},
+        {"alias": "admin-app", "displayName": "Admin App", "gitlabPath": "acme-group/admin-app", "projectId": 2002, "validated": True, "role": ""},
+        {"alias": "manager-element", "displayName": "Manager Element (design system)", "gitlabPath": "acme-group/front/design-system", "projectId": 2003, "validated": True, "role": ""},
+        {"alias": "manager-page", "displayName": "Manager Page", "gitlabPath": "acme-group/front/page-builder", "projectId": 2004, "validated": True, "role": ""},
     ],
 }
 
@@ -73,19 +73,19 @@ Issue technique sans maquette.
 
 class TestProjectResolution(unittest.TestCase):
     def test_alias_connu(self):
-        self.assertEqual(resolve("site-manager", REGISTRY)["projectId"], 4902)
+        self.assertEqual(resolve("site-manager", REGISTRY)["projectId"], 2001)
 
     def test_project_path_connu(self):
-        self.assertEqual(resolve("infomaniak/site-admin3-material", REGISTRY)["projectId"], 1412)
+        self.assertEqual(resolve("acme-group/admin-app", REGISTRY)["projectId"], 2002)
 
     def test_project_id_connu(self):
-        self.assertEqual(resolve("3898", REGISTRY)["alias"], "manager-element")
+        self.assertEqual(resolve("2003", REGISTRY)["alias"], "manager-element")
 
     def test_display_name(self):
-        self.assertEqual(resolve("Admin4", REGISTRY)["alias"], "admin4")
+        self.assertEqual(resolve("Admin App", REGISTRY)["alias"], "admin-app")
 
     def test_recherche_partielle_unique(self):
-        self.assertEqual(resolve("admin3", REGISTRY)["alias"], "admin4")
+        self.assertEqual(resolve("admin-app", REGISTRY)["alias"], "admin-app")
 
     def test_plusieurs_resultats_ambigus(self):
         with self.assertRaises(AmbiguousProject):
@@ -98,7 +98,7 @@ class TestProjectResolution(unittest.TestCase):
     def test_mapping_memorise(self):
         import copy
         reg = copy.deepcopy(REGISTRY)
-        reg["projects"].append({"alias": "podcast-suite", "displayName": "Podcast Suite", "gitlabPath": "infomaniak/media/podcast/suite", "projectId": 9999, "validated": True, "role": ""})
+        reg["projects"].append({"alias": "podcast-suite", "displayName": "Podcast Suite", "gitlabPath": "acme-group/media/player-suite", "projectId": 9999, "validated": True, "role": ""})
         self.assertEqual(resolve("podcast-suite", reg)["projectId"], 9999)
 
     def test_registry_reel_charge(self):
@@ -209,8 +209,8 @@ X.
 
 class TestSyncSafety(unittest.TestCase):
     def test_wrong_project_detecte(self):
-        self.assertTrue(detect_wrong_project("infomaniak/media/site-manager", "infomaniak/site-admin3-material"))
-        self.assertFalse(detect_wrong_project("infomaniak/media/site-manager", "infomaniak/media/site-manager"))
+        self.assertTrue(detect_wrong_project("acme-group/media/site-manager", "acme-group/admin-app"))
+        self.assertFalse(detect_wrong_project("acme-group/media/site-manager", "acme-group/media/site-manager"))
 
     def test_update_si_diff_uniquement(self):
         criteria = ["Critère 1"]

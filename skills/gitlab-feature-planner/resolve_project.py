@@ -9,12 +9,18 @@ Stratégie (SKILL.md — Project resolution) :
   5. sinon -> NotFound : recherche GitLab contrôlée autorisée, MAIS ambiguïté = STOP
      et confirmation humaine ; projet validé -> mémoriser via --record.
 
+Le registry existe en deux variantes — repo public = template, local = réel :
+  1. <script_dir>/projects-registry.json            (repo source, git-ignoré)
+  2. ~/.config/opencode/skills/gitlab-feature-planner/projects-registry.json (installation)
+  3. <script_dir>/projects-registry.example.json    (template versionné, données d'exemple)
+
+`--record` refuse d'écrire dans le template : il crée/remplit le registry local.
+
 Usage :
   resolve-project.py --list
-  resolve-project.py --resolve site-manager
-  resolve-project.py --resolve infomaniak/media/site-manager
+  resolve-project.py --resolve <alias|path|displayName>
   resolve-project.py --validate            # vérifie projectId <-> gitlabPath en live
-  resolve-project.py --record podcast-suite --path infomaniak/media/podcast/suite --id 1234 --display "Podcast Suite"
+  resolve-project.py --record <alias> --path <p> --id <n> --display "<nom>"
 
 Stdlib uniquement.
 """
@@ -33,12 +39,38 @@ class ProjectNotFound(Exception):
     pass
 
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REGISTRY_FILENAME = "projects-registry.json"
+TEMPLATE_FILENAME = "projects-registry.example.json"
+INSTALLED_REGISTRY = os.path.expanduser(
+    os.path.join("~", ".config", "opencode", "skills", "gitlab-feature-planner", REGISTRY_FILENAME)
+)
+
+
+def registry_candidates():
+    """Emplacements du registry réel, par priorité (le template example en dernier recours)."""
+    return [
+        os.path.join(SCRIPT_DIR, REGISTRY_FILENAME),
+        INSTALLED_REGISTRY,
+        os.path.join(SCRIPT_DIR, TEMPLATE_FILENAME),
+    ]
+
+
 def registry_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "projects-registry.json")
+    """Premier registry existant. None si aucun (ni réel ni template)."""
+    for path in registry_candidates():
+        if os.path.exists(path):
+            return path
+    return None
 
 
 def load_registry(path=None):
-    with open(path or registry_path(), encoding="utf-8") as f:
+    resolved = path or registry_path()
+    if resolved is None or not os.path.exists(resolved):
+        raise FileNotFoundError(
+            "Aucun registry trouvé (attendu : projects-registry.json local ou projects-registry.example.json template)"
+        )
+    with open(resolved, encoding="utf-8") as f:
         data = json.load(f)
     return data
 
@@ -105,10 +137,18 @@ def validate_live(reg):
     return errors
 
 
-def record(reg, alias, gitlab_path, project_id, display):
+def record(reg, alias, gitlab_path, project_id, display, source_path=None):
+    """Écrit DANS LE REGISTRY LOCAL (jamais le template versionné) : le repo public
+    ne doit pas recevoir de données réelles (namespaces, IDs)."""
+    local = os.path.join(SCRIPT_DIR, REGISTRY_FILENAME)
+    target = source_path or local
+    if TEMPLATE_FILENAME in os.path.basename(target):
+        target = local
     for p in reg["projects"]:
         if p["alias"] == alias:
-            sys.exit(f"alias « {alias} » déjà présent dans le registry — rien à faire (modifier le fichier à la main si la valeur a changé).")
+            sys.exit(
+                f"alias « {alias} » déjà présent dans le registry — rien à faire (modifier le fichier à la main si la valeur a changé)."
+            )
     reg["projects"].append(
         {
             "alias": alias,
@@ -119,10 +159,10 @@ def record(reg, alias, gitlab_path, project_id, display):
             "role": "",
         }
     )
-    with open(registry_path(), "w", encoding="utf-8") as f:
+    with open(target, "w", encoding="utf-8") as f:
         json.dump(reg, f, ensure_ascii=False, indent=2)
         f.write("\n")
-    print(f"enregistré : {alias} -> {gitlab_path} ({project_id})")
+    print(f"enregistré dans {target} : {alias} -> {gitlab_path} ({project_id})")
 
 
 def main():
@@ -136,7 +176,10 @@ def main():
     ap.add_argument("--display", help="displayName du projet à enregistrer")
     args = ap.parse_args()
 
+    source = registry_path()
     reg = load_registry()
+    if source:
+        print(f"registry: {source}", file=sys.stderr)
 
     if args.list:
         for p in reg["projects"]:
@@ -161,7 +204,7 @@ def main():
     if args.record:
         if not (args.path and args.project_id):
             sys.exit("--record exige --path et --id")
-        record(reg, args.record, args.path, args.project_id, args.display)
+        record(reg, args.record, args.path, args.project_id, args.display, source_path=source)
         return
     ap.print_help()
 

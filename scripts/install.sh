@@ -271,6 +271,25 @@ install_scripts() {
   done < <(find "$src" -type f -not -name "install.sh" -not -name "setup.sh" -not -name "init-project.sh" -not -name "sync-project.sh" -print0)
 }
 
+install_hooks() {
+  # Enable the pre-commit secret scanner on this repo via core.hooksPath.
+  if [[ ! -f "$ROOT_DIR/scripts/hooks/pre-commit-secrets.sh" ]]; then
+    echo "skip (nonexistent): scripts/hooks/pre-commit-secrets.sh"
+    return 1
+  fi
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "  enable:  git config core.hooksPath scripts/hooks"
+    return 0
+  fi
+  if git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    chmod +x "$ROOT_DIR/scripts/hooks/"*.sh 2>/dev/null || true
+    git -C "$ROOT_DIR" config core.hooksPath scripts/hooks
+    echo "  hooks:   core.hooksPath=scripts/hooks (pre-commit secret scan enabled)"
+  else
+    echo "skip (not a git repo): $ROOT_DIR"
+  fi
+}
+
 install_config() {
   local src="$ROOT_DIR/config"
   local dest="$TARGET_BASE"
@@ -365,6 +384,7 @@ _step_run "Installing Standards"     _step_standards
 _step_run "Installing Frameworks"    _step_frameworks
 _step_run "Installing Skills"        install_skills
 _step_run "Installing Scripts"       install_scripts
+_step_run "Enabling Git hooks"       install_hooks
 
 if [[ "$NO_CONFIG" == false ]]; then
   _step_run "Installing Configuration" install_config
